@@ -1,8 +1,6 @@
 package etchee.com.wasedabusschedule.Data
 
 import android.app.Application
-import android.provider.Settings
-import etchee.com.wasedabusschedule.Data.DataContract.DatabaseConstants
 import io.realm.Realm
 import io.realm.RealmConfiguration
 
@@ -12,15 +10,15 @@ import io.realm.RealmConfiguration
 
 class RealmApplication : Application() {
 
-    val databaseObj = DataContract.DatabaseConstants()
-    val GlobalConstantsObj = DataContract.GlobalConstants()
+    var databaseObj = DataContract.DatabaseConstants()
+    var GlobalConstantsObj = DataContract.GlobalConstants()
     val SCHEMA_VERSION:Long = 0
 
     override fun onCreate() {
         super.onCreate()
-
         //create a new Realm database
-        val realmConfiguration = RealmConfiguration.Builder(this)
+        Realm.init
+        val realmConfiguration = RealmConfiguration.Builder(applicationContext)
                 .name(databaseObj.DATABASE_NAME)
                 .schemaVersion(SCHEMA_VERSION)
                 .deleteRealmIfMigrationNeeded()

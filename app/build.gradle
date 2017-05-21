@@ -37,6 +37,7 @@ dependencies {
     // Realm
     compile 'io.realm:realm-android:0.82.1'
 
+    compile 'com.android.support:recyclerview-v7:25.3.1'
 }
 repositories {
     mavenCentral()

@@ -23,6 +23,7 @@ import android.widget.TextView
 import etchee.com.wasedabusschedule.Data.Schedule
 import io.realm.Realm
 import io.realm.Sort
+import io.realm.examples.kotlin.model.Person
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
@@ -40,6 +41,8 @@ class MainActivity : AppCompatActivity() {
         realm.close() // Remember to close Realm when done.
     }
 
+
+
     private fun showStatus(txt: String) {
         Log.i(TAG, txt)
         val tv = TextView(this)
@@ -53,13 +56,13 @@ class MainActivity : AppCompatActivity() {
         // All writes must be wrapped in a transaction to facilitate safe multi threading
         realm.executeTransaction {
             // Add a person
-            val person = realm.createObject(Schedule::class.java, 0)
+            val person = realm.createObject(Person::class.java, 0)
             person.name = "Young Person"
             person.age = 14
         }
 
         // Find the first person (no query conditions) and read a field
-        val person = realm.where(Schedule::class.java).findFirst()
+        val person = realm.where(Person::class.java).findFirst()
         showStatus(person.name + ": " + person.age)
 
         // Update person in a transaction
@@ -86,85 +89,6 @@ class MainActivity : AppCompatActivity() {
         val results = realm.where(Schedule::class.java).equalTo("cats.name", "Tiger").findAll()
 
         showStatus("Size of result set: ${results.size}")
-    }
-
-    private fun complexReadWrite(): String {
-        var status = "\nPerforming complex Read/Write operation..."
-
-        // Open the default realm. All threads must use its own reference to the realm.
-        // Those can not be transferred across threads.
-        val realm = Realm.getDefaultInstance()
-        try {
-            // Add ten persons in one transaction
-            realm.executeTransaction {
-                val fido = realm.createObject(Dog::class.java)
-                fido.name = "fido"
-                for (i in 1..9) {
-                    val person = realm.createObject(Schedule::class.java, i.toLong())
-                    person.name = "Person no. $i"
-                    person.age = i
-                    person.dog = fido
-
-                    // The field tempReference is annotated with @Ignore.
-                    // This means setTempReference sets the Person tempReference
-                    // field directly. The tempReference is NOT saved as part of
-                    // the RealmObject:
-                    person.tempReference = 42
-
-                    for (j in 0..i - 1) {
-                        val cat = realm.createObject(Cat::class.java)
-                        cat.name = "Cat_$j"
-                        person.cats.add(cat)
-                    }
-                }
-            }
-
-            // Implicit read transactions allow you to access your objects
-            status += "\nNumber of persons: ${realm.where(Schedule::class.java).count()}"
-
-            // Iterate over all objects
-            for (person in realm.where(Schedule::class.java).findAll()) {
-                val dogName: String = person?.dog?.name ?: "None"
-
-                status += "\n${person.name}: ${person.age} : $dogName : ${person.cats.size}"
-
-                // The field tempReference is annotated with @Ignore
-                // Though we initially set its value to 42, it has
-                // not been saved as part of the Person RealmObject:
-                check(person.tempReference == 0)
-            }
-
-            // Sorting
-            val sortedPersons = realm.where(Schedule::class.java).findAllSorted("age", Sort.DESCENDING)
-            status += "\nSorting ${sortedPersons.last().name} == ${realm.where(Schedule::class.java).findAll().first().name}"
-
-        } finally {
-            realm.close()
-        }
-        return status
-    }
-
-    private fun complexQuery(): String {
-        var status = "\n\nPerforming complex Query operation..."
-
-        // Realm implements the Closable interface, therefore we can make use of Kotlin's built-in
-        // extension method 'use' (pun intended).
-        Realm.getDefaultInstance().use {
-            // 'it' is the implicit lambda parameter of type Realm
-            status += "\nNumber of persons: ${it.where(Schedule::class.java).count()}"
-
-            // Find all persons where age between 7 and 9 and name begins with "Person".
-            val results = it
-                    .where(Schedule::class.java)
-                    .between("age", 7, 9)       // Notice implicit "and" operation
-                    .beginsWith("name", "Person")
-                    .findAll()
-
-            status += "\nSize of result set: ${results.size}"
-
-        }
-
-        return status
     }
 
 }

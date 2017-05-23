@@ -198,14 +198,51 @@ class DataProvider : ContentProvider() {
     }
 
     override fun update(p0: Uri?, p1: ContentValues?, p2: String?, p3: Array<out String>?): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //not needed right now
+
+        return 0
     }
 
-    override fun delete(p0: Uri?, p1: String?, p2: Array<out String>?): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun delete(uri: Uri?, selection: String?, selectionArgs: Array<out String>?): Int {
+        val numOfRowsDeleted: Int
+        val database = dbHelper.writableDatabase
+        val match = matcher.match(uri)
+
+        when (match) {
+            CODE_TO_WASEDA -> {
+                numOfRowsDeleted = database.delete(DataContract.DB_TO_WASEDA().TABLE_NAME,
+                        selection, selectionArgs)
+            }
+
+            CODE_TO_NISHI -> {
+                numOfRowsDeleted = database.delete(DataContract.DB_TO_NISHI().TABLE_NAME,
+                        selection, selectionArgs)
+            }
+            CODE_SAT_TO_WASEDA -> {
+                numOfRowsDeleted = database.delete(DataContract.DB_TO_WASEDA().TABLE_NAME,
+                        selection, selectionArgs)
+            }
+
+            CODE_SAT_TO_NISHI -> {
+                numOfRowsDeleted = database.delete(DataContract.SATURDAY_DB_TO_NISHI().TABLE_NAME, selection, selectionArgs)
+            }
+
+            else -> throw IllegalArgumentException("Delete method cannot handle " +
+                    "unsupported URI: " + uri)
+        }
+
+        if (numOfRowsDeleted < 0)
+            throw IllegalArgumentException("Content Provider (delete method) gave an error. " +
+                    "Number of deleted row was 0 or less.")
+
+        context!!.contentResolver.notifyChange(uri, null)
+        return numOfRowsDeleted
     }
+
+
 
     override fun getType(p0: Uri?): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //not needed as of now
+        return "Not Implemented in the provider"
     }
 }

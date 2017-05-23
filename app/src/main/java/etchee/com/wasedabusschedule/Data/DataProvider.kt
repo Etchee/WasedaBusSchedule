@@ -19,8 +19,8 @@ class DataProvider : ContentProvider() {
     private val CODE_SAT_TO_NISHI = 201
 
     private val data:DataContract.GlobalConstants = DataContract.GlobalConstants()
-    private val matcher : UriMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
+    private val matcher : UriMatcher = UriMatcher(UriMatcher.NO_MATCH)
     private var dbHelper:DataDbHelper = null!!
 
     private fun UriMatcher() {
@@ -31,7 +31,7 @@ class DataProvider : ContentProvider() {
     }
 
     override fun onCreate(): Boolean {
-        dbHelper = DataDbHelper(context)
+        dbHelper = DataDbHelper(context, )
 
         return true
     }
@@ -42,34 +42,33 @@ class DataProvider : ContentProvider() {
 
         val database = dbHelper.getReadableDatabase()
         val match = matcher.match(uri)
-        val cursor:Cursor
+        val cursor: Cursor
 
-        when(match) {
+        when (match) {
 
-            //query entire calendar table
+        //query entire calendar table
             CODE_TO_WASEDA -> {
                 cursor = database.query(
-                        CalendarEntry.TABLE_NAME,
+                        DataContract.DB_TO_WASEDA().TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs, null, null, null)
             }
 
-            //query the entire event table
-            CODE_TO_NISHI ->{
+        //query the entire event table
+            CODE_TO_NISHI -> {
                 cursor = database.query(
-                        EventEntry.TABLE_NAME,
+                        DataContract.DB_TO_NISHI().TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs, null, null, null)
             }
 
 
-
-            //query entire event_type table
+        //query entire event_type table
             CODE_SAT_TO_WASEDA -> {
                 cursor = database.query(
-                        EventTypeEntry.TABLE_NAME,
+                        DataContract.SATURDAY_DB_TO_WASEDA().TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -78,13 +77,20 @@ class DataProvider : ContentProvider() {
 
             CODE_SAT_TO_NISHI -> {
                 cursor = database.query(
-                        EventTypeEntry.TABLE_NAME,
+                        DataContract.SATURDAY_DB_TO_NISHI().TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
                         null, null, null)
             }
 
+            else -> {
+                throw IllegalArgumentException("Query method cannot handle " +
+                        "unsupported URI: " + uri)
+            }
+        }
+        cursor.setNotificationUri(context!!.contentResolver, uri)
+        return cursor
     }
 
     override fun insert(p0: Uri?, p1: ContentValues?): Uri {

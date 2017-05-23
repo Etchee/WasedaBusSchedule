@@ -47,7 +47,6 @@ class DataProvider : ContentProvider() {
 
         when (match) {
 
-        //query entire calendar table
             CODE_TO_WASEDA -> {
                 cursor = database.query(
                         DataContract.DB_TO_WASEDA().TABLE_NAME,
@@ -56,7 +55,6 @@ class DataProvider : ContentProvider() {
                         selectionArgs, null, null, null)
             }
 
-        //query the entire event table
             CODE_TO_NISHI -> {
                 cursor = database.query(
                         DataContract.DB_TO_NISHI().TABLE_NAME,
@@ -65,8 +63,6 @@ class DataProvider : ContentProvider() {
                         selectionArgs, null, null, null)
             }
 
-
-        //query entire event_type table
             CODE_SAT_TO_WASEDA -> {
                 cursor = database.query(
                         DataContract.SATURDAY_DB_TO_WASEDA().TABLE_NAME,
@@ -99,17 +95,15 @@ class DataProvider : ContentProvider() {
         val uri_new:Uri
 
         when (match) {
-        //query entire calendar table
+
             CODE_TO_WASEDA -> {
                 uri_new = insertInWasedaTable(uri, values!!)
             }
 
-        //query the entire event table
             CODE_TO_NISHI -> {
                 uri_new = insertInNishiTable(uri, values!!)
             }
 
-        //query entire event_type table
             CODE_SAT_TO_WASEDA -> {
                 uri_new = insertInSATWasedaTable(uri, values!!)
             }
@@ -121,7 +115,6 @@ class DataProvider : ContentProvider() {
             else -> throw IllegalArgumentException("Insert method cannot handle " +
                     "unsupported URI: " + uri)
         }
-
         return uri_new
     }
 

@@ -38,16 +38,9 @@ class DataContract private constructor() {
 
             val TABLE_NAME: String = "TABLE_TO_WASEDA",
             val _ID: String = BaseColumns._ID,
-
             val COLUMN_HOUR: String = "COLUMN_HOUR",
-            val COLUMN_FIRST:String = "COLUMN_FIRST",
-            val COLUMN_FIRST_FLAG:String = "COLUMN_FIRST_FLAG",
-            val COLUMN_SECOND:String = "COLUMN_SECOND",
-            val COLUMN_SECOND_FLAG:String = "COLUMN_SECOND_FLAG",
-            val COLUMN_THIRD:String = "COLUMN_THIRD",
-            val COLUMN_THIRD_FLAG:String = "COLUMN_THIRD_FLAG",
-            val COLUMN_FOURTH:String = "COLUMN_FOURTH",
-            val COLUMN_FOURTH_FLAG:String = "COLUMN_FOURTH_FLAG"
+            val COLUMN_MIN:String = "COLUMN_MIN",
+            val COLUMN_FLAG:String = "COLUMN_FLAG"
     )
 
     data class DB_TO_NISHI(
@@ -61,16 +54,9 @@ class DataContract private constructor() {
 
             val TABLE_NAME: String = "TABLE_TO_NISHI",
             val _ID: String = BaseColumns._ID,
-
             val COLUMN_HOUR: String = "COLUMN_HOUR",
-            val COLUMN_FIRST:String = "COLUMN_FIRST",
-            val COLUMN_FIRST_FLAG:String = "COLUMN_FIRST_FLAG",
-            val COLUMN_SECOND:String = "COLUMN_SECOND",
-            val COLUMN_SECOND_FLAG:String = "COLUMN_SECOND_FLAG",
-            val COLUMN_THIRD:String = "COLUMN_THIRD",
-            val COLUMN_THIRD_FLAG:String = "COLUMN_THIRD_FLAG",
-            val COLUMN_FOURTH:String = "COLUMN_FOURTH",
-            val COLUMN_FOURTH_FLAG:String = "COLUMN_FOURTH_FLAG"
+            val COLUMN_MIN:String = "COLUMN_MIN",
+            val COLUMN_FLAG:String = "COLUMN_FLAG"
     )
 
     data class SATURDAY_DB_TO_WASEDA(
@@ -83,16 +69,9 @@ class DataContract private constructor() {
 
             val TABLE_NAME: String = "TABLE_TO_NISHI",
             val _ID: String = BaseColumns._ID,
-
             val COLUMN_HOUR: String = "COLUMN_HOUR",
-            val COLUMN_FIRST:String = "COLUMN_FIRST",
-            val COLUMN_FIRST_FLAG:String = "COLUMN_FIRST_FLAG",
-            val COLUMN_SECOND:String = "COLUMN_SECOND",
-            val COLUMN_SECOND_FLAG:String = "COLUMN_SECOND_FLAG",
-            val COLUMN_THIRD:String = "COLUMN_THIRD",
-            val COLUMN_THIRD_FLAG:String = "COLUMN_THIRD_FLAG",
-            val COLUMN_FOURTH:String = "COLUMN_FOURTH",
-            val COLUMN_FOURTH_FLAG:String = "COLUMN_FOURTH_FLAG"
+            val COLUMN_MIN:String = "COLUMN_MIN",
+            val COLUMN_FLAG:String = "COLUMN_FLAG"
     )
 
     data class SATURDAY_DB_TO_NISHI(
@@ -105,15 +84,8 @@ class DataContract private constructor() {
 
             val TABLE_NAME: String = "TABLE_TO_NISHI",
             val _ID: String = BaseColumns._ID,
-
             val COLUMN_HOUR: String = "COLUMN_HOUR",
-            val COLUMN_FIRST:String = "COLUMN_FIRST",
-            val COLUMN_FIRST_FLAG:String = "COLUMN_FIRST_FLAG",
-            val COLUMN_SECOND:String = "COLUMN_SECOND",
-            val COLUMN_SECOND_FLAG:String = "COLUMN_SECOND_FLAG",
-            val COLUMN_THIRD:String = "COLUMN_THIRD",
-            val COLUMN_THIRD_FLAG:String = "COLUMN_THIRD_FLAG",
-            val COLUMN_FOURTH:String = "COLUMN_FOURTH",
-            val COLUMN_FOURTH_FLAG:String = "COLUMN_FOURTH_FLAG"
+            val COLUMN_MIN:String = "COLUMN_MIN",
+            val COLUMN_FLAG:String = "COLUMN_FLAG"
     )
 }

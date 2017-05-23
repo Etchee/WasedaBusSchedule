@@ -124,7 +124,7 @@ class DataProvider : ContentProvider() {
         //id is the ID of the newly inserted row. Returns -1 in case of an error with insertion.
         val id = database.insert(DataContract.DB_TO_WASEDA().TABLE_NAME, null, values)
 
-        values.getAsString(DataContract.DB_TO_WASEDA().COLUMN_FIRST) ?:
+        values.getAsString(DataContract.DB_TO_WASEDA().COLUMN_HOUR) ?:
                 throw IllegalArgumentException("Content provider's insert method of " +
                 "the calendar table has received null for the date value. " +
                         "Check what is passed into the insert method.")
@@ -146,7 +146,7 @@ class DataProvider : ContentProvider() {
         }
 
         //error prevention measure #2
-        values.getAsString(DataContract.DB_TO_NISHI().COLUMN_FIRST) ?:
+        values.getAsString(DataContract.DB_TO_NISHI().COLUMN_HOUR) ?:
                 throw IllegalArgumentException("Content provider's insert method of " +
                         "the calendar table has received null for the date value. " +
                         "Check what is passed into the insert method.")
@@ -164,7 +164,7 @@ class DataProvider : ContentProvider() {
         }
 
         //error prevention measure #2
-        values.getAsString(DataContract.SATURDAY_DB_TO_WASEDA().COLUMN_FIRST) ?:
+        values.getAsString(DataContract.SATURDAY_DB_TO_WASEDA().COLUMN_HOUR) ?:
                 throw IllegalArgumentException("Content provider's insert method of " +
                         "the calendar table has received null for the date value. " +
                         "Check what is passed into the insert method.")
@@ -182,7 +182,7 @@ class DataProvider : ContentProvider() {
         }
 
         //error prevention measure #2
-        values.getAsString(DataContract.SATURDAY_DB_TO_NISHI().COLUMN_FIRST) ?:
+        values.getAsString(DataContract.SATURDAY_DB_TO_NISHI().COLUMN_HOUR) ?:
                 throw IllegalArgumentException("Content provider's insert method of " +
                         "the calendar table has received null for the date value. " +
                         "Check what is passed into the insert method.")

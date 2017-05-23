@@ -23,6 +23,8 @@ class DataProvider : ContentProvider() {
     private val matcher : UriMatcher = UriMatcher(UriMatcher.NO_MATCH)
     private var dbHelper:DataDbHelper = null!!
 
+    private val DATABASE_VERSION:Int = 0
+
     private fun UriMatcher() {
         matcher.addURI(data.CONTENT_AUTHORITY, data.PATH_TO_WASEDA, CODE_TO_WASEDA)
         matcher.addURI(data.CONTENT_AUTHORITY, data.PATH_TO_NISHI, CODE_TO_NISHI)
@@ -31,8 +33,7 @@ class DataProvider : ContentProvider() {
     }
 
     override fun onCreate(): Boolean {
-        dbHelper = DataDbHelper(context, )
-
+        dbHelper = DataDbHelper(context, data.DATABASE_NAME, null, DATABASE_VERSION)
         return true
     }
 
@@ -93,8 +94,107 @@ class DataProvider : ContentProvider() {
         return cursor
     }
 
-    override fun insert(p0: Uri?, p1: ContentValues?): Uri {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun insert(uri: Uri, values: ContentValues?): Uri {
+        val match = matcher.match(uri)
+        val uri_new:Uri
+
+        when (match) {
+        //query entire calendar table
+            CODE_TO_WASEDA -> {
+                uri_new = insertInWasedaTable(uri, values!!)
+            }
+
+        //query the entire event table
+            CODE_TO_NISHI -> {
+                uri_new = insertInNishiTable(uri, values!!)
+            }
+
+        //query entire event_type table
+            CODE_SAT_TO_WASEDA -> {
+                uri_new = insertInSATWasedaTable(uri, values!!)
+            }
+
+            CODE_SAT_TO_NISHI -> {
+                uri_new = insertInSATNishiTable(uri, values!!)
+            }
+
+            else -> throw IllegalArgumentException("Insert method cannot handle " +
+                    "unsupported URI: " + uri)
+        }
+
+        return uri_new
+    }
+
+    fun insertInWasedaTable(uri: Uri, values: ContentValues):Uri {
+        val database = dbHelper.writableDatabase
+
+        //id is the ID of the newly inserted row. Returns -1 in case of an error with insertion.
+        val id = database.insert(DataContract.DB_TO_WASEDA().TABLE_NAME, null, values)
+
+        values.getAsString(DataContract.DB_TO_WASEDA().COLUMN_FIRST) ?:
+                throw IllegalArgumentException("Content provider's insert method of " +
+                "the calendar table has received null for the date value. " +
+                        "Check what is passed into the insert method.")
+
+        if (id < 0) {
+            throw IllegalArgumentException("Content provider's insertion has failed.")
+        }
+
+        return ContentUris.withAppendedId(uri, id)
+    }
+
+    fun insertInNishiTable(uri: Uri, values: ContentValues):Uri {
+        val database = dbHelper.writableDatabase
+
+        //error prevention measure #1
+        val id = database.insert(DataContract.DB_TO_NISHI().TABLE_NAME, null, values)
+        if (id < 0) {
+            throw IllegalArgumentException("Content provider's insertion has failed.")
+        }
+
+        //error prevention measure #2
+        values.getAsString(DataContract.DB_TO_NISHI().COLUMN_FIRST) ?:
+                throw IllegalArgumentException("Content provider's insert method of " +
+                        "the calendar table has received null for the date value. " +
+                        "Check what is passed into the insert method.")
+
+        return ContentUris.withAppendedId(uri, id)
+    }
+
+    fun insertInSATWasedaTable(uri: Uri, values: ContentValues):Uri {
+        val database = dbHelper.writableDatabase
+
+        //error prevention measure #1
+        val id = database.insert(DataContract.SATURDAY_DB_TO_WASEDA().TABLE_NAME, null, values)
+        if (id < 0) {
+            throw IllegalArgumentException("Content provider's insertion has failed.")
+        }
+
+        //error prevention measure #2
+        values.getAsString(DataContract.SATURDAY_DB_TO_WASEDA().COLUMN_FIRST) ?:
+                throw IllegalArgumentException("Content provider's insert method of " +
+                        "the calendar table has received null for the date value. " +
+                        "Check what is passed into the insert method.")
+
+        return ContentUris.withAppendedId(uri, id)
+    }
+
+    fun insertInSATNishiTable(uri: Uri, values: ContentValues):Uri {
+        val database = dbHelper.writableDatabase
+
+        //error prevention measure #1
+        val id = database.insert(DataContract.SATURDAY_DB_TO_NISHI().TABLE_NAME, null, values)
+        if (id < 0) {
+            throw IllegalArgumentException("Content provider's insertion has failed.")
+        }
+
+        //error prevention measure #2
+        values.getAsString(DataContract.SATURDAY_DB_TO_NISHI().COLUMN_FIRST) ?:
+                throw IllegalArgumentException("Content provider's insert method of " +
+                        "the calendar table has received null for the date value. " +
+                        "Check what is passed into the insert method.")
+
+        return ContentUris.withAppendedId(uri, id)
     }
 
     override fun update(p0: Uri?, p1: ContentValues?, p2: String?, p3: Array<out String>?): Int {

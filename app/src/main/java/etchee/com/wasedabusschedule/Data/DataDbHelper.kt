@@ -8,7 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper
  * Database Helper class
  * Created by rikutoechigoya on 2017/05/22.
  */
-class DataDbHelper(context: Context?): SQLiteOpenHelper(context) {
+class DataDbHelper(context: Context?, name: String?, factory: SQLiteDatabase.CursorFactory?,
+                   version: Int): SQLiteOpenHelper(context, name, factory, version) {
 
     private val TO_WASEDA = DataContract.DB_TO_WASEDA()
     private val TO_NISHI = DataContract.DB_TO_NISHI()

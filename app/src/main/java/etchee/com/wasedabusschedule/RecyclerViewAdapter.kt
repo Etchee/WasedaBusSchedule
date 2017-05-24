@@ -18,11 +18,11 @@ class RecyclerViewAdapter: RecyclerView.Adapter<RecyclerViewAdapter.Viewholder>(
     }
 
     override fun getItemCount(): Int {
-
+        return 0
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): Viewholder? {
-
+    override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): Viewholder? {
+        return Viewholder(viewGroup)
     }
 
 class Viewholder(itemView: View?) : RecyclerView.ViewHolder(itemView) {

@@ -1,28 +1,26 @@
 package etchee.com.wasedabusschedule
 
-import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
-
-    private var viewPager:ViewPager = null!!
-    private var viewPagerAdapter:ListViewPagerAdapter
-    private var context:Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         //general init
-        context = applicationContext
+        val context = applicationContext
 
         //viewpager initialization
-        viewPager = findViewById(R.id.main_viewPager) as ViewPager
-        viewPagerAdapter = ListViewPagerAdapter(supportFragmentManager, context)
+        val viewPager = findViewById(R.id.main_viewPager) as ViewPager
+        val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, context)
         viewPager.adapter = viewPagerAdapter
 
-
+        //tab to show the current item
+        val tabLayout = findViewById(R.id.list_tab) as TabLayout
+        tabLayout.setupWithViewPager(viewPager)
     }
 }

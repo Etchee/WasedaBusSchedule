@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Waseda Bus Schedule</string>
+    <string name="sample_time">23:00</string>
+    <string name="hint_text_destination">行き先: </string>
+    <string name="sample_destination">サンプル行き先</string>
+    <string name="sample_hour">60</string>
+    <string name="sample_min">60</string>
+    <string name="_60">60</string>
+    <string name="semicolon">:</string>
 </resources>

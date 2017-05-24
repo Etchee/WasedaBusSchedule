@@ -13,7 +13,7 @@ import etchee.com.wasedabusschedule.Fragments.ToWasedaFragment
  * Created by etchee on 2017/05/24.
  */
 
-class ListViewPagerAdapter(fm: FragmentManager, private val context: Context) : FragmentStatePagerAdapter(fm) {
+class ViewPagerAdapter(fm: FragmentManager, private val context: Context) : FragmentStatePagerAdapter(fm) {
 
     private val TAG = javaClass.simpleName
 

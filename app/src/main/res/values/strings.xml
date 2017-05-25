@@ -7,4 +7,6 @@
     <string name="sample_min">60</string>
     <string name="_60">60</string>
     <string name="semicolon">:</string>
+    <string name="leaving_in">Leaving in</string>
+    <string name="sample_text_route">サンプル　ルート</string>
 </resources>

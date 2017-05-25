@@ -69,7 +69,7 @@ class ToWasedaAdapter(val context: Context) : RecyclerView.Adapter<ToWasedaAdapt
     }
 
     override fun getItemCount(): Int {
-        return 5
+        return 25
     }
 
     override fun onViewRecycled(holder: ViewHolder?) {

@@ -7,7 +7,6 @@
         android:id="@+id/item_image"
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_background_height"
-        android:adjustViewBounds="true"
         android:scaleType="centerCrop" />
     <View
         android:id="@+id/drop_shadow"
@@ -18,9 +17,59 @@
         />
 
     <TextView
+        android:id="@+id/item_sec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/item_image"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/item_time_margin_right"
+        android:text="@string/_60"
+        android:textColor="@color/PearlWhite"
+        android:fontFamily="sans-serif-thin"
+        android:textSize="@dimen/item_time_text_size" />
+
+    <TextView
+        android:id="@+id/semiColon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/item_image"
+        android:layout_toLeftOf="@id/item_sec"
+        android:text="@string/semicolon"
+        android:textColor="@color/PearlWhite"
+        android:fontFamily="sans-serif-thin"
+        android:textSize="@dimen/item_time_text_size"
+        />
+
+
+
+    <TextView
+        android:id="@+id/item_min"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/item_image"
+        android:layout_toLeftOf="@id/semiColon"
+        android:text="@string/sample_min"
+        android:textColor="@color/PearlWhite"
+        android:fontFamily="sans-serif-thin"
+        android:textSize="@dimen/item_time_text_size" />
+    <TextView
+        android:id="@+id/semiColon2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/item_image"
+        android:layout_toLeftOf="@id/item_min"
+        android:text="@string/semicolon"
+        android:textColor="@color/PearlWhite"
+        android:fontFamily="sans-serif-thin"
+        android:textSize="@dimen/item_time_text_size"
+        />
+
+
+    <TextView
         android:id="@+id/item_hour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/semiColon2"
         android:layout_alignBottom="@id/item_image"
         android:text="@string/sample_hour"
         android:textColor="@color/PearlWhite"
@@ -29,49 +78,28 @@
         />
 
     <TextView
-        android:id="@+id/semiColon"
+        android:id="@+id/hint_text_remaining"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/item_image"
-        android:layout_toRightOf="@id/item_hour"
-        android:text="@string/semicolon"
         android:textColor="@color/PearlWhite"
+        android:layout_toLeftOf="@id/item_hour"
+        android:layout_marginBottom="@dimen/hint_text_margin_bottom"
+        android:layout_marginRight="@dimen/hint_text_margin_right"
+        android:text="@string/leaving_in"
         android:fontFamily="sans-serif-thin"
-        android:textSize="@dimen/item_time_text_size"
         />
 
     <TextView
-        android:id="@+id/item_min"
+        android:id="@+id/hint_route_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/item_image"
-        android:layout_toRightOf="@id/semiColon"
-        android:text="@string/sample_min"
-        android:textColor="@color/PearlWhite"
+        android:text="@string/sample_text_route"
         android:fontFamily="sans-serif-thin"
-        android:textSize="@dimen/item_time_text_size" />
-
-    <TextView
-        android:id="@+id/semiColon2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/item_image"
-        android:layout_toRightOf="@id/item_min"
-        android:text="@string/semicolon"
         android:textColor="@color/PearlWhite"
-        android:fontFamily="sans-serif-thin"
-        android:textSize="@dimen/item_time_text_size"
+        android:layout_alignBottom="@id/item_image"
+        android:layout_marginBottom="@dimen/hint_text_margin_bottom"
+        android:layout_alignParentLeft="true"
         />
-
-    <TextView
-        android:id="@+id/item_sec"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/item_image"
-        android:layout_toRightOf="@id/semiColon2"
-        android:text="@string/_60"
-        android:textColor="@color/PearlWhite"
-        android:fontFamily="sans-serif-thin"
-        android:textSize="@dimen/item_time_text_size" />
 
 </RelativeLayout>

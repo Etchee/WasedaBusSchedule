@@ -8,6 +8,7 @@ import android.view.*
 import etchee.com.wasedabusschedule.R
 
 /**
+ * Fragment showing a list of departures to Nishi campus
  * Created by rikutoechigoya on 2017/05/24.
  */
 class ToNishiFragment: Fragment() {

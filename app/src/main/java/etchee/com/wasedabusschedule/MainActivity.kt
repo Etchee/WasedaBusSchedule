@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,5 +23,8 @@ class MainActivity : AppCompatActivity() {
         //tab to show the current item
         val tabLayout = findViewById(R.id.list_tab) as TabLayout
         tabLayout.setupWithViewPager(viewPager)
+
+        val toolbar = findViewById(R.id.main_toolbar) as Toolbar
+        setSupportActionBar(toolbar)
     }
 }

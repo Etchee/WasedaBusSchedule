@@ -3,16 +3,23 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_background_height" />
+
     <TextView
         android:id="@+id/item_hour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/item_time_text_size"
         android:text="@string/sample_hour"
         />
 
     <TextView
         android:id="@+id/semiColon"
+        android:textColor="@color/Black"
         android:layout_toRightOf="@id/item_hour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,6 +30,7 @@
     <TextView
         android:id="@+id/item_min"
         android:layout_toRightOf="@id/semiColon"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/item_time_text_size"
         android:text="@string/sample_min"
         android:layout_width="wrap_content"
@@ -30,6 +38,7 @@
 
     <TextView
         android:id="@+id/semiColon2"
+        android:textColor="@color/Black"
         android:layout_toRightOf="@id/item_min"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,6 +49,7 @@
     <TextView
         android:id="@+id/item_sec"
         android:layout_toRightOf="@id/semiColon2"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/item_time_text_size"
         android:text="@string/_60"
         android:layout_width="wrap_content"

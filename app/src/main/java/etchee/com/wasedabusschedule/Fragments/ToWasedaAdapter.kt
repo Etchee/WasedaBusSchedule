@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.R
@@ -62,7 +63,7 @@ class ToWasedaAdapter(val context: Context) : RecyclerView.Adapter<ToWasedaAdapt
     }
 
     override fun getItemCount(): Int {
-        return 3
+        return 5
     }
 
     override fun onViewRecycled(holder: ViewHolder?) {
@@ -76,9 +77,9 @@ class ToWasedaAdapter(val context: Context) : RecyclerView.Adapter<ToWasedaAdapt
             override fun run() {
                 (handler)?.postDelayed(this, 1000)
                 try {
-                    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.JAPAN)
+                    val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.JAPAN)
                     // Here Set your Event Date
-                    val eventDate = dateFormat.parse("2017-12-30")
+                    val eventDate = dateFormat.parse("2017-12-30-21-15-00")
                     val currentDate = Date()
                     if (!currentDate.after(eventDate)) {
                         var diff = eventDate.time - currentDate.time
@@ -90,12 +91,11 @@ class ToWasedaAdapter(val context: Context) : RecyclerView.Adapter<ToWasedaAdapt
                         diff -= minutes * (60 * 1000)
                         val seconds = diff / 1000
 
-                        viewHolder.hour_text?.text = String.format("%02d", hours)
-                        viewHolder.min_text?.text = String.format("%02d", minutes)
-                        viewHolder.sec_text?.text = String.format("%02d", seconds)
+                        viewHolder.hour_text.text = String.format("%02d", hours)
+                        viewHolder.min_text.text = String.format("%02d", minutes)
+                        viewHolder.sec_text.text = String.format("%02d", seconds)
                     } else {
                         handler?.removeCallbacks(runnable)
-                        // handler.removeMessages(0);
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -108,8 +108,9 @@ class ToWasedaAdapter(val context: Context) : RecyclerView.Adapter<ToWasedaAdapt
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val hour_text = view.findViewById(R.id.item_hour) as TextView?
-        val min_text = view.findViewById(R.id.item_min) as TextView?
-        val sec_text = view.findViewById(R.id.item_sec) as TextView?
+        val hour_text = view.findViewById(R.id.item_hour) as TextView
+        val min_text = view.findViewById(R.id.item_min) as TextView
+        val sec_text = view.findViewById(R.id.item_sec) as TextView
+        val image_background = view.findViewById(R.id.item_image) as ImageView
     }
 }

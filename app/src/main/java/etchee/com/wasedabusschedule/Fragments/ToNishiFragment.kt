@@ -25,7 +25,7 @@ class ToNishiFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = view.findViewById(R.id.recyclerView_toNishi) as RecyclerView
         val layoutManager = LinearLayoutManager(context.applicationContext)
-        val adapter = ToWasedaAdapter(context.applicationContext)
+        val adapter = ToNishiAdapter(context.applicationContext)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
     }

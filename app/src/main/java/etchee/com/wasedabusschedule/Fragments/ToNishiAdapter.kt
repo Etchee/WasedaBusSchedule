@@ -7,7 +7,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import etchee.com.wasedabusschedule.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -32,7 +34,7 @@ class ToNishiAdapter(val context:Context) : android.support.v7.widget.RecyclerVi
      *
      *  Get the current time, query the SQL bus schedule table and then display from there.
      */
-    override fun onBindViewHolder(viewHolder: ViewHolder?, position: Int) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         //get data from the Waseda Bus Schedule Table
         var cursor: Cursor? = null
 //        try {
@@ -55,7 +57,12 @@ class ToNishiAdapter(val context:Context) : android.support.v7.widget.RecyclerVi
 //            cursor?.close()
 //        }
 
-        countDownStart(viewHolder as ViewHolder)
+        Glide.with(context)
+                .load(R.drawable.nishi)
+                .into(viewHolder.image_background)
+
+
+        countDownStart(viewHolder)
 
     }
 
@@ -106,8 +113,9 @@ class ToNishiAdapter(val context:Context) : android.support.v7.widget.RecyclerVi
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val hour_text = view.findViewById(R.id.item_hour) as TextView?
-        val min_text = view.findViewById(R.id.item_min) as TextView?
-        val sec_text = view.findViewById(R.id.item_sec) as TextView?
+        val hour_text = view.findViewById(R.id.item_hour) as TextView
+        val min_text = view.findViewById(R.id.item_min) as TextView
+        val sec_text = view.findViewById(R.id.item_sec) as TextView
+        val image_background = view.findViewById(R.id.item_image) as ImageView
     }
 }

@@ -6,7 +6,9 @@
     <ImageView
         android:id="@+id/item_image"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_background_height" />
+        android:layout_height="@dimen/item_background_height"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/item_hour"

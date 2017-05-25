@@ -16,5 +16,5 @@
     <dimen name="item_time_text_size">50sp</dimen>
     <dimen name="item_destination_hint_margin_right">10dp</dimen>
     <dimen name="item_destination_margin_left">3dp</dimen>
-    <dimen name="item_background_height">40dp</dimen>
+    <dimen name="item_background_height">100dp</dimen>
 </resources>

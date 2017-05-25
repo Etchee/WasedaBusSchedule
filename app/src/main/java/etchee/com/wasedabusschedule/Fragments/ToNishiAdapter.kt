@@ -58,7 +58,7 @@ class ToNishiAdapter(val context:Context) : android.support.v7.widget.RecyclerVi
 //        }
 
         Glide.with(context)
-                .load(R.drawable.nishi)
+                .load(R.drawable.nishi_improved)
                 .into(viewHolder.image_background)
 
 

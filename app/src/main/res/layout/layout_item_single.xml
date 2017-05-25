@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/item_image"
@@ -94,12 +94,12 @@
         android:id="@+id/hint_route_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sample_text_route"
+        android:text="学生会館経由"
         android:fontFamily="sans-serif-thin"
         android:textColor="@color/PearlWhite"
         android:layout_alignBottom="@id/item_image"
-        android:layout_marginBottom="@dimen/hint_text_margin_bottom"
-        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="@dimen/half_background_height"
+        android:layout_centerHorizontal="true"
         />
 
 </RelativeLayout>

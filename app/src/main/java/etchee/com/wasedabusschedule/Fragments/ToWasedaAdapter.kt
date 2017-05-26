@@ -19,12 +19,11 @@ import java.util.*
  * Adapter for the RecyclerView
  * Created by rikutoechigoya on 2017/05/23.
  */
-class ToWasedaAdapter(val context: Context, cursor: Cursor?) : RecyclerView.Adapter<ToWasedaAdapter.ViewHolder>() {
+class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.Adapter<ToWasedaAdapter.ViewHolder>() {
 
     private var TAG: String = javaClass.simpleName
     var handler: Handler? = null
     var runnable: Runnable? = null
-
 
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false))
@@ -44,7 +43,9 @@ class ToWasedaAdapter(val context: Context, cursor: Cursor?) : RecyclerView.Adap
     }
 
     override fun getItemCount(): Int {
-        return 25
+        if (cursor != null) {
+            return cursor!!.count
+        }else return 0
     }
 
     override fun onViewRecycled(holder: ViewHolder?) {

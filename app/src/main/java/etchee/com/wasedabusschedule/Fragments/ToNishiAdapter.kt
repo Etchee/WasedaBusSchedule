@@ -18,7 +18,7 @@ import java.util.*
  * RecyclerView Adapter for the ToNishi fragment
  * Created by rikutoechigoya on 2017/05/24.
  */
-class ToNishiAdapter(val context: Context, cursor: Cursor?) : android.support.v7.widget.RecyclerView.Adapter<ToNishiAdapter.ViewHolder>() {
+class ToNishiAdapter(val context: Context, var cursor: Cursor?) : android.support.v7.widget.RecyclerView.Adapter<ToNishiAdapter.ViewHolder>() {
 
     private var TAG: String = javaClass.simpleName
     var handler: Handler? = null

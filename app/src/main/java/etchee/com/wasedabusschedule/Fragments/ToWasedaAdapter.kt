@@ -1,11 +1,8 @@
 package etchee.com.wasedabusschedule.Fragments
 
 import android.content.Context
-import android.content.res.Resources
 import android.database.Cursor
 import android.os.Handler
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -23,7 +19,7 @@ import java.util.*
  * Adapter for the RecyclerView
  * Created by rikutoechigoya on 2017/05/23.
  */
-class ToWasedaAdapter(val context: Context) : RecyclerView.Adapter<ToWasedaAdapter.ViewHolder>() {
+class ToWasedaAdapter(val context: Context, cursor: Cursor?) : RecyclerView.Adapter<ToWasedaAdapter.ViewHolder>() {
 
     private var TAG: String = javaClass.simpleName
     var handler: Handler? = null
@@ -40,27 +36,6 @@ class ToWasedaAdapter(val context: Context) : RecyclerView.Adapter<ToWasedaAdapt
      *  Get the current time, query the SQL bus schedule table and then display from there.
      */
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        //get data from the Waseda Bus Schedule Table
-        var cursor: Cursor? = null
-//        try {
-//            cursor = context.contentResolver.query(
-//                    DataContract.DB_TO_WASEDA().CONTENT_URI,
-//                    null,
-//                    null,
-//                    null,
-//                    null
-//                    )
-//
-//            if (cursor.moveToFirst()) {
-//
-//            } else {
-//                throw IllegalArgumentException(TAG + ": Cursor null for full query.")
-//            }
-//        } catch(e: Exception) {
-//            e.printStackTrace()
-//        } finally {
-//            cursor?.close()
-//        }
         Glide.with(context)
                 .load(R.drawable.img_okuma)
                 .into(viewHolder.image_background)

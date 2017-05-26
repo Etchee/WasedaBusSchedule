@@ -41,6 +41,10 @@ class ViewPagerAdapter(fm: FragmentManager, private val context: Context) : Frag
     }
 
     //return the current number of item
+    /**
+     *  This method is being called twice every second due to UI update from the time count.
+     *  DO NOT do heavy process on here
+     */
     override fun getCount(): Int {
         return 2
     }

@@ -74,9 +74,9 @@ class ToNishiAdapter(val context: Context, var cursor: Cursor?) : android.suppor
                         diff -= minutes * (60 * 1000)
                         val seconds = diff / 1000
 
-                        viewHolder.hour_text?.text = String.format("%02d", hours)
-                        viewHolder.min_text?.text = String.format("%02d", minutes)
-                        viewHolder.sec_text?.text = String.format("%02d", seconds)
+                        viewHolder.hour_text.text = String.format("%02d", hours)
+                        viewHolder.min_text.text = String.format("%02d", minutes)
+                        viewHolder.sec_text.text = String.format("%02d", seconds)
                     } else {
                         handler?.removeCallbacks(runnable)
                         // handler.removeMessages(0);

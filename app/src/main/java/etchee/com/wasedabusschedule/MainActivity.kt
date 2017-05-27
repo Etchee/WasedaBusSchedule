@@ -1,5 +1,6 @@
 package etchee.com.wasedabusschedule
 
+import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.widget.Toast
 import etchee.com.wasedabusschedule.Data.DataContract
+import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         if (checkDB() == 1) {
-            initDB()
+            if (initDB() < 0) throw IllegalArgumentException("InitDB() failed")
         }
     }
 
@@ -51,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                     null,
                     null
             )
-            if (cursor == null) {
+            if (!cursor.moveToFirst()) {
                 errorFlag = 1
             }
 
@@ -64,7 +66,7 @@ class MainActivity : AppCompatActivity() {
                     null
             )
 
-            if (cursor == null) {
+            if (!cursor.moveToFirst()) {
                 errorFlag = 1
             }
 
@@ -78,7 +80,286 @@ class MainActivity : AppCompatActivity() {
         return errorFlag
     }
 
-    private fun initDB() {
-        var uri: Uri? = null
+    private fun initDB(): Int {
+        var flag = 1
+        var numOfRowsInserted:Int
+
+        numOfRowsInserted= contentResolver.bulkInsert(
+                DataContract.DB_TO_WASEDA().CONTENT_URI,
+                getWasedaContentValuesArray()
+        )
+
+        if (numOfRowsInserted < 0) flag = -1
+
+            numOfRowsInserted = contentResolver.bulkInsert(
+                DataContract.DB_TO_NISHI().CONTENT_URI,
+                getNishiContentValuesArray()
+        )
+        if (numOfRowsInserted < 0) flag = -1
+
+        return flag
+    }
+
+    private fun getWasedaContentValuesArray(): Array<ContentValues> {
+        val data: DataContract.DB_TO_WASEDA = DataContract.DB_TO_WASEDA()
+        val values:ContentValues = ContentValues()
+        val array = arrayListOf<ContentValues>()
+
+
+        /*      From data helper:
+
+                val CREATE_TO_WASEDA_TABLE:String = "CREATE TABLE IF NOT EXISTS " +
+                TO_WASEDA.TABLE_NAME + " (" +
+                TO_WASEDA._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                TO_WASEDA.COLUMN_HOUR + " INTEGER, " +
+                TO_WASEDA.COLUMN_MIN + " INTEGER, " +
+                TO_WASEDA.COLUMN_FLAG + " INTEGER);"
+        * */
+
+
+        values.put(data.COLUMN_HOUR, 9)
+        values.put(data.COLUMN_MIN, 20)
+        values.put(data.COLUMN_FLAG, 0)
+        array[0] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 9)
+        values.put(data.COLUMN_MIN, 35)
+        values.put(data.COLUMN_FLAG, 0)
+        array[1] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 9)
+        values.put(data.COLUMN_MIN, 50)
+        values.put(data.COLUMN_FLAG, 0)
+        array[2] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 10)
+        values.put(data.COLUMN_MIN, 5)
+        values.put(data.COLUMN_FLAG, 0)
+        array[3] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 10)
+        values.put(data.COLUMN_MIN, 35)
+        values.put(data.COLUMN_FLAG, 0)
+        array[4] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 10)
+        values.put(data.COLUMN_MIN, 45)
+        values.put(data.COLUMN_FLAG, 0)
+        array[5] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR,11)
+        values.put(data.COLUMN_MIN, 15)
+        values.put(data.COLUMN_FLAG, 0)
+        array[6] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR,11)
+        values.put(data.COLUMN_MIN, 45)
+        values.put(data.COLUMN_FLAG, 0)
+        array[7] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 12)
+        values.put(data.COLUMN_MIN, 5)
+        values.put(data.COLUMN_FLAG, 1)
+        array[8] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 12)
+        values.put(data.COLUMN_MIN, 15)
+        values.put(data.COLUMN_FLAG, 2)
+        array[9] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 12)
+        values.put(data.COLUMN_MIN, 45)
+        values.put(data.COLUMN_FLAG, 0)
+        array[10] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 13)
+        values.put(data.COLUMN_MIN, 15)
+        values.put(data.COLUMN_FLAG, 0)
+        array[11] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 13)
+        values.put(data.COLUMN_MIN, 45)
+        values.put(data.COLUMN_FLAG, 0)
+        array[12] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 14)
+        values.put(data.COLUMN_MIN, 5)
+        values.put(data.COLUMN_FLAG, 0)
+        array[13] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 15)
+        values.put(data.COLUMN_MIN, 5)
+        values.put(data.COLUMN_FLAG, 0)
+        array[14] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 15)
+        values.put(data.COLUMN_MIN, 20)
+        values.put(data.COLUMN_FLAG, 0)
+        array[15] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 15)
+        values.put(data.COLUMN_MIN, 35)
+        values.put(data.COLUMN_FLAG, 0)
+        array[16] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 15)
+        values.put(data.COLUMN_MIN, 50)
+        values.put(data.COLUMN_FLAG, 0)
+        array[17] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 16)
+        values.put(data.COLUMN_MIN, 20)
+        values.put(data.COLUMN_FLAG, 0)
+        array[18] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 16)
+        values.put(data.COLUMN_MIN, 35)
+        values.put(data.COLUMN_FLAG, 3)
+        array[19] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 17)
+        values.put(data.COLUMN_MIN, 0)
+        values.put(data.COLUMN_FLAG, 0)
+        array[20] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 17)
+        values.put(data.COLUMN_MIN, 20)
+        values.put(data.COLUMN_FLAG, 0)
+        array[21] = values; values.clear()
+
+        values.put(data.COLUMN_HOUR, 18)
+        values.put(data.COLUMN_MIN, 10)
+        values.put(data.COLUMN_FLAG, 3)
+        array[22] = values; values.clear()
+
+        return array as Array<ContentValues>
+    }
+
+    private fun getNishiContentValuesArray(): Array<ContentValues> {
+        val data: DataContract.DB_TO_WASEDA = DataContract.DB_TO_WASEDA()
+        var values:ContentValues = ContentValues()
+        var array:Array<ContentValues>? = null
+
+        values.put(data.COLUMN_HOUR, 9)
+        values.put(data.COLUMN_MIN, 20)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(0, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 9)
+        values.put(data.COLUMN_MIN, 35)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(1, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 9)
+        values.put(data.COLUMN_MIN, 50)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(2, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 10)
+        values.put(data.COLUMN_MIN, 5)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(3, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 10)
+        values.put(data.COLUMN_MIN, 35)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(4, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 10)
+        values.put(data.COLUMN_MIN, 45)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(5, values); values.clear()
+
+        values.put(data.COLUMN_HOUR,11)
+        values.put(data.COLUMN_MIN, 0)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(6, values); values.clear()
+
+        values.put(data.COLUMN_HOUR,11)
+        values.put(data.COLUMN_MIN, 30)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(7, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 12)
+        values.put(data.COLUMN_MIN, 5)
+        values.put(data.COLUMN_FLAG, 4)
+        array?.set(8, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 12)
+        values.put(data.COLUMN_MIN, 20)
+        values.put(data.COLUMN_FLAG, 5)
+        array?.set(9, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 12)
+        values.put(data.COLUMN_MIN, 45)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(10, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 13)
+        values.put(data.COLUMN_MIN, 0)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(11, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 13)
+        values.put(data.COLUMN_MIN, 30)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(12, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 14)
+        values.put(data.COLUMN_MIN, 5)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(13, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 14)
+        values.put(data.COLUMN_MIN, 35)
+        values.put(data.COLUMN_FLAG, 6)
+        array?.set(14, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 14)
+        values.put(data.COLUMN_MIN, 50)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(15, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 15)
+        values.put(data.COLUMN_MIN, 5)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(16, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 15)
+        values.put(data.COLUMN_MIN, 20)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(17, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 16)
+        values.put(data.COLUMN_MIN, 20)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(18, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 16)
+        values.put(data.COLUMN_MIN, 35)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(19, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 17)
+        values.put(data.COLUMN_MIN, 0)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(20, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 17)
+        values.put(data.COLUMN_MIN, 20)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(21, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 18)
+        values.put(data.COLUMN_MIN, 10)
+        values.put(data.COLUMN_FLAG, 0)
+        array?.set(22, values); values.clear()
+
+        values.put(data.COLUMN_HOUR, 18)
+        values.put(data.COLUMN_MIN, 25)
+        values.put(data.COLUMN_FLAG, 8)
+        array?.set(23, values); values.clear()
+
+        return array as Array<ContentValues>
     }
 }

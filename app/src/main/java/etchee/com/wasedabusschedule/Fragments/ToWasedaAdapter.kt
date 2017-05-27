@@ -45,7 +45,7 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
     override fun getItemCount(): Int {
         if (cursor != null) {
             return cursor!!.count
-        }else return 0
+        }else return 5
     }
 
     override fun onViewRecycled(holder: ViewHolder?) {

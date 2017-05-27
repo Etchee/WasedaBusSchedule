@@ -21,9 +21,9 @@ class DataProvider : ContentProvider() {
     private val data:DataContract.GlobalConstants = DataContract.GlobalConstants()
 
     private val matcher : UriMatcher = UriMatcher(UriMatcher.NO_MATCH)
-    private var dbHelper:DataDbHelper = null!!
+    private var dbHelper:DataDbHelper? = null
 
-    private val DATABASE_VERSION:Int = 0
+    private val DATABASE_VERSION:Int = 1
 
     private fun UriMatcher() {
         matcher.addURI(data.CONTENT_AUTHORITY, data.PATH_TO_WASEDA, CODE_TO_WASEDA)
@@ -33,7 +33,7 @@ class DataProvider : ContentProvider() {
     }
 
     override fun onCreate(): Boolean {
-        dbHelper = DataDbHelper(context, data.DATABASE_NAME, null, DATABASE_VERSION)
+        dbHelper = DataDbHelper(context)
         return true
     }
 
@@ -41,44 +41,44 @@ class DataProvider : ContentProvider() {
                        selectionArgs: Array<out String>?, sortOrder: String?): Cursor {
 
 
-        val database = dbHelper.getReadableDatabase()
+        val database = dbHelper?.getReadableDatabase()
         val match = matcher.match(uri)
         val cursor: Cursor
 
         when (match) {
 
             CODE_TO_WASEDA -> {
-                cursor = database.query(
+                cursor = database?.query(
                         DataContract.DB_TO_WASEDA().TABLE_NAME,
                         projection,
                         selection,
-                        selectionArgs, null, null, null)
+                        selectionArgs, null, null, null) as Cursor
             }
 
             CODE_TO_NISHI -> {
-                cursor = database.query(
+                cursor = database?.query(
                         DataContract.DB_TO_NISHI().TABLE_NAME,
                         projection,
                         selection,
-                        selectionArgs, null, null, null)
+                        selectionArgs, null, null, null) as Cursor
             }
 
             CODE_SAT_TO_WASEDA -> {
-                cursor = database.query(
+                cursor = database?.query(
                         DataContract.SATURDAY_DB_TO_WASEDA().TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
-                        null, null, null)
+                        null, null, null) as Cursor
             }
 
             CODE_SAT_TO_NISHI -> {
-                cursor = database.query(
+                cursor = database?.query(
                         DataContract.SATURDAY_DB_TO_NISHI().TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
-                        null, null, null)
+                        null, null, null) as Cursor
             }
 
             else -> {
@@ -119,30 +119,34 @@ class DataProvider : ContentProvider() {
     }
 
     fun insertInWasedaTable(uri: Uri, values: ContentValues):Uri {
-        val database = dbHelper.writableDatabase
+        val database = dbHelper?.writableDatabase
 
         //id is the ID of the newly inserted row. Returns -1 in case of an error with insertion.
-        val id = database.insert(DataContract.DB_TO_WASEDA().TABLE_NAME, null, values)
+        val id = database?.insert(DataContract.DB_TO_WASEDA().TABLE_NAME, null, values)
 
         values.getAsString(DataContract.DB_TO_WASEDA().COLUMN_HOUR) ?:
                 throw IllegalArgumentException("Content provider's insert method of " +
                 "the calendar table has received null for the date value. " +
                         "Check what is passed into the insert method.")
 
-        if (id < 0) {
-            throw IllegalArgumentException("Content provider's insertion has failed.")
+        if (id != null) {
+            if (id < 0) {
+                throw IllegalArgumentException("Content provider's insertion has failed.")
+            }
         }
 
-        return ContentUris.withAppendedId(uri, id)
+        return ContentUris.withAppendedId(uri, id as Long)
     }
 
     fun insertInNishiTable(uri: Uri, values: ContentValues):Uri {
-        val database = dbHelper.writableDatabase
+        val database = dbHelper?.writableDatabase
 
         //error prevention measure #1
-        val id = database.insert(DataContract.DB_TO_NISHI().TABLE_NAME, null, values)
-        if (id < 0) {
-            throw IllegalArgumentException("Content provider's insertion has failed.")
+        val id = database?.insert(DataContract.DB_TO_NISHI().TABLE_NAME, null, values)
+        if (id != null) {
+            if (id < 0) {
+                throw IllegalArgumentException("Content provider's insertion has failed.")
+            }
         }
 
         //error prevention measure #2
@@ -151,16 +155,18 @@ class DataProvider : ContentProvider() {
                         "the calendar table has received null for the date value. " +
                         "Check what is passed into the insert method.")
 
-        return ContentUris.withAppendedId(uri, id)
+        return ContentUris.withAppendedId(uri, id as Long)
     }
 
     fun insertInSATWasedaTable(uri: Uri, values: ContentValues):Uri {
-        val database = dbHelper.writableDatabase
+        val database = dbHelper?.writableDatabase
 
         //error prevention measure #1
-        val id = database.insert(DataContract.SATURDAY_DB_TO_WASEDA().TABLE_NAME, null, values)
-        if (id < 0) {
-            throw IllegalArgumentException("Content provider's insertion has failed.")
+        val id = database?.insert(DataContract.SATURDAY_DB_TO_WASEDA().TABLE_NAME, null, values)
+        if (id != null) {
+            if (id < 0) {
+                throw IllegalArgumentException("Content provider's insertion has failed.")
+            }
         }
 
         //error prevention measure #2
@@ -169,16 +175,18 @@ class DataProvider : ContentProvider() {
                         "the calendar table has received null for the date value. " +
                         "Check what is passed into the insert method.")
 
-        return ContentUris.withAppendedId(uri, id)
+        return ContentUris.withAppendedId(uri, id as Long)
     }
 
     fun insertInSATNishiTable(uri: Uri, values: ContentValues):Uri {
-        val database = dbHelper.writableDatabase
+        val database = dbHelper?.writableDatabase
 
         //error prevention measure #1
-        val id = database.insert(DataContract.SATURDAY_DB_TO_NISHI().TABLE_NAME, null, values)
-        if (id < 0) {
-            throw IllegalArgumentException("Content provider's insertion has failed.")
+        val id = database?.insert(DataContract.SATURDAY_DB_TO_NISHI().TABLE_NAME, null, values)
+        if (id != null) {
+            if (id < 0) {
+                throw IllegalArgumentException("Content provider's insertion has failed.")
+            }
         }
 
         //error prevention measure #2
@@ -187,7 +195,7 @@ class DataProvider : ContentProvider() {
                         "the calendar table has received null for the date value. " +
                         "Check what is passed into the insert method.")
 
-        return ContentUris.withAppendedId(uri, id)
+        return ContentUris.withAppendedId(uri, id as Long)
     }
 
     override fun update(p0: Uri?, p1: ContentValues?, p2: String?, p3: Array<out String>?): Int {
@@ -198,26 +206,26 @@ class DataProvider : ContentProvider() {
 
     override fun delete(uri: Uri?, selection: String?, selectionArgs: Array<out String>?): Int {
         val numOfRowsDeleted: Int
-        val database = dbHelper.writableDatabase
+        val database = dbHelper?.writableDatabase
         val match = matcher.match(uri)
 
         when (match) {
             CODE_TO_WASEDA -> {
-                numOfRowsDeleted = database.delete(DataContract.DB_TO_WASEDA().TABLE_NAME,
-                        selection, selectionArgs)
+                numOfRowsDeleted = database?.delete(DataContract.DB_TO_WASEDA().TABLE_NAME,
+                        selection, selectionArgs) as Int
             }
 
             CODE_TO_NISHI -> {
-                numOfRowsDeleted = database.delete(DataContract.DB_TO_NISHI().TABLE_NAME,
-                        selection, selectionArgs)
+                numOfRowsDeleted = database?.delete(DataContract.DB_TO_NISHI().TABLE_NAME,
+                        selection, selectionArgs) as Int
             }
             CODE_SAT_TO_WASEDA -> {
-                numOfRowsDeleted = database.delete(DataContract.DB_TO_WASEDA().TABLE_NAME,
-                        selection, selectionArgs)
+                numOfRowsDeleted = database?.delete(DataContract.DB_TO_WASEDA().TABLE_NAME,
+                        selection, selectionArgs) as Int
             }
 
             CODE_SAT_TO_NISHI -> {
-                numOfRowsDeleted = database.delete(DataContract.SATURDAY_DB_TO_NISHI().TABLE_NAME, selection, selectionArgs)
+                numOfRowsDeleted = database?.delete(DataContract.SATURDAY_DB_TO_NISHI().TABLE_NAME, selection, selectionArgs) as Int
             }
 
             else -> throw IllegalArgumentException("Delete method cannot handle " +

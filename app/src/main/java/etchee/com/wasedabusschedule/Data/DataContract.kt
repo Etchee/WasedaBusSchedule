@@ -24,7 +24,16 @@ class DataContract private constructor() {
             val PATH_TO_WASEDA: String = "TO-WASEDA",
             val PATH_TO_NISHI: String = "TO-NISHI",
             val PATH_SAT_TO_WASEDA: String = "SAT-TO-WASEDA",
-            val PATH_SAT_TO_NISHI: String = "SAT-TO-NISHI"
+            val PATH_SAT_TO_NISHI: String = "SAT-TO-NISHI",
+
+            val FLAG_1: String = "西早稲田キャンパス経由",
+            val FLAG_2: String = "Twins経由",
+            val FLAG_3: String = "学生会館経由と直行便の運行",
+            val FLAG_4: String = "早稲田キャンパス経由",
+            val FLAG_5: String = "Twins経由",
+            val FLAG_6: String = "学生会館経由と直行便の運行",
+            val FLAG_7: String = "折り返し後すぐ運行。時間誤差あり",
+            val FLAG_8: String = "西早稲田キャンパス経由、 \\n　学生会館経由と直行便の運行 "
     )
 
     data class DB_TO_WASEDA(

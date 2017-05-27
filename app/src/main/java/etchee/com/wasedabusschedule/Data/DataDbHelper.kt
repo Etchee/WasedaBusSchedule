@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper
  * Database Helper class
  * Created by rikutoechigoya on 2017/05/22.
  */
-class DataDbHelper(context: Context?, name: String?, factory: SQLiteDatabase.CursorFactory?,
+class DataDbHelper(context: Context, name: String, factory: SQLiteDatabase.CursorFactory?,
                    version: Int): SQLiteOpenHelper(context, name, factory, version) {
 
     private val to_wasedaDb = DataContract.DB_TO_WASEDA()
@@ -17,7 +17,7 @@ class DataDbHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cur
     private val sat_to_wasedaDb = DataContract.SATURDAY_DB_TO_WASEDA()
     private val sat_to_nishiDb = DataContract.SATURDAY_DB_TO_NISHI()
 
-    override fun onCreate(db: SQLiteDatabase?) {
+    override fun onCreate(db: SQLiteDatabase) {
         //Create the Calendar table
         val CREATE_TO_WASEDA_TABLE:String = "CREATE TABLE IF NOT EXISTS " +
                 to_wasedaDb.TABLE_NAME + " (" +
@@ -47,7 +47,7 @@ class DataDbHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cur
                 sat_to_nishiDb.COLUMN_MIN + " INTEGER, " +
                 sat_to_nishiDb.COLUMN_FLAG + " INTEGER);"
 
-        db!!.execSQL(CREATE_TO_WASEDA_TABLE)
+        db.execSQL(CREATE_TO_WASEDA_TABLE)
         db.execSQL(CREATE_TO_NISHI_TABLE)
         db.execSQL(CREATE_SAT_TO_WASEDA_TABLE)
         db.execSQL(CREATE_SAT_TO_NISHI_TABLE)

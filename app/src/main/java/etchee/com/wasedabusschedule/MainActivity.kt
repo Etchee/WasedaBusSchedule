@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkDB(): Int {
         var cursor: Cursor? = null
-        var errorFlag:Int = 0
+        var errorFlag = 0
         try {
             //query the Waseda Table
              cursor = contentResolver.query(
@@ -72,7 +72,10 @@ class MainActivity : AppCompatActivity() {
             e.printStackTrace()
         } finally {
             cursor?.close()
-            Toast.makeText(applicationContext, "時刻表がない！", Toast.LENGTH_SHORT).show()
+            if (errorFlag == 1) {
+                Toast.makeText(applicationContext, "時刻表がない！", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         return errorFlag

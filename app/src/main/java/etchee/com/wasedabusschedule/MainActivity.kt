@@ -2,7 +2,6 @@ package etchee.com.wasedabusschedule
 
 import android.content.ContentValues
 import android.database.Cursor
-import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
@@ -10,7 +9,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.widget.Toast
 import etchee.com.wasedabusschedule.Data.DataContract
-import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -80,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         return errorFlag
     }
 
+
     private fun initDB(): Int {
         var flag = 1
         var numOfRowsInserted:Int
@@ -100,10 +99,10 @@ class MainActivity : AppCompatActivity() {
         return flag
     }
 
-    private fun getWasedaContentValuesArray(): Array<ContentValues> {
+    private fun getWasedaContentValuesArray(): Array<ContentValues>? {
         val data: DataContract.DB_TO_WASEDA = DataContract.DB_TO_WASEDA()
         val values:ContentValues = ContentValues()
-        val array = arrayListOf<ContentValues>()
+        val array:Array<ContentValues>? = null
 
 
         /*      From data helper:
@@ -120,7 +119,7 @@ class MainActivity : AppCompatActivity() {
         values.put(data.COLUMN_HOUR, 9)
         values.put(data.COLUMN_MIN, 20)
         values.put(data.COLUMN_FLAG, 0)
-        array[0] = values; values.clear()
+        array!![0] = values; values.clear()
 
         values.put(data.COLUMN_HOUR, 9)
         values.put(data.COLUMN_MIN, 35)
@@ -232,13 +231,13 @@ class MainActivity : AppCompatActivity() {
         values.put(data.COLUMN_FLAG, 3)
         array[22] = values; values.clear()
 
-        return array as Array<ContentValues>
+        return array
     }
 
-    private fun getNishiContentValuesArray(): Array<ContentValues> {
+    private fun getNishiContentValuesArray(): Array<ContentValues>? {
         val data: DataContract.DB_TO_WASEDA = DataContract.DB_TO_WASEDA()
-        var values:ContentValues = ContentValues()
-        var array:Array<ContentValues>? = null
+        val values:ContentValues = ContentValues()
+        val array:Array<ContentValues>? = null
 
         values.put(data.COLUMN_HOUR, 9)
         values.put(data.COLUMN_MIN, 20)
@@ -360,6 +359,6 @@ class MainActivity : AppCompatActivity() {
         values.put(data.COLUMN_FLAG, 8)
         array?.set(23, values); values.clear()
 
-        return array as Array<ContentValues>
+        return array
     }
 }

@@ -18,7 +18,7 @@
         </activity>
 
         <provider
-            android:authorities="etchee.com.WasedaBusSchedule"
+            android:authorities="etchee.com.wasedabusschedule"
             android:name=".Data.DataProvider"
             android:exported="false" />
     </application>

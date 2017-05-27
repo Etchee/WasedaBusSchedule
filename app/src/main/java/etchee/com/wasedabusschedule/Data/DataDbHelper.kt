@@ -1,12 +1,8 @@
 package etchee.com.wasedabusschedule.Data
 
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.database.MatrixCursor
-import android.database.SQLException
-import android.util.Log
 
 
 /**
@@ -16,40 +12,40 @@ import android.util.Log
 class DataDbHelper(context: Context?, name: String?, factory: SQLiteDatabase.CursorFactory?,
                    version: Int): SQLiteOpenHelper(context, name, factory, version) {
 
-    private val TO_WASEDA = DataContract.DB_TO_WASEDA()
-    private val TO_NISHI = DataContract.DB_TO_NISHI()
-    private val SAT_TO_WASEDA = DataContract.SATURDAY_DB_TO_WASEDA()
-    private val SAT_TO_NISHI = DataContract.SATURDAY_DB_TO_NISHI()
+    private val to_wasedaDb = DataContract.DB_TO_WASEDA()
+    private val to_nishiDb = DataContract.DB_TO_NISHI()
+    private val sat_to_wasedaDb = DataContract.SATURDAY_DB_TO_WASEDA()
+    private val sat_to_nishiDb = DataContract.SATURDAY_DB_TO_NISHI()
 
     override fun onCreate(db: SQLiteDatabase?) {
         //Create the Calendar table
         val CREATE_TO_WASEDA_TABLE:String = "CREATE TABLE IF NOT EXISTS " +
-                TO_WASEDA.TABLE_NAME + " (" +
-                TO_WASEDA._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                TO_WASEDA.COLUMN_HOUR + " INTEGER, " +
-                TO_WASEDA.COLUMN_MIN + " INTEGER, " +
-                TO_WASEDA.COLUMN_FLAG + " INTEGER);"
+                to_wasedaDb.TABLE_NAME + " (" +
+                to_wasedaDb._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                to_wasedaDb.COLUMN_HOUR + " INTEGER, " +
+                to_wasedaDb.COLUMN_MIN + " INTEGER, " +
+                to_wasedaDb.COLUMN_FLAG + " INTEGER);"
 
         val CREATE_TO_NISHI_TABLE:String = "CREATE TABLE IF NOT EXISTS " +
-                TO_NISHI.TABLE_NAME + " (" +
-                TO_NISHI._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                TO_NISHI.COLUMN_HOUR + " INTEGER AUTOINCREMENT, " +
-                TO_NISHI.COLUMN_MIN + " INTEGER, " +
-                TO_NISHI.COLUMN_FLAG + " INTEGER);"
+                to_nishiDb.TABLE_NAME + " (" +
+                to_nishiDb._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                to_nishiDb.COLUMN_HOUR + " INTEGER AUTOINCREMENT, " +
+                to_nishiDb.COLUMN_MIN + " INTEGER, " +
+                to_nishiDb.COLUMN_FLAG + " INTEGER);"
 
         val CREATE_SAT_TO_WASEDA_TABLE:String = "CREATE TABLE IF NOT EXISTS " +
-                SAT_TO_WASEDA.TABLE_NAME + " (" +
-                SAT_TO_WASEDA._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                SAT_TO_WASEDA.COLUMN_HOUR + " INTEGER AUTOINCREMENT, " +
-                SAT_TO_WASEDA.COLUMN_MIN + " INTEGER, " +
-                SAT_TO_WASEDA.COLUMN_FLAG + " INTEGER);"
+                sat_to_wasedaDb.TABLE_NAME + " (" +
+                sat_to_wasedaDb._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                sat_to_wasedaDb.COLUMN_HOUR + " INTEGER AUTOINCREMENT, " +
+                sat_to_wasedaDb.COLUMN_MIN + " INTEGER, " +
+                sat_to_wasedaDb.COLUMN_FLAG + " INTEGER);"
 
         val CREATE_SAT_TO_NISHI_TABLE:String = "CREATE TABLE IF NOT EXISTS " +
-                SAT_TO_NISHI.TABLE_NAME + " (" +
-                SAT_TO_NISHI._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                SAT_TO_NISHI.COLUMN_HOUR + " INTEGER AUTOINCREMENT, " +
-                SAT_TO_NISHI.COLUMN_MIN + " INTEGER, " +
-                SAT_TO_NISHI.COLUMN_FLAG + " INTEGER);"
+                sat_to_nishiDb.TABLE_NAME + " (" +
+                sat_to_nishiDb._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                sat_to_nishiDb.COLUMN_HOUR + " INTEGER AUTOINCREMENT, " +
+                sat_to_nishiDb.COLUMN_MIN + " INTEGER, " +
+                sat_to_nishiDb.COLUMN_FLAG + " INTEGER);"
 
         db!!.execSQL(CREATE_TO_WASEDA_TABLE)
         db.execSQL(CREATE_TO_NISHI_TABLE)

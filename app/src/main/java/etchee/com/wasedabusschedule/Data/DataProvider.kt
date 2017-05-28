@@ -30,7 +30,7 @@ class DataProvider : ContentProvider() {
     }
 
     override fun onCreate(): Boolean {
-        dbHelper = DataDbHelper(context, data.DATABASE_NAME, null, DATABASE_VERSION)
+        dbHelper = DataDbHelper(context.applicationContext, data.DATABASE_NAME, null, DATABASE_VERSION)
         return true
     }
 

@@ -17,6 +17,8 @@ class DataDbHelper(context: Context, name: String, factory: SQLiteDatabase.Curso
     private val sat_to_wasedaDb = DataContract.SATURDAY_DB_TO_WASEDA()
     private val sat_to_nishiDb = DataContract.SATURDAY_DB_TO_NISHI()
 
+
+
     override fun onCreate(db: SQLiteDatabase) {
         //Create the Calendar table
         val CREATE_TO_WASEDA_TABLE:String = "CREATE TABLE IF NOT EXISTS " +

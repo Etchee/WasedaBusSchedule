@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                     null,
                     null
             )
-            if (!cursor.moveToFirst()) {
+            if (cursor == null) {
                 errorFlag = 1
             }
 
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                     null
             )
 
-            if (!cursor.moveToFirst()) {
+            if (cursor == null) {
                 errorFlag = 1
             }
 

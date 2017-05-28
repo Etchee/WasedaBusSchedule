@@ -21,10 +21,10 @@ class DataContract private constructor() {
             val DATABASE_NAME: String = "DATABASE",
 
             //Specific URI addresses
-            val PATH_TO_WASEDA: String = "TO-WASEDA",
-            val PATH_TO_NISHI: String = "TO-NISHI",
-            val PATH_SAT_TO_WASEDA: String = "SAT-TO-WASEDA",
-            val PATH_SAT_TO_NISHI: String = "SAT-TO-NISHI",
+            val PATH_TO_WASEDA: String = "TO_WASEDA",
+            val PATH_TO_NISHI: String = "TO_NISHI",
+            val PATH_SAT_TO_WASEDA: String = "SAT_TO_WASEDA",
+            val PATH_SAT_TO_NISHI: String = "SAT_TO_NISHI",
 
             val FLAG_1: String = "西早稲田キャンパス経由",
             val FLAG_2: String = "Twins経由",
@@ -38,7 +38,7 @@ class DataContract private constructor() {
 
     data class DB_TO_WASEDA(
 
-            val CONTENT_URI: Uri? = GlobalConstants().BASE_CONTENT_URI.buildUpon()
+            val CONTENT_URI: Uri = GlobalConstants().BASE_CONTENT_URI.buildUpon()
                     .appendPath(GlobalConstants().PATH_TO_WASEDA).build(),
 
             val CONTENT_ITEM_TYPE: String = ContentResolver.CURSOR_ITEM_BASE_TYPE +
@@ -54,7 +54,7 @@ class DataContract private constructor() {
 
     data class DB_TO_NISHI(
 
-            val CONTENT_URI: Uri? = GlobalConstants().BASE_CONTENT_URI.buildUpon()
+            val CONTENT_URI: Uri = GlobalConstants().BASE_CONTENT_URI.buildUpon()
                     .appendPath(GlobalConstants().PATH_TO_NISHI).build(),
 
             val CONTENT_ITEM_TYPE: String = ContentResolver.CURSOR_ITEM_BASE_TYPE +
@@ -69,7 +69,7 @@ class DataContract private constructor() {
     )
 
     data class SATURDAY_DB_TO_WASEDA(
-            val CONTENT_URI: Uri? = GlobalConstants().BASE_CONTENT_URI.buildUpon()
+            val CONTENT_URI: Uri = GlobalConstants().BASE_CONTENT_URI.buildUpon()
                     .appendPath(GlobalConstants().PATH_SAT_TO_WASEDA).build(),
 
             val CONTENT_ITEM_TYPE: String = ContentResolver.CURSOR_ITEM_BASE_TYPE +

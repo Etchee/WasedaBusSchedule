@@ -21,7 +21,6 @@
         <provider
             android:name=".Data.DataProvider"
             android:authorities="etchee.com.wasedabusschedule"
-            android:enabled="true"
             android:exported="false" />
 
     </application>

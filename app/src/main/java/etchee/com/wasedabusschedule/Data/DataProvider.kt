@@ -1,9 +1,6 @@
 package etchee.com.wasedabusschedule.Data
 
-import android.content.ContentProvider
-import android.content.ContentUris
-import android.content.ContentValues
-import android.content.UriMatcher
+import android.content.*
 import android.database.Cursor
 import android.net.Uri
 
@@ -19,17 +16,21 @@ class DataProvider : ContentProvider() {
     private val CODE_SAT_TO_NISHI = 201
     private val DATABASE_VERSION:Int = 1
     private val data:DataContract.GlobalConstants = DataContract.GlobalConstants()
-    private val matcher : UriMatcher = UriMatcher(UriMatcher.NO_MATCH)
-    private val dbHelper:DataDbHelper =  DataDbHelper(context, data.DATABASE_NAME, null, DATABASE_VERSION)
+    private val matcher : UriMatcher = initUriMatcher()
+    lateinit var dbHelper:DataDbHelper
 
-    private fun UriMatcher() {
-        matcher.addURI(data.CONTENT_AUTHORITY, data.PATH_TO_WASEDA, CODE_TO_WASEDA)
-        matcher.addURI(data.CONTENT_AUTHORITY, data.PATH_TO_NISHI, CODE_TO_NISHI)
-        matcher.addURI(data.CONTENT_AUTHORITY, data.PATH_SAT_TO_WASEDA, CODE_SAT_TO_WASEDA)
-        matcher.addURI(data.CONTENT_AUTHORITY, data.PATH_SAT_TO_NISHI, CODE_SAT_TO_NISHI)
+    private fun initUriMatcher():UriMatcher {
+        val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
+        uriMatcher.addURI(data.CONTENT_AUTHORITY, data.PATH_TO_WASEDA, CODE_TO_WASEDA)
+        uriMatcher.addURI(data.CONTENT_AUTHORITY, data.PATH_TO_NISHI, CODE_TO_NISHI)
+        uriMatcher.addURI(data.CONTENT_AUTHORITY, data.PATH_SAT_TO_WASEDA, CODE_SAT_TO_WASEDA)
+        uriMatcher.addURI(data.CONTENT_AUTHORITY, data.PATH_SAT_TO_NISHI, CODE_SAT_TO_NISHI)
+
+        return uriMatcher
     }
 
     override fun onCreate(): Boolean {
+        dbHelper = DataDbHelper(context, data.DATABASE_NAME, null, DATABASE_VERSION)
         return true
     }
 

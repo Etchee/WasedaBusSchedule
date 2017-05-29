@@ -19,6 +19,7 @@ class DataContract private constructor() {
             val CONTENT_AUTHORITY: String = "etchee.com.wasedabusschedule",
             val BASE_CONTENT_URI: Uri = Uri.parse("content://" + CONTENT_AUTHORITY),
             val DATABASE_NAME: String = "schedule.db",
+            val DATABASE_VERSION: Int = 1,
 
             //Specific URI addresses
             val PATH_TO_WASEDA: String = "TO_WASEDA",

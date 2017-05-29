@@ -2,8 +2,10 @@ package etchee.com.wasedabusschedule.Fragments
 
 import android.content.Context
 import android.database.Cursor
+import android.database.DatabaseUtils
 import android.os.Handler
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,9 +45,12 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
     }
 
     override fun getItemCount(): Int {
-        if (cursor != null) {
+        if (cursor == null) {
+            Log.e(TAG, "Cursor is null")
+            return 0
+        } else {
             return cursor!!.count
-        }else return 5
+        }
     }
 
     override fun onViewRecycled(holder: ViewHolder?) {

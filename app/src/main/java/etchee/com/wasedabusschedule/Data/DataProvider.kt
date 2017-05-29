@@ -87,26 +87,26 @@ class DataProvider : ContentProvider() {
         return cursor
     }
 
-    override fun insert(uri: Uri, values: ContentValues?): Uri {
+    override fun insert(uri: Uri, values: ContentValues): Uri {
         val match = matcher.match(uri)
         val uri_new:Uri?
 
         when (match) {
 
             CODE_TO_WASEDA -> {
-                uri_new = insertInWasedaTable(uri, values!!)
+                uri_new = insertInWasedaTable(uri, values )
             }
 
             CODE_TO_NISHI -> {
-                uri_new = insertInNishiTable(uri, values!!)
+                uri_new = insertInNishiTable(uri, values )
             }
 
             CODE_SAT_TO_WASEDA -> {
-                uri_new = insertInSATWasedaTable(uri, values!!)
+                uri_new = insertInSATWasedaTable(uri, values )
             }
 
             CODE_SAT_TO_NISHI -> {
-                uri_new = insertInSATNishiTable(uri, values!!)
+                uri_new = insertInSATNishiTable(uri, values )
             }
 
             else -> throw IllegalArgumentException("Insert method cannot handle " +
@@ -121,18 +121,11 @@ class DataProvider : ContentProvider() {
         //id is the ID of the newly inserted row. Returns -1 in case of an error with insertion.
         val id = database.insert(DataContract.DB_TO_WASEDA().TABLE_NAME, null, values)
 
-        values.getAsString(DataContract.DB_TO_WASEDA().COLUMN_HOUR) ?:
-                throw IllegalArgumentException("Content provider's insert method of " +
-                "the calendar table has received null for the date value. " +
-                        "Check what is passed into the insert method.")
-
-        if (id != null) {
             if (id < 0) {
                 throw IllegalArgumentException("Content provider's insertion has failed.")
-            }
         }
 
-        return ContentUris.withAppendedId(uri, id as Long)
+        return ContentUris.withAppendedId(uri, id)
     }
 
     fun insertInNishiTable(uri: Uri, values: ContentValues):Uri {
@@ -145,13 +138,6 @@ class DataProvider : ContentProvider() {
                 throw IllegalArgumentException("Content provider's insertion has failed.")
             }
         }
-
-        //error prevention measure #2
-        values.getAsString(DataContract.DB_TO_NISHI().COLUMN_HOUR) ?:
-                throw IllegalArgumentException("Content provider's insert method of " +
-                        "the calendar table has received null for the date value. " +
-                        "Check what is passed into the insert method.")
-
         return ContentUris.withAppendedId(uri, id as Long)
     }
 
@@ -160,18 +146,10 @@ class DataProvider : ContentProvider() {
 
         //error prevention measure #1
         val id = database.insert(DataContract.SATURDAY_DB_TO_WASEDA().TABLE_NAME, null, values)
-        if (id != null) {
+
             if (id < 0) {
                 throw IllegalArgumentException("Content provider's insertion has failed.")
             }
-        }
-
-        //error prevention measure #2
-        if (values.getAsString(DataContract.SATURDAY_DB_TO_WASEDA().COLUMN_HOUR) == null){
-            throw IllegalArgumentException("Content provider's insert method of " +
-                    "the calendar table has received null for the date value. " +
-                    "Check what is passed into the insert method.")
-        }
 
 
         return ContentUris.withAppendedId(uri, id as Long)
@@ -186,13 +164,6 @@ class DataProvider : ContentProvider() {
             if (id < 0) {
                 throw IllegalArgumentException("Content provider's insertion has failed.")
             }
-        }
-
-        //error prevention measure #2
-        if (values.getAsString(DataContract.SATURDAY_DB_TO_NISHI().COLUMN_HOUR) == null){
-            throw IllegalArgumentException("Content provider's insert method of " +
-                    "the calendar table has received null for the date value. " +
-                    "Check what is passed into the insert method.")
         }
 
 

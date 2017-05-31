@@ -1,5 +1,6 @@
 package etchee.com.wasedabusschedule.Data
 
+import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -14,15 +15,25 @@ import android.widget.Toast
  */
 class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
 
-    val contentResolver = context.contentResolver
+    val contentResolver: ContentResolver = context.contentResolver
 
     override fun doInBackground(vararg params: Void?): Boolean {
         //do stuff in here
 
         if (!checkDB()) {
             initDB()
+            return false
+        } else return true
+    }
+
+    override fun onPostExecute(result: Boolean?) {
+        super.onPostExecute(result)
+        when(result){
+            false -> Toast.makeText(context, "時刻表作成中・・・", Toast.LENGTH_SHORT).show()
+            true -> Toast.makeText(context, "時刻表あります", Toast.LENGTH_SHORT).show()
         }
     }
+
     /**
      * No problem -> true
      * No table -> false
@@ -60,9 +71,6 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
             e.printStackTrace()
         } finally {
             cursor?.close()
-            if (errorFlag == false) {
-                Toast.makeText(applicationContext, "時刻表がない！", Toast.LENGTH_SHORT).show()
-            }
 
         }
 
@@ -596,7 +604,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
             e.printStackTrace()
         }finally {
             if (uri == null) {
-                
+                throw SQLException("The last insertion has failed")
             }
         }
     }

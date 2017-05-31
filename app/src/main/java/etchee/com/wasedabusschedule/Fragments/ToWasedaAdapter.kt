@@ -21,7 +21,7 @@ import java.util.*
  * Adapter for the RecyclerView
  * Created by rikutoechigoya on 2017/05/23.
  */
-class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.Adapter<ToWasedaAdapter.ViewHolder>() {
+class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.Adapter<ToWasedaAdapter.ViewHolder>() {
 
     private var TAG: String = javaClass.simpleName
     var handler: Handler? = null
@@ -49,7 +49,7 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
             Log.e(TAG, "Cursor is null")
             return 0
         } else {
-            return cursor!!.count
+            return cursor.count
         }
     }
 

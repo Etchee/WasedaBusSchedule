@@ -74,17 +74,18 @@ class ToWasedaFragment: android.support.v4.app.Fragment() {
             }
 
             7->{    //Saturday Table
+                val selection = DataContract.DB_TO_WASEDA().COLUMN_SEARCH + " > ?"
+                val selectionArgs = arrayOf(search_key.toString())
                 cursor = context.contentResolver.query(
-                        DataContract.DB_TO_WASEDA().CONTENT_URI,
+                        DataContract.SATURDAY_DB_TO_WASEDA().CONTENT_URI,
                         null,
-                        null,
-                        null,
+                        selection,
+                        selectionArgs,
                         null
                 )
             }
 
             else->{ //WeekDay Table
-//                val selection = "KEY_COLUMN3 >= ? AND KEY_COLUMN4 < ?"
                 val selection = DataContract.DB_TO_WASEDA().COLUMN_SEARCH + " > ?"
                 val selectionArgs = arrayOf(search_key.toString())
                 cursor = context.contentResolver.query(

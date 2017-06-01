@@ -48,7 +48,7 @@ class ToWasedaFragment: Fragment() {
      *  今の時刻を取得して、それ以降に出るバスの分の情報をCursorに乗っけて持ってくる！
      */
     fun createCursor(): Cursor? {
-        var cursor:Cursor? = null
+        val cursor:Cursor?
 
         //Get the current time as an instance
         val now = Date()
@@ -76,7 +76,7 @@ class ToWasedaFragment: Fragment() {
 
             7->{    //Saturday Table
                 cursor = context.contentResolver.query(
-                        DataContract.DB_TO_WASEDA().CONTENT_URI,
+                        DataContract.SATURDAY_DB_TO_WASEDA().CONTENT_URI,
                         null,
                         null,
                         null,
@@ -87,8 +87,8 @@ class ToWasedaFragment: Fragment() {
             else->{ //WeekDay Table
                 cursor = context.contentResolver.query(
                         DataContract.DB_TO_WASEDA().CONTENT_URI,
-                        null,
-                        null,
+                        null,   //projection
+                        null,   //selection
                         null,
                         null
                 )

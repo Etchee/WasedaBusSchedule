@@ -20,7 +20,7 @@ class ToNishiFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         cursor = context.contentResolver.query(
-                DataContract.DB_TO_NISHI().CONTENT_URI,
+                DataContract.DB_TO_WASEDA().CONTENT_URI,
                 null,
                 null,
                 null,

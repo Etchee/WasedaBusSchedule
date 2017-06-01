@@ -50,7 +50,8 @@ class DataContract private constructor() {
             val _ID: String = BaseColumns._ID,
             val COLUMN_HOUR: String = "COLUMN_HOUR",
             val COLUMN_MIN:String = "COLUMN_MIN",
-            val COLUMN_FLAG:String = "COLUMN_FLAG"
+            val COLUMN_FLAG:String = "COLUMN_FLAG",
+            val COLUMN_SEARCH:String = "COLUMN_CONCAT"
     )
 
     data class DB_TO_NISHI(
@@ -66,7 +67,8 @@ class DataContract private constructor() {
             val _ID: String = BaseColumns._ID,
             val COLUMN_HOUR: String = "COLUMN_HOUR",
             val COLUMN_MIN:String = "COLUMN_MIN",
-            val COLUMN_FLAG:String = "COLUMN_FLAG"
+            val COLUMN_FLAG:String = "COLUMN_FLAG",
+            val COLUMN_SEARCH:String = "COLUMN_CONCAT"
     )
 
     data class SATURDAY_DB_TO_WASEDA(
@@ -81,7 +83,8 @@ class DataContract private constructor() {
             val _ID: String = BaseColumns._ID,
             val COLUMN_HOUR: String = "COLUMN_HOUR",
             val COLUMN_MIN:String = "COLUMN_MIN",
-            val COLUMN_FLAG:String = "COLUMN_FLAG"
+            val COLUMN_FLAG:String = "COLUMN_FLAG",
+            val COLUMN_SEARCH:String = "COLUMN_CONCAT"
     )
 
     data class SATURDAY_DB_TO_NISHI(
@@ -96,6 +99,7 @@ class DataContract private constructor() {
             val _ID: String = BaseColumns._ID,
             val COLUMN_HOUR: String = "COLUMN_HOUR",
             val COLUMN_MIN:String = "COLUMN_MIN",
-            val COLUMN_FLAG:String = "COLUMN_FLAG"
+            val COLUMN_FLAG:String = "COLUMN_FLAG",
+            val COLUMN_SEARCH:String = "COLUMN_CONCAT"
     )
 }

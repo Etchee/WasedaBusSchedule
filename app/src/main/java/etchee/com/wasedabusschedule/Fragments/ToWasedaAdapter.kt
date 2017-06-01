@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import etchee.com.wasedabusschedule.R
 import java.text.SimpleDateFormat
@@ -46,15 +47,19 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
 
     override fun getItemCount(): Int {
         if (cursor == null) {
-            Log.e(TAG, "Cursor is null")
+            Toast.makeText(context, "申し訳ありません。時刻表のエラーです。", Toast.LENGTH_SHORT).show()
             return 0
         } else {
             return cursor.count
         }
     }
 
-    override fun onViewRecycled(holder: ViewHolder?) {
-        super.onViewRecycled(holder)
+    /**
+     *  Given the time, iterate thru ALREADY PASSED CURSOR to find the next bus schedule.
+     */
+    fun nextBus(now:SimpleDateFormat) {
+        //SimpleDateFormat → yyyy-MM-dd-HH-mm-ss
+
     }
 
     //function to start countdown

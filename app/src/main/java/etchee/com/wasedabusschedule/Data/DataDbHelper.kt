@@ -35,11 +35,11 @@ class DataDbHelper(context: Context, name: String, factory: SQLiteDatabase.Curso
         val CREATE_TO_NISHI_TABLE:String =
                 "CREATE TABLE IF NOT EXISTS " +
                         to_nishiDb.TABLE_NAME + " (" +
-//                        to_nishiDb._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        to_nishiDb._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         to_nishiDb.COLUMN_HOUR + " TEXT NOT NULL, " +
-                                to_nishiDb.COLUMN_MIN + " TEXT NOT NULL, " +
-                                to_nishiDb.COLUMN_FLAG + " INTEGER NOT NULL, " +
-                                to_nishiDb.COLUMN_SEARCH + "INTEGER NOT NULL);"
+                        to_nishiDb.COLUMN_MIN + " TEXT NOT NULL, " +
+                        to_nishiDb.COLUMN_FLAG + " INTEGER NOT NULL, " +
+                        to_nishiDb.COLUMN_SEARCH + "INTEGER NOT NULL);"
 
         val CREATE_SAT_TO_WASEDA_TABLE:String = "CREATE TABLE IF NOT EXISTS " +
                 sat_to_wasedaDb.TABLE_NAME + " (" +

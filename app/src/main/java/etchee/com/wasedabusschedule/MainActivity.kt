@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         //general init
         val context = applicationContext
 
-        //viewpager initialization (And attach the fragments)
+        //viewpager initialization
         val viewPager = findViewById(R.id.main_viewPager) as ViewPager
         val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, context)
         viewPager.adapter = viewPagerAdapter
@@ -34,11 +34,9 @@ class MainActivity : AppCompatActivity() {
         val tabLayout = findViewById(R.id.list_tab) as TabLayout
         tabLayout.setupWithViewPager(viewPager)
 
-        //Toolbar
         val toolbar = findViewById(R.id.main_toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        //Check the timetable
         AsyncInitTables(context).execute()
 
     }
@@ -50,13 +48,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        when (item.itemId) {
-            R.id.menu_create_database -> {
+        when(item.itemId){
+             R.id.menu_create_database ->{
                 //fire the asyncTask
-                AsyncInitTables(applicationContext).execute()
+                 AsyncInitTables(applicationContext).execute()
             }
 
-            R.id.menu_delete_database -> {
+            R.id.menu_delete_database ->{
                 val rows = contentResolver.delete(
                         DataContract.DB_TO_WASEDA().CONTENT_URI,
                         null,
@@ -65,29 +63,24 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, rows.toString() + " rows deleted", Toast.LENGTH_SHORT).show()
             }
 
-            R.id.menu_get_count -> {
-                var cursor: Cursor? = null
-                try {
-                    cursor = contentResolver.query(
-                            DataContract.DB_TO_WASEDA().CONTENT_URI,
-                            null, null, null, null
-                    )
+            R.id.menu_get_count ->{
+                var cursor:Cursor? = contentResolver.query(
+                        DataContract.DB_TO_WASEDA().CONTENT_URI,
+                        null, null, null, null
+                )
 
-                    Toast.makeText(this, "Waseda Table has: " + cursor?.count.toString() + " rows.",
-                            Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Waseda Table has: " + cursor?.count.toString() + " rows.",
+                        Toast.LENGTH_SHORT).show()
 
-                    cursor = contentResolver.query(
-                            DataContract.DB_TO_NISHI().CONTENT_URI,
-                            null, null, null, null
-                    )
+                cursor = contentResolver.query(
+                        DataContract.DB_TO_NISHI().CONTENT_URI,
+                        null, null, null, null
+                )
 
-                    Toast.makeText(this, "Nishi Table has: " + cursor?.count.toString() + " rows.",
-                            Toast.LENGTH_SHORT).show()
-                } finally {
-                    cursor?.close()
-                }
+                Toast.makeText(this, "Nishi Table has: " + cursor?.count.toString() + " rows.",
+                        Toast.LENGTH_SHORT).show()
 
-
+                cursor?.close()
             }
         }
 

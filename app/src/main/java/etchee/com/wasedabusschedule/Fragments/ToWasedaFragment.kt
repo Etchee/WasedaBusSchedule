@@ -53,7 +53,7 @@ class ToWasedaFragment: Fragment() {
      *  今の時刻を取得して、それ以降に出るバスの分の情報をCursorに乗っけて持ってくる！
      */
     fun createCursor(): Cursor? {
-        val cursor:Cursor?
+        var cursor:Cursor?
 
         //Get the current time as an instance
         val now = Date()

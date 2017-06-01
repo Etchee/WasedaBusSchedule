@@ -26,6 +26,7 @@ class DataDbHelper(context: Context, name: String, factory: SQLiteDatabase.Curso
                 to_wasedaDb._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 to_wasedaDb.COLUMN_HOUR + " INTEGER, " +
                 to_wasedaDb.COLUMN_MIN + " INTEGER, " +
+                to_wasedaDb.COLUMN_SEARCH + " INTEGER, " +
                 to_wasedaDb.COLUMN_FLAG + " INTEGER);"
 
         val CREATE_TO_NISHI_TABLE:String = "CREATE TABLE IF NOT EXISTS " +
@@ -33,6 +34,7 @@ class DataDbHelper(context: Context, name: String, factory: SQLiteDatabase.Curso
                 to_nishiDb._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 to_nishiDb.COLUMN_HOUR + " INTEGER NOT NULL, " +
                 to_nishiDb.COLUMN_MIN + " INTEGER NOT NULL, " +
+                to_nishiDb.COLUMN_SEARCH + " INTEGER, " +
                 to_nishiDb.COLUMN_FLAG + " INTEGER NOT NULL);"
 
         val CREATE_SAT_TO_WASEDA_TABLE:String = "CREATE TABLE IF NOT EXISTS " +
@@ -40,6 +42,7 @@ class DataDbHelper(context: Context, name: String, factory: SQLiteDatabase.Curso
                 sat_to_wasedaDb._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 sat_to_wasedaDb.COLUMN_HOUR + " INTEGER NOT NULL, " +
                 sat_to_wasedaDb.COLUMN_MIN + " INTEGER NOT NULL, " +
+                sat_to_wasedaDb.COLUMN_SEARCH + " INTEGER, " +
                 sat_to_wasedaDb.COLUMN_FLAG + " INTEGER NOT NULL);"
 
         val CREATE_SAT_TO_NISHI_TABLE:String = "CREATE TABLE IF NOT EXISTS " +
@@ -47,6 +50,7 @@ class DataDbHelper(context: Context, name: String, factory: SQLiteDatabase.Curso
                 sat_to_nishiDb._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 sat_to_nishiDb.COLUMN_HOUR + " INTEGER NOT NULL, " +
                 sat_to_nishiDb.COLUMN_MIN + " INTEGER NOT NULL, " +
+                sat_to_nishiDb.COLUMN_SEARCH + " INTEGER, " +
                 sat_to_nishiDb.COLUMN_FLAG + " INTEGER NOT NULL);"
 
         db.execSQL(CREATE_TO_WASEDA_TABLE)

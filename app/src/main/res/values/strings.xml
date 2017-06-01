@@ -9,4 +9,6 @@
     <string name="semicolon">:</string>
     <string name="leaving_in">Leaving in</string>
     <string name="sample_text_route">サンプル　ルート</string>
+    <string name="sample_route_option">サンプル経由</string>
+    <string name="hint_departure_text">発</string>
 </resources>

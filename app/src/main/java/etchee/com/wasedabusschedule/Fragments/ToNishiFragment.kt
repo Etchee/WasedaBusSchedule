@@ -27,7 +27,6 @@ class ToNishiFragment: Fragment() {
                 null
         )
     }
-    //test
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.layout_fragment_nishi, container, false)
     }

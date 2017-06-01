@@ -1,9 +1,7 @@
 package etchee.com.wasedabusschedule.Fragments
 
 import android.database.Cursor
-import android.database.DatabaseUtils
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -16,22 +14,13 @@ import java.util.*
  * Fragment to actually display the list of bus departures
  * Created by rikutoechigoya on 2017/05/24.
  */
-class ToWasedaFragment: Fragment() {
+class ToWasedaFragment: android.support.v4.app.Fragment() {
 
     val TAG: String = javaClass.simpleName
-    lateinit var cursor: Cursor
-    lateinit var adapter:ToWasedaAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cursor = context.contentResolver.query(
-                DataContract.DB_TO_WASEDA().CONTENT_URI,
-                null,
-                null,
-                null,
-                null
-        )
-        Log.v(TAG, "CURSOR CONTENTS GOING INTO ADAPTER" + DatabaseUtils.dumpCursorToString(cursor))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -40,10 +29,15 @@ class ToWasedaFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //view assignment
         val recyclerView = view.findViewById(R.id.recyclerView_toWaseda) as RecyclerView
-        val layoutManager = LinearLayoutManager(context.applicationContext)
-        adapter = ToWasedaAdapter(context.applicationContext, cursor)
-        recyclerView.layoutManager = layoutManager
+
+        //create cursor containing appropriate table depending on the day
+        val cursor = createCursor()
+
+        //RecyclerView init
+        val adapter:ToWasedaAdapter = ToWasedaAdapter(context.applicationContext, cursor)
+        recyclerView.layoutManager = LinearLayoutManager(context.applicationContext)
         recyclerView.adapter = adapter
 
         cursor?.close()
@@ -67,9 +61,7 @@ class ToWasedaFragment: Fragment() {
         Log.v(TAG, "Fetched Day:" + day.toString() + " hour:" + hour.toString() + " min:" + min.toString())
         /*
                 The table:
-
                 |Hour column| |Minute Column|
-
                 Compare the current hour against the hour column,
                 then compare the minute column.
          */
@@ -81,7 +73,7 @@ class ToWasedaFragment: Fragment() {
 
             7->{    //Saturday Table
                 cursor = context.contentResolver.query(
-                        DataContract.SATURDAY_DB_TO_WASEDA().CONTENT_URI,
+                        DataContract.DB_TO_WASEDA().CONTENT_URI,
                         null,
                         null,
                         null,
@@ -92,8 +84,8 @@ class ToWasedaFragment: Fragment() {
             else->{ //WeekDay Table
                 cursor = context.contentResolver.query(
                         DataContract.DB_TO_WASEDA().CONTENT_URI,
-                        null,   //projection
-                        null,   //selection
+                        null,
+                        null,
                         null,
                         null
                 )
@@ -101,7 +93,6 @@ class ToWasedaFragment: Fragment() {
         }
 
         return cursor
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.*
 import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.R
+import java.util.*
 
 /**
  * Fragment to actually display the list of bus departures
@@ -44,7 +45,6 @@ class ToWasedaFragment: Fragment() {
         adapter = ToWasedaAdapter(context.applicationContext, cursor)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
-<<<<<<< HEAD
 
         cursor?.close()
     }
@@ -101,9 +101,7 @@ class ToWasedaFragment: Fragment() {
         }
 
         return cursor
-=======
-        if (cursor != null) (cursor as Cursor).close()
->>>>>>> parent of 3a0dce1... Fragment gets the current time
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

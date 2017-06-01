@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,7 +42,26 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
                 .load(R.drawable.img_okuma)
                 .into(viewHolder.image_background)
 
-        countDownStart(viewHolder)
+        if (cursor == null) {
+            //don't do anything
+        }else{
+            cursor.moveToPosition(position)
+            //extract the time info from the database
+            val hour = cursor.getString(cursor.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_HOUR))
+            val min = cursor.getString(cursor.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_MIN))
+            val departureTime = hour + ":" + min
+
+            //set the departure time
+            viewHolder.departure_time_text.text = departureTime
+
+            //start the countdown
+            countDownStart(
+                    viewHolder,
+                    hour,
+                    min
+            )
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -58,7 +78,7 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
     }
 
     //function to start countdown
-    fun countDownStart(viewHolder: ViewHolder) {
+    fun countDownStart(viewHolder: ViewHolder, hour:String?, min:String?) {
         handler = Handler()
         runnable = object : Runnable {
             override fun run() {
@@ -66,10 +86,11 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
                 try {
                     val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.JAPAN)
                     // Here Set your Event Date
-                    val eventDate = dateFormat.parse("2017-12-30-21-15-00")
-                    val currentDate = Date()
-                    if (!currentDate.after(eventDate)) {
-                        var diff = eventDate.time - currentDate.time
+                    val eventDate = dateFormat.parse("2017-12-30-$hour-$min-00")
+                    val currentTime = Date()
+
+                    if (!currentTime.after(eventDate)) {
+                        var diff = eventDate.time - currentTime.time
                         val days = diff / (24 * 60 * 60 * 1000)
                         diff -= days * (24 * 60 * 60 * 1000)
                         val hours = diff / (60 * 60 * 1000)
@@ -99,5 +120,6 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
         val min_text = view.findViewById(R.id.item_min) as TextView
         val sec_text = view.findViewById(R.id.item_sec) as TextView
         val image_background = view.findViewById(R.id.item_image) as ImageView
+        val departure_time_text =view.findViewById(R.id.departure_time) as TextView
     }
 }

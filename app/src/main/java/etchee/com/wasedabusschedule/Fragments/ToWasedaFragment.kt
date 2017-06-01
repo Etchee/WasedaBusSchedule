@@ -40,8 +40,6 @@ class ToWasedaFragment: android.support.v4.app.Fragment() {
         val adapter:ToWasedaAdapter = ToWasedaAdapter(context.applicationContext, cursor)
         recyclerView.layoutManager = LinearLayoutManager(context.applicationContext)
         recyclerView.adapter = adapter
-
-        cursor?.close()
     }
 
     /**

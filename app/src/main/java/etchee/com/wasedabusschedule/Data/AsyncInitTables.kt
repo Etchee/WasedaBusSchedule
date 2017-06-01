@@ -94,7 +94,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         var uri: Uri? = null    //For error checking
 
         try{
-            while(count < 22) {
+            while(count < 23) {
                 when(count) {
                     0 -> {
                         values.put(data.COLUMN_HOUR, "09")
@@ -371,7 +371,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         var uri:Uri? = null
 
         try{
-            while(count < 10) {
+            while(count < 11) {
                 when(count) {
                     0 -> {
                         values.put(data.COLUMN_HOUR, "09")
@@ -514,7 +514,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         var uri:Uri? = null
 
         try{
-            while(count < 23) {
+            while(count < 24) {
                 when(count){
                     0->{
                         values.put(data.COLUMN_HOUR, "09")
@@ -800,7 +800,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         var uri:Uri? = null
 
         try{
-            while(count < 9) {
+            while(count < 10) {
                 when(count) {
                     0 -> {
                         values.put(data.COLUMN_HOUR, "09")

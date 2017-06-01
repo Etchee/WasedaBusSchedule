@@ -11,4 +11,5 @@
     <string name="sample_text_route">サンプル　ルート</string>
     <string name="sample_route_option">サンプル経由</string>
     <string name="hint_departure_text">発</string>
+    <string name="sample_departure_time">10:00</string>
 </resources>

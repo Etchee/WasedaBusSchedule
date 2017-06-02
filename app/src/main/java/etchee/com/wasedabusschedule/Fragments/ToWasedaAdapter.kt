@@ -27,6 +27,7 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
     private var TAG: String = javaClass.simpleName
     var handler: Handler? = null
     var runnable: Runnable? = null
+    var itemsArray = arrayListOf<RecyclerScrollTemp>()
 
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false))
@@ -38,30 +39,58 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
      *  Get the current time, query the SQL bus schedule table and then display from there.
      */
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        Glide.with(context)
-                .load(R.drawable.img_okuma)
-                .into(viewHolder.image_background)
 
+        //declare all the item contents
+        var hour = ""
+        var min = ""
+        var departureTime = ""
+
+        //if cursor is null, do not do anything
         if (cursor == null) {
-            //don't do anything
-        }else{
-            cursor.moveToPosition(position)
-            //extract the time info from the database
-            val hour = cursor.getString(cursor.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_HOUR))
-            val min = cursor.getString(cursor.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_MIN))
-            val departureTime = hour + ":" + min
 
-            //set the departure time
-            viewHolder.departure_time_text.text = departureTime
+        }else {
+            //background image is the same for all.
+            Glide.with(context)
+                    .load(R.drawable.img_okuma)
+                    .into(viewHolder.image_background)
 
-            //start the countdown
-            countDownStart(
-                    viewHolder,
-                    hour,
-                    min
-            )
+            // new data, create.
+            if (itemsArray.size >= position) {
+                cursor.moveToPosition(position)
+                //extract the time info from the database
+                hour = cursor.getString(cursor.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_HOUR))
+                min = cursor.getString(cursor.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_MIN))
+                departureTime = hour + ":" + min
+
+                //set the departure time
+                viewHolder.departure_time_text.text = departureTime
+
+                //start the countdown
+                countDownStart(
+                        viewHolder,
+                        hour,
+                        min
+                )
+
+                //and save for restore.
+                itemsArray.add(position, RecyclerScrollTemp(hour, min, departureTime))
+
+            } else {    //Data has been created before, restore.
+                val hour1 = itemsArray.get(position).hour_text
+                val min1 = itemsArray.get(position).min_text
+                val departureTime1 = itemsArray.get(position).departure_time_text
+
+                //set the departure time
+                viewHolder.departure_time_text.text = departureTime1
+
+                //start the countdown
+                countDownStart(
+                        viewHolder,
+                        hour1,
+                        min1
+                )
+            }
         }
-
     }
 
     override fun getItemCount(): Int {
@@ -122,4 +151,14 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
         val image_background = view.findViewById(R.id.item_image) as ImageView
         val departure_time_text =view.findViewById(R.id.departure_time) as TextView
     }
+
+    /**
+     * Temporarily save recyclerView contents data to preserve contents after scrolling
+     * Created by rikutoechigoya on 2017/06/02.
+     */
+    data class RecyclerScrollTemp(
+            val hour_text:String,
+            val min_text: String,
+            val departure_time_text:String
+    )
 }

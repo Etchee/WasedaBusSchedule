@@ -2,7 +2,7 @@ package etchee.com.wasedabusschedule.Fragments
 
 import android.content.Context
 import android.database.Cursor
-import android.database.DatabaseUtils
+import android.os.CountDownTimer
 import android.os.Handler
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -14,8 +14,9 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.R
-import java.text.SimpleDateFormat
 import java.util.*
+import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -112,7 +113,7 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
 
     //function to start countdown
     fun countDownStart(viewHolder: ViewHolder, hour:String?, min:String?) {
-        handler = Handler()
+/*        handler = Handler()
         runnable = object : Runnable {
             override fun run() {
                 (handler)?.postDelayed(this, 1000)
@@ -146,7 +147,39 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
             }
         }
 
-        handler?.postDelayed(runnable, 0)
+        handler?.postDelayed(runnable, 0)*/
+
+        val now = Calendar.getInstance().timeInMillis
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.JAPAN)
+
+        //bus departure time
+        val departure = dateFormat.parse("$nowYear-$nowMonth-$nowDate-$hour-$min-00")
+
+        val cdt = object : CountDownTimer(departure.time, 1000) {  //throw in the bus schedule param here
+            override fun onTick(timeremaining: Long) {
+                var remaining = timeremaining
+                val days = TimeUnit.MILLISECONDS.toDays(remaining)
+                remaining -= TimeUnit.DAYS.toMillis(days)
+
+                val hours = TimeUnit.MILLISECONDS.toHours(remaining)
+                remaining -= TimeUnit.HOURS.toMillis(hours)
+
+                val minutes = TimeUnit.MILLISECONDS.toMinutes(remaining)
+                remaining -= TimeUnit.MINUTES.toMillis(minutes)
+
+                val seconds = TimeUnit.MILLISECONDS.toSeconds(remaining)
+
+                viewHolder.hour_text.text = hours.toString()
+                viewHolder.min_text.text = minutes.toString()
+                viewHolder.sec_text.text = seconds.toString()
+            }
+
+            override fun onFinish() {
+
+            }
+        }
+
+        cdt.start()
     }
 
 

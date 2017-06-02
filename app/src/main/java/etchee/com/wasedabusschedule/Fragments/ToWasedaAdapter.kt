@@ -29,6 +29,10 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
     var runnable: Runnable? = null
     var itemsArray = arrayListOf<RecyclerScrollTemp>()
 
+    val nowYear = Calendar.getInstance(Locale.JAPAN).get(Calendar.YEAR)
+    val nowMonth = Calendar.getInstance(Locale.JAPAN).get(Calendar.MONTH) + 1
+    val nowDate = Calendar.getInstance(Locale.JAPAN).get(Calendar.DATE)
+
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false))
      }
@@ -113,19 +117,21 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
             override fun run() {
                 (handler)?.postDelayed(this, 1000)
                 try {
+                    val now = Date()
                     val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.JAPAN)
-                    // Here Set your Event Date
-                    val eventDate = dateFormat.parse("2017-12-30-$hour-$min-00")
-                    val currentTime = Date()
 
-                    if (!currentTime.after(eventDate)) {
-                        var diff = eventDate.time - currentTime.time
-                        val days = diff / (24 * 60 * 60 * 1000)
-                        diff -= days * (24 * 60 * 60 * 1000)
+                    //bus departure time
+                    val departure = dateFormat.parse("$nowYear-$nowMonth-$nowDate-$hour-$min-00")
+
+                    if (now.before(departure)) {
+                        var diff = departure.time - now.time
+
                         val hours = diff / (60 * 60 * 1000)
                         diff -= hours * (60 * 60 * 1000)
+
                         val minutes = diff / (60 * 1000)
                         diff -= minutes * (60 * 1000)
+
                         val seconds = diff / 1000
 
                         viewHolder.hour_text.text = String.format("%02d", hours)

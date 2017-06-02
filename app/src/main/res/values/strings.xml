@@ -12,4 +12,13 @@
     <string name="sample_route_option">サンプル経由</string>
     <string name="hint_departure_text">発</string>
     <string name="sample_departure_time">10:00</string>
+    <string name="waseda_flag_0">学生会館経由</string>
+    <string name="waseda_flag_1">西早稲田キャンパス経由、Twins行き</string>
+    <string name="waseda_flag_2">Twins経由、西早稲田キャンパス行き</string>
+    <string name="waseda_flag_3">中型とマイクロバス両方の運行</string>
+    <string name="waseda_flag_4">早稲田キャンパス経由Twins行き</string>
+    <string name="waseda_flag_5">Twins経由早稲田キャンパス行き</string>
+    <string name="waseda_flag_6">中型とマイクロバス両方の運行</string>
+    <string name="waseda_flag_7">前の便が到着次第運行。カウントダウンは目安</string>
+    <string name="waseda_flag_8">バス２台の運行。前の便が到着次第運行。カウントダウンは目安</string>
 </resources>

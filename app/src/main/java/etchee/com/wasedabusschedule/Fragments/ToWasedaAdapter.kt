@@ -3,8 +3,6 @@ package etchee.com.wasedabusschedule.Fragments
 import android.content.Context
 import android.database.Cursor
 import android.os.CountDownTimer
-import android.os.Handler
-import android.support.design.R.id.start
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,7 +16,6 @@ import etchee.com.wasedabusschedule.R
 import java.util.*
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
-import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
 
 
 /**
@@ -28,11 +25,14 @@ import kotlin.coroutines.experimental.EmptyCoroutineContext.plus
 class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.Adapter<ToWasedaAdapter.ViewHolder>() {
 
     private var TAG: String = javaClass.simpleName
-    var itemsArray = arrayListOf<RecyclerScrollTemp>()  //to store data while scrolling
+    var restoreDataArray = arrayListOf<RecyclerScrollTemp>()  //to store data while scrolling
     //Users won't be using the bus around midnight -- no need to perform real-time date query.
     val nowYear = Calendar.getInstance(Locale.JAPAN).get(Calendar.YEAR)
     val nowMonth = Calendar.getInstance(Locale.JAPAN).get(Calendar.MONTH) + 1
     val nowDate = Calendar.getInstance(Locale.JAPAN).get(Calendar.DATE)
+    val hourFormat = SimpleDateFormat("HH", Locale.JAPAN)
+    val minFormat = SimpleDateFormat("mm", Locale.JAPAN)
+    val secFormat = SimpleDateFormat("ss", Locale.JAPAN)
 
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false))
@@ -61,57 +61,49 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
                     .into(viewHolder.image_background)
 
             // NEW: if no item is contained, create new
-            if (itemsArray.size >= position) {
+            if (restoreDataArray.size >= position) {
+
+                //get data
                 cursor.moveToPosition(position)
-                //extract the time info from the database
+
                 hour = cursor.getString(cursor.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_HOUR))
                 min = cursor.getString(cursor.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_MIN))
+                departureTime = hour + ":" + min    //Concat text for display
+
                 flag = cursor.getInt(cursor.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_FLAG))
                 val routeOption = getRouteOption(flag)
-                departureTime = hour + ":" + min
 
-                //set the departure time
+                //and display data
                 viewHolder.departure_time_text.text = departureTime
-
-                //set the route option
                 viewHolder.route_option_text.text = routeOption
 
-                //start the countdown
-               /* countDownStart(
-                        viewHolder,
-                        hour,
-                        min
-                )*/
-                val now = Calendar.getInstance().timeInMillis
+                //countdown components
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.JAPAN)
-
-                //bus departure time
-                val departure = dateFormat.parse("$nowYear-$nowMonth-$nowDate-$hour-$min-00")
-
-                val cdt = createTimer(departure, viewHolder)
-
-                cdt.start()
+                val dep_time_obj:Date = dateFormat.parse("$nowYear-$nowMonth-$nowDate-$hour-$min-00")
+                //cancel timer if exists
+                viewHolder.countdown?.cancel()
+                //and start a new one
+                mTimer(dep_time_obj, viewHolder).start()
 
                 //and save for restore.
-                itemsArray.add(position, RecyclerScrollTemp(hour, min, departureTime, cdt))
+                restoreDataArray.add(position, RecyclerScrollTemp(hour, min, departureTime, dep_time_obj))
 
-            } else {    //Data has been created before, restore.
-                val hour1 = itemsArray.get(position).hour_text
-                val min1 = itemsArray.get(position).min_text
-                val departureTime1 = itemsArray.get(position).departure_time_text
+            } else {
+                //Data has been created before, restore.
 
-                //set the departure time
-                viewHolder.departure_time_text.text = departureTime1
+                val departureTime:String = restoreDataArray[position].departure_Time
+
+                val dep_time_obj:Date = restoreDataArray[position].departure_obj
+
+                //cancel timer if exists
+                viewHolder.countdown?.cancel()
+                //and start a new one
+                mTimer(dep_time_obj, viewHolder).start()
+
+                viewHolder.departure_time_text.text = departureTime
                 val now = Calendar.getInstance().timeInMillis
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.JAPAN)
 
-                //bus departure time
-                val departure = dateFormat.parse("$nowYear-$nowMonth-$nowDate-$hour-$min-00")
-
-                //start the countdown
-                val cdt = createTimer(departure, viewHolder)
-
-                cdt.start()
             }
         }
     }
@@ -158,10 +150,11 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
         }
     }
 
-    private fun createTimer(departure:Date, viewHolder:ViewHolder):CountDownTimer{
-        val cdt = object : CountDownTimer(departure.time, 1000) {  //throw in the bus schedule param here
-            override fun onTick(timeremaining: Long) {
-                var remaining = timeremaining
+    private fun mTimer(dep_obj:Date, viewHolder:ViewHolder):CountDownTimer{
+
+        val cdt = object : CountDownTimer(dep_obj.time, 1000) {  //throw in the bus schedule param here
+            override fun onTick(timerRemaining: Long) {
+                var remaining = timerRemaining
                 val days = TimeUnit.MILLISECONDS.toDays(remaining)
                 remaining -= TimeUnit.DAYS.toMillis(days)
 
@@ -173,9 +166,9 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
 
                 val seconds = TimeUnit.MILLISECONDS.toSeconds(remaining)
 
-                viewHolder.hour_text.text = hours.toString()
-                viewHolder.min_text.text = minutes.toString()
-                viewHolder.sec_text.text = seconds.toString()
+                viewHolder.hour_text.text = hourFormat.format(hours).toString()
+                viewHolder.min_text.text = minFormat.format(minutes).toString()
+                viewHolder.sec_text.text = secFormat.format(seconds).toString()
             }
 
             override fun onFinish() {
@@ -197,6 +190,7 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
         val image_background = view.findViewById(R.id.item_image) as ImageView
         val departure_time_text = view.findViewById(R.id.departure_time) as TextView
         val route_option_text = view.findViewById(R.id.hint_route_text)as TextView
+        val countdown:CountDownTimer? = null
     }
 
     /**
@@ -206,7 +200,7 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
     data class RecyclerScrollTemp(
             val hour_text:String,
             val min_text: String,
-            val departure_time_text:String,
-            val cdt:CountDownTimer
+            val departure_Time:String,
+            val departure_obj:Date
     )
 }

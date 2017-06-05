@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
 class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.Adapter<ToWasedaAdapter.ViewHolder>() {
 
     private var TAG: String = javaClass.simpleName
-    var restoreDataArray = arrayListOf<RecyclerScrollTemp>()  //to store data while scrolling
+    var restoreDataList = arrayListOf<RecyclerScrollTemp>()  //to store data while scrolling
     //Users won't be using the bus around midnight -- no need to perform real-time date query.
     val nowYear = Calendar.getInstance(Locale.JAPAN).get(Calendar.YEAR)
     val nowMonth = Calendar.getInstance(Locale.JAPAN).get(Calendar.MONTH) + 1
@@ -33,6 +33,8 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
     val hourFormat = SimpleDateFormat("HH", Locale.JAPAN)
     val minFormat = SimpleDateFormat("mm", Locale.JAPAN)
     val secFormat = SimpleDateFormat("ss", Locale.JAPAN)
+
+    var viewHolderList = arrayListOf<ViewHolder>()
 
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false))
@@ -46,8 +48,8 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
         //declare all the item contents
-        var hour = ""
-        var min = ""
+        var dep_hour = ""
+        var dep_min = ""
         var departureTime = ""
         val flag:Int
 
@@ -60,50 +62,48 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
                     .load(R.drawable.img_okuma)
                     .into(viewHolder.image_background)
 
-            // NEW: if no item is contained, create new
-            if (restoreDataArray.size >= position) {
+            // --NEW VIEWHOLDER--
+            if (viewHolderList.size == position) {
+
+                //save the viewHolder in the list
+                viewHolderList.add(viewHolder)
 
                 //get data
                 cursor.moveToPosition(position)
-
-                hour = cursor.getString(cursor.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_HOUR))
-                min = cursor.getString(cursor.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_MIN))
-                departureTime = hour + ":" + min    //Concat text for display
-
+                //DEPARTURE TIME TEXTS
+                dep_hour = cursor.getString(cursor.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_HOUR))
+                dep_min = cursor.getString(cursor.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_MIN))
+                departureTime = dep_hour + ":" + dep_min    //Concat text for display
+                //ROUTE OPTION TEXTS
                 flag = cursor.getInt(cursor.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_FLAG))
                 val routeOption = getRouteOption(flag)
 
-                //and display data
-                viewHolder.departure_time_text.text = departureTime
-                viewHolder.route_option_text.text = routeOption
+                //AND DISPLAY
+                viewHolderList[position].departure_time_text.text = departureTime
+                viewHolderList[position].route_option_text.text = routeOption
 
-                //countdown components
+                //GET COUNTDOWN COMPONENTS
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.JAPAN)
-                val dep_time_obj:Date = dateFormat.parse("$nowYear-$nowMonth-$nowDate-$hour-$min-00")
-                //cancel timer if exists
-                viewHolder.countdown?.cancel()
+                val dep_time_obj:Date = dateFormat.parse("$nowYear-$nowMonth-$nowDate-$dep_hour-$dep_min-00")
+                //cancel timer if exists, just in case
+                viewHolderList[position].countdown?.cancel()
                 //and start a new one
                 mTimer(dep_time_obj, viewHolder).start()
 
-                //and save for restore.
-                restoreDataArray.add(position, RecyclerScrollTemp(hour, min, departureTime, dep_time_obj))
+                //SAVE THE STATE
+                restoreDataList.add(position, RecyclerScrollTemp(dep_hour, dep_min, departureTime, dep_time_obj))
 
             } else {
-                //Data has been created before, restore.
-
-                val departureTime:String = restoreDataArray[position].departure_Time
-
-                val dep_time_obj:Date = restoreDataArray[position].departure_obj
+                //--SAVED VIEWHOLDER--
+                val dep_time_obj:Date = restoreDataList[position].departure_obj
+                viewHolderList[position].departure_time_text.text = restoreDataList[position].departure_Time
 
                 //cancel timer if exists
-                viewHolder.countdown?.cancel()
+                viewHolderList[position].countdown?.cancel()
                 //and start a new one
                 mTimer(dep_time_obj, viewHolder).start()
 
-                viewHolder.departure_time_text.text = departureTime
-                val now = Calendar.getInstance().timeInMillis
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.JAPAN)
-
+                viewHolderList[position].departure_time_text.text = departureTime
             }
         }
     }
@@ -150,25 +150,37 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
         }
     }
 
-    private fun mTimer(dep_obj:Date, viewHolder:ViewHolder):CountDownTimer{
+    private fun mTimer(dep_obj:Date, viewholder:ViewHolder):CountDownTimer{
 
-        val cdt = object : CountDownTimer(dep_obj.time, 1000) {  //throw in the bus schedule param here
-            override fun onTick(timerRemaining: Long) {
-                var remaining = timerRemaining
-                val days = TimeUnit.MILLISECONDS.toDays(remaining)
-                remaining -= TimeUnit.DAYS.toMillis(days)
+        val remaining = dep_obj.time - Date().time
 
-                val hours = TimeUnit.MILLISECONDS.toHours(remaining)
-                remaining -= TimeUnit.HOURS.toMillis(hours)
+        val cdt = object : CountDownTimer(remaining, 1000) {  //throw in the bus schedule param here
+            override fun onTick(milliSeconds: Long) {
+//                var remaining = milliSeconds
+//                val days = TimeUnit.MILLISECONDS.toDays(remaining)
+//                remaining -= TimeUnit.DAYS.toMillis(days)
+//
+//                val hours = TimeUnit.MILLISECONDS.toHours(remaining)
+//                remaining -= TimeUnit.HOURS.toMillis(hours)
+//
+//                val minutes = TimeUnit.MILLISECONDS.toMinutes(remaining)
+//                remaining -= TimeUnit.MINUTES.toMillis(minutes)
+//
+//                val seconds = TimeUnit.MILLISECONDS.toSeconds(remaining)
 
-                val minutes = TimeUnit.MILLISECONDS.toMinutes(remaining)
-                remaining -= TimeUnit.MINUTES.toMillis(minutes)
+                val hours = (milliSeconds / (1000*60*60)) % 24
+                val minutes =  (milliSeconds / (1000*60)) % 60
+                val seconds = (milliSeconds / 1000) % 60
 
-                val seconds = TimeUnit.MILLISECONDS.toSeconds(remaining)
-
-                viewHolder.hour_text.text = hourFormat.format(hours).toString()
-                viewHolder.min_text.text = minFormat.format(minutes).toString()
-                viewHolder.sec_text.text = secFormat.format(seconds).toString()
+//                viewholder.hour_text.text = hourFormat.format(hours).toString()
+//                viewholder.min_text.text = minFormat.format(minutes).toString()
+//                viewholder.sec_text.text = secFormat.format(seconds).toString()
+                viewholder.hour_text.text = hours.toString()
+                viewholder.min_text.text = minutes.toString()
+                viewholder.sec_text.text = seconds.toString()
+                Log.v(TAG, "Remaining time computed: " + hours.toString() + ":"
+                        + minutes.toString() + ":"
+                        + seconds.toString() )
             }
 
             override fun onFinish() {

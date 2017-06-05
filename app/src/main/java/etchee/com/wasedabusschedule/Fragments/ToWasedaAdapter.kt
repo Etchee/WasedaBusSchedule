@@ -175,9 +175,9 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
 //                viewholder.hour_text.text = hourFormat.format(hours).toString()
 //                viewholder.min_text.text = minFormat.format(minutes).toString()
 //                viewholder.sec_text.text = secFormat.format(seconds).toString()
-                viewholder.hour_text.text = hours.toString()
-                viewholder.min_text.text = minutes.toString()
-                viewholder.sec_text.text = seconds.toString()
+                viewholder.hour_text.text = countFormatter(hours)
+                viewholder.min_text.text = countFormatter(minutes)
+                viewholder.sec_text.text = countFormatter(seconds)
                 Log.v(TAG, "Remaining time computed: " + hours.toString() + ":"
                         + minutes.toString() + ":"
                         + seconds.toString() )
@@ -193,6 +193,17 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
 
     override fun onViewRecycled(holder: ViewHolder?) {
         super.onViewRecycled(holder)
+    }
+
+    private fun countFormatter(num:Long):String{
+        var str = ""
+        if (num < 10) {
+            str = "0" + num.toString()
+        }else{
+            str = num.toString()
+        }
+
+        return str
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

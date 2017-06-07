@@ -15,7 +15,6 @@ import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.R
 import java.util.*
 import java.text.SimpleDateFormat
-import java.util.concurrent.TimeUnit
 
 
 /**
@@ -33,6 +32,8 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
     val hourFormat = SimpleDateFormat("HH", Locale.JAPAN)
     val minFormat = SimpleDateFormat("mm", Locale.JAPAN)
     val secFormat = SimpleDateFormat("ss", Locale.JAPAN)
+
+    var timerList = arrayListOf<CountDownTimer>()
 
     var viewHolderList = arrayListOf<ViewHolder>()
 
@@ -88,7 +89,8 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
                 //cancel timer if exists, just in case
                 viewHolderList[position].countdown?.cancel()
                 //and start a new one
-                mTimer(dep_time_obj, viewHolder).start()
+                timerList.add(position, mTimer(dep_time_obj, viewHolder, position))
+
 
                 //SAVE THE STATE
                 restoreDataList.add(position, RecyclerScrollTemp(dep_hour, dep_min, departureTime, dep_time_obj))
@@ -101,7 +103,8 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
                 //cancel timer if exists
                 viewHolderList[position].countdown?.cancel()
                 //and start a new one
-                mTimer(dep_time_obj, viewHolder).start()
+                timerList[position].cancel()
+                timerList[position] = mTimer(dep_time_obj, viewHolder, position)
 
                 viewHolderList[position].departure_time_text.text = departureTime
             }
@@ -150,34 +153,20 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
         }
     }
 
-    private fun mTimer(dep_obj:Date, viewholder:ViewHolder):CountDownTimer{
+    private fun mTimer(dep_obj:Date, viewHolder:ViewHolder, position:Int):CountDownTimer{
 
         val remaining = dep_obj.time - Date().time
 
         val cdt = object : CountDownTimer(remaining, 1000) {  //throw in the bus schedule param here
             override fun onTick(milliSeconds: Long) {
-//                var remaining = milliSeconds
-//                val days = TimeUnit.MILLISECONDS.toDays(remaining)
-//                remaining -= TimeUnit.DAYS.toMillis(days)
-//
-//                val hours = TimeUnit.MILLISECONDS.toHours(remaining)
-//                remaining -= TimeUnit.HOURS.toMillis(hours)
-//
-//                val minutes = TimeUnit.MILLISECONDS.toMinutes(remaining)
-//                remaining -= TimeUnit.MINUTES.toMillis(minutes)
-//
-//                val seconds = TimeUnit.MILLISECONDS.toSeconds(remaining)
 
                 val hours = (milliSeconds / (1000*60*60)) % 24
                 val minutes =  (milliSeconds / (1000*60)) % 60
                 val seconds = (milliSeconds / 1000) % 60
 
-//                viewholder.hour_text.text = hourFormat.format(hours).toString()
-//                viewholder.min_text.text = minFormat.format(minutes).toString()
-//                viewholder.sec_text.text = secFormat.format(seconds).toString()
-                viewholder.hour_text.text = countFormatter(hours)
-                viewholder.min_text.text = countFormatter(minutes)
-                viewholder.sec_text.text = countFormatter(seconds)
+                viewHolderList[position].hour_text.text = countFormatter(hours)
+                viewHolderList[position].min_text.text = countFormatter(minutes)
+                viewHolderList[position].sec_text.text = countFormatter(seconds)
                 Log.v(TAG, "Remaining time computed: " + hours.toString() + ":"
                         + minutes.toString() + ":"
                         + seconds.toString() )

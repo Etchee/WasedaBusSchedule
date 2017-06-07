@@ -18,7 +18,7 @@ import java.util.*
 class ToWasedaFragment: android.support.v4.app.Fragment() {
 
     val TAG: String = javaClass.simpleName
-
+    var adapter:ToWasedaAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,6 +98,11 @@ class ToWasedaFragment: android.support.v4.app.Fragment() {
         Log.v(TAG, "Generated concat current time value is: " + search_key.toString())
         Log.v(TAG, DatabaseUtils.dumpCursorToString(cursor))
         return cursor
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adapter?.notifyDataSetChanged()
     }
 
     private fun processMin(min:Int):String {

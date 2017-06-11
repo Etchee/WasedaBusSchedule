@@ -2,6 +2,7 @@ package etchee.com.wasedabusschedule.Fragments
 
 import android.content.Context
 import android.database.Cursor
+import android.database.DatabaseUtils
 import android.os.Handler
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -20,7 +21,8 @@ import kotlinx.android.synthetic.main.layout_item_single.view.*
  * RecyclerView Adapter for the ToNishi fragment
  * Created by rikutoechigoya on 2017/05/24.
  */
-class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.support.v7.widget.RecyclerView.Adapter<ToNishiAdapter.ViewHolder>() {
+class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
+        android.support.v7.widget.RecyclerView.Adapter<ToNishiAdapter.ViewHolder>() {
 
     private var TAG: String = javaClass.simpleName
     var handler: Handler? = null
@@ -29,8 +31,7 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
 
 
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
-        viewHolderArray.add(ViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false)))
-        return viewHolderArray[viewHolderArray.size - 1]
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false))
     }
 
     /**
@@ -44,7 +45,9 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
                 .load(R.drawable.nishi_improved)
                 .into(viewHolder.image_background)
 
-        when(viewHolderArray[position].min_holder == ""){
+        if (viewHolderArray.size == position) viewHolderArray.add(viewHolder)
+
+        when(viewHolderArray[position].min_holder.isEmpty()){
 
             //new ViewHolder
             true->{
@@ -64,6 +67,8 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
                 )
                 //SimpleDateFormat specifies like 2017-06-12-13-15-00
                 countDownStart(position, getCurrentDateText() + "$hourValue-$minValue-00")
+
+                viewHolderArray.add(viewHolder)
             }
 
             //Already made ViewHolder
@@ -71,9 +76,15 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
                 Glide.with(context)
                         .load(R.drawable.nishi_improved)
                         .into(viewHolder.image_background)
-                viewHolder.bindStaticInfo(viewHolderArray[position].hour_holder,
+                viewHolder.bindStaticInfo(
+                        viewHolderArray[position].hour_holder,
                         viewHolderArray[position].min_holder,
-                        viewHolderArray[position].routeOption)
+                        viewHolderArray[position].routeOption )
+                viewHolder.bindCountDown(
+                        viewHolderArray[position].hour_holder,
+                        viewHolderArray[position].min_holder,
+                        "00"
+                        )
             }
         }
     }
@@ -83,8 +94,7 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
             Log.e(TAG, "Cursor is null")
             return 0
         } else {
-//            Log.v(TAG, DatabaseUtils.dumpCursorToString(cursor))
-            val count = cursor.count
+            Log.v(TAG, "NISHI ADAPTER RECEIVING CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
             return cursor.count
         }
     }

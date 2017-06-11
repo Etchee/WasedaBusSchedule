@@ -21,7 +21,6 @@ import java.util.*
 class ToNishiFragment: Fragment() {
 
     val TAG: String = javaClass.simpleName
-    var adapter:ToWasedaAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +45,6 @@ class ToNishiFragment: Fragment() {
      *  今の時刻を取得して、それ以降に出るバスの分の情報をCursorに乗っけて持ってくる！
      */
     fun createCursor(): Cursor? {
-        val cursor:Cursor?
-
         //Get the current time as an instance
         val now = Date()
         val calendar = Calendar.getInstance(Locale.JAPAN)
@@ -62,10 +59,13 @@ class ToNishiFragment: Fragment() {
 
         when(day){
             1->{    //No bus on Sunday
-                cursor = null
+                val cursor:Cursor? = null
+                Log.v(TAG, "Passing cursor: " + DatabaseUtils.dumpCursorToString(cursor))
+                return cursor
             }
 
             7->{    //Saturday Table
+                val cursor:Cursor?
                 val selection = DataContract.SATURDAY_DB_TO_NISHI().COLUMN_SEARCH + " > ?"
                 val selectionArgs = arrayOf(search_key.toString())
                 cursor = context.contentResolver.query(
@@ -75,9 +75,12 @@ class ToNishiFragment: Fragment() {
                         selectionArgs,
                         null
                 )
+                Log.v(TAG, "Passing cursor: " + DatabaseUtils.dumpCursorToString(cursor))
+                return cursor
             }
 
             else->{ //WeekDay Table
+                val cursor:Cursor?
                 val selection = DataContract.DB_TO_NISHI().COLUMN_SEARCH + " > ?"
                 val selectionArgs = arrayOf(search_key.toString())
                 cursor = context.contentResolver.query(
@@ -87,10 +90,11 @@ class ToNishiFragment: Fragment() {
                         selectionArgs,
                         null
                 )
+                Log.v(TAG, "Passing cursor: " + DatabaseUtils.dumpCursorToString(cursor))
+                return cursor
             }
         }
-        Log.v(TAG, "Generated concat current time value is: " + search_key.toString())
-        return cursor
+
     }
 
     override fun onResume() {

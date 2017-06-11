@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.Cursor
 import android.os.Handler
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,7 @@ import kotlinx.android.synthetic.main.layout_item_single.view.*
  * RecyclerView Adapter for the ToNishi fragment
  * Created by rikutoechigoya on 2017/05/24.
  */
-class ToNishiAdapter(val context: Context, var cursor: Cursor?) : android.support.v7.widget.RecyclerView.Adapter<ToNishiAdapter.ViewHolder>() {
+class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.support.v7.widget.RecyclerView.Adapter<ToNishiAdapter.ViewHolder>() {
 
     private var TAG: String = javaClass.simpleName
     var handler: Handler? = null
@@ -42,16 +43,54 @@ class ToNishiAdapter(val context: Context, var cursor: Cursor?) : android.suppor
                 .load(R.drawable.nishi_improved)
                 .into(viewHolder.image_background)
 
-
         countDownStart(viewHolder)
     }
 
     override fun getItemCount(): Int {
-        return 40
+        if (cursor == null) {
+            Log.e(TAG, "Cursor is null")
+            return 0
+        } else {
+//            Log.v(TAG, DatabaseUtils.dumpCursorToString(cursor))
+            return cursor.count
+        }
     }
 
     override fun onViewRecycled(holder: ViewHolder?) {
         super.onViewRecycled(holder)
+    }
+
+    private fun getRouteOption(flag:Int):String {
+        when(flag) {
+            0 -> {
+                return context.resources.getString(R.string.waseda_flag_0)
+            }
+            1 -> {
+                return context.resources.getString(R.string.waseda_flag_1)
+            }
+            2 -> {
+                return context.resources.getString(R.string.waseda_flag_2)
+            }
+            3 -> {
+                return context.resources.getString(R.string.waseda_flag_3)
+            }
+            4 -> {
+                return context.resources.getString(R.string.waseda_flag_4)
+            }
+            5 -> {
+                return context.resources.getString(R.string.waseda_flag_5)
+            }
+            6 -> {
+                return context.resources.getString(R.string.waseda_flag_6)
+            }
+            7 -> {
+                return context.resources.getString(R.string.waseda_flag_7)
+            }
+            8 -> {
+                return context.resources.getString(R.string.waseda_flag_8)
+            }
+            else -> return ""
+        }
     }
 
     //function to start countdown

@@ -48,12 +48,16 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
         val minIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_MIN)
         val routeOptionIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_FLAG)
 
+        val hourValue = timeFormatter(cursor?.getString(hourIndex as Int) as String)
+        val minValue = timeFormatter(cursor.getString(minIndex as Int))
+
         viewHolder.bindStaticInfo(
-                timeFormatter(cursor?.getString(hourIndex as Int) as String),
-                timeFormatter(cursor.getString(minIndex as Int)),
+                hourValue,
+                minValue,
                 getRouteOption(cursor.getInt(routeOptionIndex as Int))
         )
-        countDownStart(viewHolder)
+        //SimpleDateFormat specifies like 2017-06-12-13-15-00
+        countDownStart(viewHolder, getCurrentDateText() + "$hourValue-$minValue-00")
     }
 
     override fun getItemCount(): Int {
@@ -64,6 +68,14 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
 //            Log.v(TAG, DatabaseUtils.dumpCursorToString(cursor))
             return cursor.count
         }
+    }
+
+    fun getCurrentDateText():String{
+        val year:String = Calendar.getInstance().get(Calendar.YEAR).toString()
+        val month:String = Calendar.getInstance().get(Calendar.MONTH + 1).toString()
+        val date:String = Calendar.getInstance().get(Calendar.DATE).toString()
+
+        return "$year-$month-$date-"
     }
 
     override fun onViewRecycled(holder: ViewHolder?) {
@@ -104,15 +116,15 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
     }
 
     //function to start countdown
-    fun countDownStart(viewHolder: ViewHolder) {
+    fun countDownStart(viewHolder: ViewHolder, dept_time:String) {
         handler = Handler()
         runnable = object : Runnable {
             override fun run() {
                 (handler)?.postDelayed(this, 1000)
                 try {
-                    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.JAPAN)
+                    val dateFormat = SimpleDateFormat("yyyy-MM-dd-kk-mm-ss", Locale.JAPAN)
                     // Here Set your Event Date
-                    val eventDate = dateFormat.parse("2017-12-30")
+                    val eventDate = dateFormat.parse(dept_time)
                     val currentDate = Date()
                     if (!currentDate.after(eventDate)) {
                         var diff = eventDate.time - currentDate.time

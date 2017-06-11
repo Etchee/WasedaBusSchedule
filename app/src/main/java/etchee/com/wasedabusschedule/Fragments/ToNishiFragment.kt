@@ -38,9 +38,8 @@ class ToNishiFragment: Fragment() {
         val cursor = createCursor()
 
         //RecyclerView init
-        val adapter:ToWasedaAdapter = ToWasedaAdapter(context.applicationContext, cursor)
         recyclerView_toNishi.layoutManager = LinearLayoutManager(context.applicationContext)
-        recyclerView_toNishi.adapter = adapter
+        recyclerView_toNishi.adapter = ToNishiAdapter(context, cursor)
     }
 
     /**
@@ -60,12 +59,6 @@ class ToNishiFragment: Fragment() {
         val min = calendar.get(Calendar.MINUTE)
         val search_key = getKey(min, hour)  //get the integer value of the current time. i.g. 9:09AM → 909
         //So just need to find rows with key bigger than 909
-        /*
-                The table:
-                |Hour column| |Minute Column|
-                Compare the current hour against the hour column,
-                then compare the minute column.
-         */
 
         when(day){
             1->{    //No bus on Sunday

@@ -79,7 +79,7 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
                 viewHolder.bindStaticInfo(
                         viewHolderArray[position].hour_holder,
                         viewHolderArray[position].min_holder,
-                        viewHolderArray[position].routeOption )
+                        viewHolderArray[position].routeOption_holder)
                 viewHolder.bindCountDown(
                         viewHolderArray[position].hour_holder,
                         viewHolderArray[position].min_holder,
@@ -203,17 +203,18 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
         val image_background = view.findViewById(R.id.item_image) as ImageView
 
         //and PlaceHolders for saving data for scrolling
-        val routeOption:String = ""
+        var routeOption_holder:String = ""
         var hour_holder:String = ""
         var min_holder:String = ""
 
         fun bindStaticInfo(hour:String?, min:String?, routeOption:String?){
             //save in placeholder
+            routeOption_holder = routeOption as String
             hour_holder = hour as String
             min_holder = min as String
 
-            itemView.departure_time.text = hour + min
             itemView.hint_route_text.text = routeOption
+            itemView.departure_time.text = hour + min
         }
 
         fun bindCountDown(hour:String?, min:String?, sec:String?){

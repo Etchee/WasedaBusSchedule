@@ -94,7 +94,6 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
             Log.e(TAG, "Cursor is null")
             return 0
         } else {
-            Log.v(TAG, "NISHI ADAPTER RECEIVING CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
             return cursor.count
         }
     }

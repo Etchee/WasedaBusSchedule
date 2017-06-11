@@ -97,7 +97,6 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
             Log.e(TAG, "Cursor is null")
             return 0
         } else {
-            Log.v(TAG, "WASEDA ADAPTER RECEIVING CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
             return cursor.count
         }
     }

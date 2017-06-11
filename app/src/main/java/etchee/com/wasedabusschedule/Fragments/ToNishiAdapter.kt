@@ -25,10 +25,12 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
     private var TAG: String = javaClass.simpleName
     var handler: Handler? = null
     var runnable: Runnable? = null
+    var viewHolderArray = arrayListOf<ToNishiAdapter.ViewHolder>()
 
 
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false))
+        viewHolderArray.add(ViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false)))
+        return viewHolderArray[viewHolderArray.size - 1]
     }
 
     /**
@@ -42,22 +44,38 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
                 .load(R.drawable.nishi_improved)
                 .into(viewHolder.image_background)
 
-        //GET THE INFO
-        cursor?.moveToPosition(position)
-        val hourIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_HOUR)
-        val minIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_MIN)
-        val routeOptionIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_FLAG)
+        when(viewHolderArray[position].min_holder == ""){
 
-        val hourValue = timeFormatter(cursor?.getString(hourIndex as Int) as String)
-        val minValue = timeFormatter(cursor.getString(minIndex as Int))
+            //new ViewHolder
+            true->{
+                //GET THE INFO
+                cursor?.moveToPosition(position)
+                val hourIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_HOUR)
+                val minIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_MIN)
+                val routeOptionIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_FLAG)
 
-        viewHolder.bindStaticInfo(
-                hourValue,
-                minValue,
-                getRouteOption(cursor.getInt(routeOptionIndex as Int))
-        )
-        //SimpleDateFormat specifies like 2017-06-12-13-15-00
-        countDownStart(viewHolder, getCurrentDateText() + "$hourValue-$minValue-00")
+                val hourValue = timeFormatter(cursor?.getString(hourIndex as Int) as String)
+                val minValue = timeFormatter(cursor.getString(minIndex as Int))
+
+                viewHolderArray[position].bindStaticInfo(
+                        hourValue,
+                        minValue,
+                        getRouteOption(cursor.getInt(routeOptionIndex as Int))
+                )
+                //SimpleDateFormat specifies like 2017-06-12-13-15-00
+                countDownStart(position, getCurrentDateText() + "$hourValue-$minValue-00")
+            }
+
+            //Already made ViewHolder
+            false->{
+                Glide.with(context)
+                        .load(R.drawable.nishi_improved)
+                        .into(viewHolder.image_background)
+                viewHolder.bindStaticInfo(viewHolderArray[position].hour_holder,
+                        viewHolderArray[position].min_holder,
+                        viewHolderArray[position].routeOption)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -66,6 +84,7 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
             return 0
         } else {
 //            Log.v(TAG, DatabaseUtils.dumpCursorToString(cursor))
+            val count = cursor.count
             return cursor.count
         }
     }
@@ -117,7 +136,7 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
     }
 
     //function to start countdown
-    fun countDownStart(viewHolder: ViewHolder, dept_time:String) {
+    fun countDownStart(position:Int, dept_time:String) {
         Log.v(TAG, "COUNTDOWN INITIATED FOR: $dept_time")
         handler = Handler()
         runnable = object : Runnable {
@@ -142,7 +161,7 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
                         val minText = String.format("%02d", minutes)
                         val secText = String.format("%02d", seconds)
 
-                        viewHolder.bindCountDown(hourText, minText, secText)
+                        viewHolderArray[position].bindCountDown(hourText, minText, secText)
 
                     } else {
                         handler?.removeCallbacks(runnable)
@@ -173,7 +192,16 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
         //property access cannot be used because of Glide library limitation
         val image_background = view.findViewById(R.id.item_image) as ImageView
 
+        //and PlaceHolders for saving data for scrolling
+        val routeOption:String = ""
+        var hour_holder:String = ""
+        var min_holder:String = ""
+
         fun bindStaticInfo(hour:String?, min:String?, routeOption:String?){
+            //save in placeholder
+            hour_holder = hour as String
+            min_holder = min as String
+
             itemView.departure_time.text = hour + min
             itemView.hint_route_text.text = routeOption
         }

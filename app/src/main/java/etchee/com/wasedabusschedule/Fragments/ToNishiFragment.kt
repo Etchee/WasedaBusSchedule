@@ -66,7 +66,7 @@ class ToNishiFragment: Fragment() {
             }
 
             7->{    //Saturday Table
-                val selection = DataContract.DB_TO_WASEDA().COLUMN_SEARCH + " > ?"
+                val selection = DataContract.SATURDAY_DB_TO_NISHI().COLUMN_SEARCH + " > ?"
                 val selectionArgs = arrayOf(search_key.toString())
                 cursor = context.contentResolver.query(
                         DataContract.SATURDAY_DB_TO_NISHI().CONTENT_URI,
@@ -81,7 +81,7 @@ class ToNishiFragment: Fragment() {
                 val selection = DataContract.DB_TO_NISHI().COLUMN_SEARCH + " > ?"
                 val selectionArgs = arrayOf(search_key.toString())
                 cursor = context.contentResolver.query(
-                        DataContract.DB_TO_WASEDA().CONTENT_URI,
+                        DataContract.DB_TO_NISHI().CONTENT_URI,
                         null,
                         selection,
                         selectionArgs,

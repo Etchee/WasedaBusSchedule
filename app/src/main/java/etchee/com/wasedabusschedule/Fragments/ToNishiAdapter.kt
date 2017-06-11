@@ -13,6 +13,8 @@ import com.bumptech.glide.Glide
 import etchee.com.wasedabusschedule.R
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.android.synthetic.main.layout_fragment_nishi.*
+import kotlinx.android.synthetic.main.layout_item_single.view.*
 
 /**
  * RecyclerView Adapter for the ToNishi fragment
@@ -42,11 +44,10 @@ class ToNishiAdapter(val context: Context, var cursor: Cursor?) : android.suppor
 
 
         countDownStart(viewHolder)
-
     }
 
     override fun getItemCount(): Int {
-        return 3
+        return 40
     }
 
     override fun onViewRecycled(holder: ViewHolder?) {
@@ -74,9 +75,12 @@ class ToNishiAdapter(val context: Context, var cursor: Cursor?) : android.suppor
                         diff -= minutes * (60 * 1000)
                         val seconds = diff / 1000
 
-                        viewHolder.hour_text.text = String.format("%02d", hours)
-                        viewHolder.min_text.text = String.format("%02d", minutes)
-                        viewHolder.sec_text.text = String.format("%02d", seconds)
+                        val hourText = String.format("%02d", hours)
+                        val minText = String.format("%02d", minutes)
+                        val secText = String.format("%02d", seconds)
+
+                        viewHolder.bindTexts(hourText, minText, secText)
+
                     } else {
                         handler?.removeCallbacks(runnable)
                         // handler.removeMessages(0);
@@ -92,9 +96,13 @@ class ToNishiAdapter(val context: Context, var cursor: Cursor?) : android.suppor
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val hour_text = view.findViewById(R.id.item_hour) as TextView
-        val min_text = view.findViewById(R.id.item_min) as TextView
-        val sec_text = view.findViewById(R.id.item_sec) as TextView
+        //property access cannot be used because of Glide library limitation
         val image_background = view.findViewById(R.id.item_image) as ImageView
+
+        fun bindTexts(hour:String, min:String, sec:String){
+            itemView.item_hour.text = hour
+            itemView.item_min.text = min
+            itemView.item_sec.text = sec
+        }
     }
 }

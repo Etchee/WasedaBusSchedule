@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.R
+import kotlinx.android.synthetic.main.layout_fragment_nishi.*
 
 /**
  * Fragment showing a list of departures to Nishi campus

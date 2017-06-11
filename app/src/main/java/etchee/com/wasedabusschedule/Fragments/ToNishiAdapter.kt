@@ -2,7 +2,6 @@ package etchee.com.wasedabusschedule.Fragments
 
 import android.content.Context
 import android.database.Cursor
-import android.database.DatabaseUtils
 import android.os.Handler
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -10,13 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import com.bumptech.glide.Glide
 import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.R
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlinx.android.synthetic.main.layout_fragment_nishi.*
 import kotlinx.android.synthetic.main.layout_item_single.view.*
 
 /**
@@ -51,13 +48,11 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
         val minIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_MIN)
         val routeOptionIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_FLAG)
 
-        viewHolder.bindTexts(
+        viewHolder.bindStaticInfo(
                 timeFormatter(cursor?.getString(hourIndex as Int) as String),
                 timeFormatter(cursor.getString(minIndex as Int)),
                 getRouteOption(cursor.getInt(routeOptionIndex as Int))
         )
-
-
         countDownStart(viewHolder)
     }
 
@@ -133,11 +128,11 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
                         val minText = String.format("%02d", minutes)
                         val secText = String.format("%02d", seconds)
 
-//                        viewHolder.bindTexts(hourText, minText, secText)
+                        viewHolder.bindCountDown(hourText, minText, secText)
 
                     } else {
                         handler?.removeCallbacks(runnable)
-                        // handler.removeMessages(0);
+                         handler?.removeMessages(0)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -164,9 +159,15 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
         //property access cannot be used because of Glide library limitation
         val image_background = view.findViewById(R.id.item_image) as ImageView
 
-        fun bindTexts(hour:String?, min:String?, routeOption:String?){
+        fun bindStaticInfo(hour:String?, min:String?, routeOption:String?){
             itemView.departure_time.text = hour + min
             itemView.hint_route_text.text = routeOption
+        }
+
+        fun bindCountDown(hour:String?, min:String?, sec:String?){
+            itemView.item_hour.text = hour
+            itemView.item_min.text = min
+            itemView.item_sec.text = sec
         }
     }
 }

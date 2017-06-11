@@ -2,6 +2,7 @@ package etchee.com.wasedabusschedule.Fragments
 
 import android.content.Context
 import android.database.Cursor
+import android.database.DatabaseUtils
 import android.os.CountDownTimer
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -91,7 +92,6 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
                 //and start a new one
                 timerList.add(position, mTimer(dep_time_obj, viewHolder, position))
 
-
                 //SAVE THE STATE
                 restoreDataList.add(position, RecyclerScrollTemp(dep_hour, dep_min, departureTime, dep_time_obj))
 
@@ -116,6 +116,7 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
             Log.e(TAG, "Cursor is null")
             return 0
         } else {
+//            Log.v(TAG, DatabaseUtils.dumpCursorToString(cursor))
             return cursor.count
         }
     }

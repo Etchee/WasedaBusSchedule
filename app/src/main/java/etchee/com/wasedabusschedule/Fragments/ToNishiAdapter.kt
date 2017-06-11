@@ -71,9 +71,10 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
     }
 
     fun getCurrentDateText():String{
-        val year:String = Calendar.getInstance().get(Calendar.YEAR).toString()
-        val month:String = Calendar.getInstance().get(Calendar.MONTH + 1).toString()
-        val date:String = Calendar.getInstance().get(Calendar.DATE).toString()
+        val calendar = Calendar.getInstance()
+        val year:String = calendar.get(Calendar.YEAR).toString()
+        val month:String = (calendar.get(Calendar.MONTH) +1).toString()
+        val date:String = calendar.get(Calendar.DATE).toString()
 
         return "$year-$month-$date-"
     }
@@ -117,6 +118,7 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) : android.suppor
 
     //function to start countdown
     fun countDownStart(viewHolder: ViewHolder, dept_time:String) {
+        Log.v(TAG, "COUNTDOWN INITIATED FOR: $dept_time")
         handler = Handler()
         runnable = object : Runnable {
             override fun run() {

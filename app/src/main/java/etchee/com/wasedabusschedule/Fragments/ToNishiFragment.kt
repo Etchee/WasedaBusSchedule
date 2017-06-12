@@ -21,6 +21,7 @@ import java.util.*
  */
 class ToNishiFragment: Fragment() {
 
+
     val TAG: String = javaClass.simpleName
     lateinit var mAdapter:ToNishiAdapter
 
@@ -34,14 +35,14 @@ class ToNishiFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //view assignment
 
         //create cursor containing appropriate table depending on the day
         mAdapter = ToNishiAdapter(context, createCursor())
 
         //RecyclerView init
         recyclerView_toNishi.layoutManager = LinearLayoutManager(context.applicationContext)
-        val adapter = ToNishiAdapter(context, createCursor())
-        recyclerView_toNishi.adapter = adapter
+        recyclerView_toNishi.adapter = mAdapter
 
         //Pull to refresh setting
         nishi_swipeToRefresh.setOnRefreshListener {
@@ -49,10 +50,17 @@ class ToNishiFragment: Fragment() {
         }
     }
 
+    fun refreshAdapter(){
+        mAdapter.swapCursor(createCursor())
+        nishi_swipeToRefresh.isRefreshing = false
+    }
+
     /**
      *  今の時刻を取得して、それ以降に出るバスの分の情報をCursorに乗っけて持ってくる！
      */
     fun createCursor(): Cursor? {
+        var cursor:Cursor?
+
         //Get the current time as an instance
         val now = Date()
         val calendar = Calendar.getInstance(Locale.JAPAN)
@@ -64,16 +72,19 @@ class ToNishiFragment: Fragment() {
         val min = calendar.get(Calendar.MINUTE)
         val search_key = getKey(min, hour)  //get the integer value of the current time. i.g. 9:09AM → 909
         //So just need to find rows with key bigger than 909
+        /*
+                The table:
+                |Hour column| |Minute Column|
+                Compare the current hour against the hour column,
+                then compare the minute column.
+         */
 
         when(day){
             1->{    //No bus on Sunday
-                val cursor:Cursor? = null
-                Log.v(TAG, "Passing cursor: " + DatabaseUtils.dumpCursorToString(cursor))
-                return cursor
+                cursor = null
             }
 
             7->{    //Saturday Table
-                val cursor:Cursor?
                 val selection = DataContract.SATURDAY_DB_TO_NISHI().COLUMN_SEARCH + " > ?"
                 val selectionArgs = arrayOf(search_key.toString())
                 cursor = context.contentResolver.query(
@@ -83,12 +94,9 @@ class ToNishiFragment: Fragment() {
                         selectionArgs,
                         null
                 )
-                Log.v(TAG, "Passing cursor: " + DatabaseUtils.dumpCursorToString(cursor))
-                return cursor
             }
 
             else->{ //WeekDay Table
-                val cursor:Cursor?
                 val selection = DataContract.DB_TO_NISHI().COLUMN_SEARCH + " > ?"
                 val selectionArgs = arrayOf(search_key.toString())
                 cursor = context.contentResolver.query(
@@ -98,16 +106,11 @@ class ToNishiFragment: Fragment() {
                         selectionArgs,
                         null
                 )
-                Log.v(TAG, "Passing cursor: " + DatabaseUtils.dumpCursorToString(cursor))
-                return cursor
             }
         }
-
-    }
-
-    private fun refreshAdapter(){
-        mAdapter.swapCursor(createCursor())
-        nishi_swipeToRefresh.isRefreshing = false
+        Log.v(TAG, "Generated concat current time value is: " + search_key.toString())
+        Log.v(TAG, DatabaseUtils.dumpCursorToString(cursor))
+        return cursor
     }
 
     override fun onResume() {

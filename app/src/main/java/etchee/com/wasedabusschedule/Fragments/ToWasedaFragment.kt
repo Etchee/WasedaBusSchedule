@@ -19,7 +19,7 @@ import java.util.*
 class ToWasedaFragment: android.support.v4.app.Fragment() {
 
     val TAG: String = javaClass.simpleName
-    var adapter:ToWasedaAdapter? = null
+    lateinit var mAdapter:ToWasedaAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,18 +34,21 @@ class ToWasedaFragment: android.support.v4.app.Fragment() {
         //view assignment
 
         //create cursor containing appropriate table depending on the day
-        val cursor = createCursor()
+        mAdapter = ToWasedaAdapter(context, createCursor())
 
         //RecyclerView init
         recyclerView_toWaseda.layoutManager = LinearLayoutManager(context.applicationContext)
-        val mAdapter = ToWasedaAdapter(context, createCursor())
         recyclerView_toWaseda.adapter = mAdapter
 
         //Pull to refresh setting
         waseda_swipetoRefreshContainer.setOnRefreshListener {
-            mAdapter.swapCursor(createCursor())
-            waseda_swipetoRefreshContainer.isRefreshing = false
+            refreshAdapter()
         }
+    }
+
+     fun refreshAdapter(){
+        mAdapter.swapCursor(createCursor())
+        waseda_swipetoRefreshContainer.isRefreshing = false
     }
 
     /**
@@ -108,7 +111,7 @@ class ToWasedaFragment: android.support.v4.app.Fragment() {
 
     override fun onResume() {
         super.onResume()
-        adapter?.notifyDataSetChanged()
+        refreshAdapter()
     }
 
     private fun processMin(min:Int):String {

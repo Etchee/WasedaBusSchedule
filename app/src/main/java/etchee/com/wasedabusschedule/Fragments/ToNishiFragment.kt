@@ -22,6 +22,7 @@ import java.util.*
 class ToNishiFragment: Fragment() {
 
     val TAG: String = javaClass.simpleName
+    lateinit var mAdapter:ToNishiAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,7 @@ class ToNishiFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //create cursor containing appropriate table depending on the day
-        val cursor = createCursor()
+        mAdapter = ToNishiAdapter(context, createCursor())
 
         //RecyclerView init
         recyclerView_toNishi.layoutManager = LinearLayoutManager(context.applicationContext)
@@ -44,8 +45,7 @@ class ToNishiFragment: Fragment() {
 
         //Pull to refresh setting
         nishi_swipeToRefresh.setOnRefreshListener {
-            adapter.swapCursor(createCursor())
-            nishi_swipeToRefresh.isRefreshing = false
+            refreshAdapter()
         }
     }
 
@@ -105,9 +105,14 @@ class ToNishiFragment: Fragment() {
 
     }
 
+    private fun refreshAdapter(){
+        mAdapter.swapCursor(createCursor())
+        nishi_swipeToRefresh.isRefreshing = false
+    }
+
     override fun onResume() {
         super.onResume()
-        view?.recyclerView_toNishi?.adapter?.notifyDataSetChanged()
+        refreshAdapter()
     }
 
     private fun processMin(min:Int):String {

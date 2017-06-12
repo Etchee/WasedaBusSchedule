@@ -34,8 +34,12 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
     override fun onPostExecute(result: Boolean?) {
         super.onPostExecute(result)
         when(result){
-            false -> Toast.makeText(context, "時刻表最適化完了！", Toast.LENGTH_SHORT).show()
-            true -> Toast.makeText(context, "時刻表あります", Toast.LENGTH_SHORT).show()
+            false -> {
+                Toast.makeText(context, "時刻表最適化完了！", Toast.LENGTH_SHORT).show()
+            }
+            true -> {
+                Toast.makeText(context, "時刻表あります", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -792,7 +796,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
     }
 
     private fun initSat_NishiTable(){
-        val data: DataContract.SATURDAY_DB_TO_WASEDA = DataContract.SATURDAY_DB_TO_WASEDA()
+        val data = DataContract.SATURDAY_DB_TO_NISHI()
         //dump all the values in here
         val values: ContentValues = ContentValues()
         //Counter to use in loop

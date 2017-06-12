@@ -41,6 +41,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        //check the database every time LOL
+        AsyncInitTables(applicationContext).execute()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
@@ -57,6 +63,10 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_delete_database ->{
                 val rows = contentResolver.delete(
                         DataContract.DB_TO_WASEDA().CONTENT_URI,
+                        null,
+                        null
+                ) + contentResolver.delete(
+                        DataContract.DB_TO_NISHI().CONTENT_URI,
                         null,
                         null
                 )

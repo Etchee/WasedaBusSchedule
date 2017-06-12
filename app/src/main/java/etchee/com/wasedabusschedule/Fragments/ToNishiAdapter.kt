@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.layout_item_single.view.*
  * RecyclerView Adapter for the ToNishi fragment
  * Created by rikutoechigoya on 2017/05/24.
  */
-class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
+class ToNishiAdapter(val context: Context, var cursor: Cursor?) :
         android.support.v7.widget.RecyclerView.Adapter<ToNishiAdapter.ViewHolder>() {
 
 
@@ -70,12 +70,12 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
                 val routeOptionIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_FLAG)
 
                 val hourValue = timeFormatter(cursor?.getString(hourIndex as Int) as String)
-                val minValue = timeFormatter(cursor.getString(minIndex as Int))
+                val minValue = timeFormatter(cursor!!.getString(minIndex as Int))
 
                 viewHolderArray[position].bindStaticInfo(
                         hourValue,
                         minValue,
-                        getRouteOption(cursor.getInt(routeOptionIndex as Int))
+                        getRouteOption(cursor!!.getInt(routeOptionIndex as Int))
                 )
                 //SimpleDateFormat specifies like 2017-06-12-13-15-00
                 countDownStart(position, getCurrentDateText() + "$hourValue-$minValue-00")
@@ -104,7 +104,7 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
             Log.e(TAG, "Cursor is null")
             return 0
         } else {
-            return cursor.count
+            return cursor!!.count
         }
     }
 
@@ -204,6 +204,11 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
         }
 
         return str
+    }
+
+    fun swapCursor(cursor:Cursor?){
+        this.cursor = cursor
+        notifyDataSetChanged()
     }
 
 

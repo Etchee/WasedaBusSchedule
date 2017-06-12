@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.*
 import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.R
+import kotlinx.android.synthetic.main.layout_fragment_waseda.*
 import java.util.*
 
 /**
@@ -31,15 +32,20 @@ class ToWasedaFragment: android.support.v4.app.Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //view assignment
-        val recyclerView = view.findViewById(R.id.recyclerView_toWaseda) as RecyclerView
 
         //create cursor containing appropriate table depending on the day
         val cursor = createCursor()
 
         //RecyclerView init
-        val adapter:ToWasedaAdapter = ToWasedaAdapter(context.applicationContext, cursor)
-        recyclerView.layoutManager = LinearLayoutManager(context.applicationContext)
-        recyclerView.adapter = adapter
+        recyclerView_toWaseda.layoutManager = LinearLayoutManager(context.applicationContext)
+        val mAdapter = ToWasedaAdapter(context, createCursor())
+        recyclerView_toWaseda.adapter = mAdapter
+
+        //Pull to refresh setting
+        waseda_swipetoRefreshContainer.setOnRefreshListener {
+            mAdapter.swapCursor(createCursor())
+            waseda_swipetoRefreshContainer.isRefreshing = false
+        }
     }
 
     /**

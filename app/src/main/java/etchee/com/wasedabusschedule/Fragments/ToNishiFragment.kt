@@ -39,8 +39,14 @@ class ToNishiFragment: Fragment() {
 
         //RecyclerView init
         recyclerView_toNishi.layoutManager = LinearLayoutManager(context.applicationContext)
-        recyclerView_toNishi.adapter = ToNishiAdapter(context, cursor)
+        val adapter = ToNishiAdapter(context, createCursor())
+        recyclerView_toNishi.adapter = adapter
 
+        //Pull to refresh setting
+        nishi_swipeToRefresh.setOnRefreshListener {
+            adapter.swapCursor(createCursor())
+            nishi_swipeToRefresh.isRefreshing = false
+        }
     }
 
     /**

@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat
  * Adapter for the RecyclerView
  * Created by rikutoechigoya on 2017/05/23.
  */
-class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.Adapter<ToWasedaAdapter.ViewHolder>() {
+class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.Adapter<ToWasedaAdapter.ViewHolder>() {
 
 
     private var TAG: String = javaClass.simpleName
@@ -47,6 +47,8 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
         )
         return viewHolder
     }
+
+
     /**
      *  Position 0 → next bus leaving Waseda.
      *
@@ -71,12 +73,12 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
                 val routeOptionIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_FLAG)
 
                 val hourValue = timeFormatter(cursor?.getString(hourIndex as Int) as String)
-                val minValue = timeFormatter(cursor.getString(minIndex as Int))
+                val minValue = timeFormatter((cursor as Cursor).getString(minIndex as Int))
 
                 viewHolderArray[position].bindStaticInfo(
                         hourValue,
                         minValue,
-                        getRouteOption(cursor.getInt(routeOptionIndex as Int))
+                        getRouteOption(cursor!!.getInt(routeOptionIndex as Int))
                 )
                 //SimpleDateFormat specifies like 2017-06-12-13-15-00
                 countDownStart(position, getCurrentDateText() + "$hourValue-$minValue-00")
@@ -105,7 +107,7 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
             Log.e(TAG, "Cursor is null")
             return 0
         } else {
-            return cursor.count
+            return cursor!!.count
         }
     }
 
@@ -205,6 +207,11 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
         }
 
         return str
+    }
+
+    fun swapCursor(cursor:Cursor?){
+        this.cursor = cursor
+        notifyDataSetChanged()
     }
 
 

@@ -36,6 +36,7 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
 
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
 //        Log.v(TAG, "WASEDA ADAPTER RECEIVING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
+
         val view:View = LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false)
         val viewHolder = ToWasedaAdapter.ViewHolder(view)
         view.setOnClickListener( {
@@ -46,7 +47,6 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
         )
         return viewHolder
     }
-
     /**
      *  Position 0 → next bus leaving Waseda.
      *
@@ -58,7 +58,7 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
                 .load(R.drawable.img_okuma)
                 .into(viewHolder.image_background)
 
-        if (viewHolderArray.size == position) viewHolderArray.add(viewHolder)
+        if (viewHolderArray.size == viewHolder.adapterPosition) viewHolderArray.add(viewHolder)
 
         when(viewHolderArray[position].min_holder.isEmpty()){
 
@@ -80,8 +80,6 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
                 )
                 //SimpleDateFormat specifies like 2017-06-12-13-15-00
                 countDownStart(position, getCurrentDateText() + "$hourValue-$minValue-00")
-
-                viewHolderArray.add(viewHolder)
             }
 
         //Already made ViewHolder

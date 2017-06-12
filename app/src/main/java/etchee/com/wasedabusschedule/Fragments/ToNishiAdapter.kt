@@ -25,6 +25,8 @@ import kotlinx.android.synthetic.main.layout_item_single.view.*
 class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
         android.support.v7.widget.RecyclerView.Adapter<ToNishiAdapter.ViewHolder>() {
 
+
+
     private var TAG: String = javaClass.simpleName
     var handler: Handler? = null
     var runnable: Runnable? = null
@@ -32,17 +34,18 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
 
 
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
+//        Log.v(TAG, "WASEDA ADAPTER RECEIVING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
+
         val view:View = LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false)
-        val viewHolder = ViewHolder(view)
+        val viewHolder = ToNishiAdapter.ViewHolder(view)
         view.setOnClickListener( {
             Toast.makeText(context,
-                        "Position: " + viewHolder.adapterPosition,
-                        Toast.LENGTH_SHORT).show()
-            }
+                    "Position: " + viewHolder.adapterPosition,
+                    Toast.LENGTH_SHORT).show()
+        }
         )
         return viewHolder
     }
-
     /**
      *  Position 0 → next bus leaving Waseda.
      *
@@ -54,17 +57,17 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
                 .load(R.drawable.nishi_improved)
                 .into(viewHolder.image_background)
 
-        if (viewHolderArray.size == position) viewHolderArray.add(viewHolder)
+        if (viewHolderArray.size == viewHolder.adapterPosition) viewHolderArray.add(viewHolder)
 
         when(viewHolderArray[position].min_holder.isEmpty()){
 
-            //new ViewHolder
+        //new ViewHolder
             true->{
-                //GET THE INFO
+                //GET THE INFO FROM CURSOR
                 cursor?.moveToPosition(position)
-                val hourIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_HOUR)
-                val minIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_MIN)
-                val routeOptionIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_FLAG)
+                val hourIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_HOUR)
+                val minIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_MIN)
+                val routeOptionIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_FLAG)
 
                 val hourValue = timeFormatter(cursor?.getString(hourIndex as Int) as String)
                 val minValue = timeFormatter(cursor.getString(minIndex as Int))
@@ -76,11 +79,9 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
                 )
                 //SimpleDateFormat specifies like 2017-06-12-13-15-00
                 countDownStart(position, getCurrentDateText() + "$hourValue-$minValue-00")
-
-                viewHolderArray.add(viewHolder)
             }
 
-            //Already made ViewHolder
+        //Already made ViewHolder
             false->{
                 Glide.with(context)
                         .load(R.drawable.nishi_improved)
@@ -93,7 +94,7 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
                         viewHolderArray[position].hour_holder,
                         viewHolderArray[position].min_holder,
                         "00"
-                        )
+                )
             }
         }
     }
@@ -183,7 +184,7 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
 
                     } else {
                         handler?.removeCallbacks(runnable)
-                         handler?.removeMessages(0)
+                        handler?.removeMessages(0)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -204,8 +205,6 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
 
         return str
     }
-
-
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

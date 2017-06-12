@@ -7,8 +7,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import etchee.com.wasedabusschedule.Data.DataContract
+import etchee.com.wasedabusschedule.Interface.DatasetUpdate
 import etchee.com.wasedabusschedule.R
+import etchee.com.wasedabusschedule.R.id.recyclerView_toWaseda
+import etchee.com.wasedabusschedule.R.id.waseda_swipetoRefreshContainer
 import kotlinx.android.synthetic.main.layout_fragment_waseda.*
 import java.util.*
 
@@ -16,10 +20,10 @@ import java.util.*
  * Fragment to actually display the list of bus departures
  * Created by rikutoechigoya on 2017/05/24.
  */
-class ToWasedaFragment: android.support.v4.app.Fragment() {
+class ToWasedaFragment: android.support.v4.app.Fragment(), DatasetUpdate {
 
     val TAG: String = javaClass.simpleName
-    lateinit var mAdapter:ToWasedaAdapter
+    var mAdapter:ToWasedaAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +51,8 @@ class ToWasedaFragment: android.support.v4.app.Fragment() {
     }
 
      fun refreshAdapter(){
-        mAdapter.swapCursor(createCursor())
-        waseda_swipetoRefreshContainer.isRefreshing = false
+        mAdapter?.swapCursor(createCursor())
+        waseda_swipetoRefreshContainer?.isRefreshing = false
     }
 
     /**
@@ -120,6 +124,11 @@ class ToWasedaFragment: android.support.v4.app.Fragment() {
             str = "0" + min.toString()
             return str
         } else return min.toString()
+    }
+
+    override fun onTimeTableCreated() {
+        refreshAdapter()
+        Toast.makeText(context, "InterfaceReceived", Toast.LENGTH_SHORT)
     }
 
     private fun getKey(min: Int, hour:Int):Int{

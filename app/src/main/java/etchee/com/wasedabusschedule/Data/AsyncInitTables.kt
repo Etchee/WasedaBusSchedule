@@ -8,7 +8,9 @@ import android.database.SQLException
 import android.net.Uri
 import android.os.AsyncTask
 import android.widget.Toast
+import etchee.com.wasedabusschedule.Fragments.ToWasedaAdapter
 import etchee.com.wasedabusschedule.Fragments.ToWasedaFragment
+import etchee.com.wasedabusschedule.Interface.DatasetUpdate
 
 
 /**
@@ -37,7 +39,8 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         when(result){
             false -> {
                 Toast.makeText(context, "時刻表最適化完了！", Toast.LENGTH_SHORT).show()
-
+                val dataUpdate:(()->Unit)? = null
+                dataUpdate?.invoke()
             }
             true -> {
                 Toast.makeText(context, "時刻表あります", Toast.LENGTH_SHORT).show()

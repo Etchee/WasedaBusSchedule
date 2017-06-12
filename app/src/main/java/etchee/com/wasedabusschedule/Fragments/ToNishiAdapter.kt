@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.R
@@ -31,7 +32,15 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
 
 
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false))
+        val view:View = LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false)
+        val viewHolder = ViewHolder(view)
+        view.setOnClickListener( {
+            Toast.makeText(context,
+                        "Position: " + viewHolder.adapterPosition,
+                        Toast.LENGTH_SHORT).show()
+            }
+        )
+        return viewHolder
     }
 
     /**
@@ -195,6 +204,8 @@ class ToNishiAdapter(val context: Context, val cursor: Cursor?) :
 
         return str
     }
+
+
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

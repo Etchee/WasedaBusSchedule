@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.R
 import kotlinx.android.synthetic.main.layout_fragment_nishi.*
@@ -39,6 +40,7 @@ class ToNishiFragment: Fragment() {
         //RecyclerView init
         recyclerView_toNishi.layoutManager = LinearLayoutManager(context.applicationContext)
         recyclerView_toNishi.adapter = ToNishiAdapter(context, cursor)
+
     }
 
     /**

@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.R
@@ -34,7 +35,16 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
 
 
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false))
+//        Log.v(TAG, "WASEDA ADAPTER RECEIVING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
+        val view:View = LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false)
+        val viewHolder = ToWasedaAdapter.ViewHolder(view)
+        view.setOnClickListener( {
+            Toast.makeText(context,
+                    "Position: " + viewHolder.adapterPosition,
+                    Toast.LENGTH_SHORT).show()
+        }
+        )
+        return viewHolder
     }
 
     /**
@@ -54,7 +64,7 @@ class ToWasedaAdapter(val context: Context, val cursor: Cursor?) : RecyclerView.
 
         //new ViewHolder
             true->{
-                //GET THE INFO
+                //GET THE INFO FROM CURSOR
                 cursor?.moveToPosition(position)
                 val hourIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_HOUR)
                 val minIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_MIN)

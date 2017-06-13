@@ -211,6 +211,8 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
 
     fun swapCursor(cursor:Cursor?){
         this.cursor = cursor
+//        Log.v(TAG, "NEW CURSOR: " + DatabaseUtils.dumpCursorToString(cursor))
+        viewHolderArray.clear()
         notifyDataSetChanged()
     }
 
@@ -223,6 +225,7 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
         var routeOption_holder:String = ""
         var hour_holder:String = ""
         var min_holder:String = ""
+        var holder_number:Int? = null
 
         fun bindStaticInfo(hour:String?, min:String?, routeOption:String?){
             //save in placeholder

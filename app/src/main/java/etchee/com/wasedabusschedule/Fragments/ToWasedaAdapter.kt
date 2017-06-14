@@ -29,6 +29,7 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
     var handler: Handler? = null
     var runnable: Runnable? = null
     var viewHolderArray = arrayListOf<ToWasedaAdapter.ViewHolder>()
+    var viewHolderCreatedCount = 0
 
     /*
     *   TODO: 今一番上のカウントダウンが止まったときに全部のタイマーがとまる。それを直す
@@ -44,6 +45,8 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
                     Toast.LENGTH_SHORT).show()
         }
         )
+//        Log.v(TAG,"Viewholder#$viewHolderCreatedCount")
+//        viewHolderCreatedCount++
         //Don't add viewHolder to array yet: Viewholder must have position value
         return viewHolder
     }
@@ -53,6 +56,9 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
      *  Position 0 → next bus leaving Waseda.
      *
      *  Get the current time, query the SQL bus schedule table and then display from there.
+     *
+     *  VIEWHOLDER IS RECYCLED FROM viewHolder#7 (position = 6) ITEM
+     *
      */
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         //Background image is the same for every view
@@ -60,11 +66,8 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
                 .load(R.drawable.img_okuma)
                 .into(viewHolder.image_background)
 
-        Log.v(TAG, "Position is: $position")
-
         if (viewHolderArray.size <= position){
             viewHolderArray.add(viewHolder)
-            viewHolderArray[position].bindViewHolderNumber(position)
         }
 
         val hourIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_HOUR)
@@ -75,7 +78,6 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
             For some weird reason...
             When viewHolderList reaches index = 8, contents from the position = 0 viewHolder is saved
          */
-
         when(viewHolderArray[position].min_holder.isEmpty()){
 
         //new ViewHolder
@@ -92,7 +94,7 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
                         getRouteOption(cursor!!.getInt(routeOptionIndex as Int))
                 )
                 //SimpleDateFormat specifies like 2017-06-12-13-15-00
-                countDownStart(viewHolder.adapterPosition, getCurrentDateText() + "$hourValue-$minValue-00")
+                countDownStart(position, getCurrentDateText() + "$hourValue-$minValue-00")
             }
 
         //Already made ViewHolder
@@ -102,8 +104,8 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
                         .into(viewHolder.image_background)
 
 //                cursor?.moveToPosition(viewHolder.holder_position)
-                val hourValue = viewHolderArray[viewHolder.adapterPosition].hour_holder
-                val minValue = viewHolderArray[viewHolder.adapterPosition].min_holder
+                val hourValue = viewHolderArray[position].hour_holder
+                val minValue = viewHolderArray[position].min_holder
 
                 viewHolder.bindStaticInfo(
                         position,
@@ -119,10 +121,10 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
                         "00"
                 )
 
-                Log.v(TAG, "ISEMPTY() FALSE, POSITION IS $position," +
-                        " ARRAY LENGTH IS " + viewHolderArray.size +"," +
-                        "ARRAY holder_position is:" + viewHolderArray[position].holder_position +
-                ", HourValue:$hourValue, minValue: $minValue")
+//                Log.v(TAG, "ISEMPTY() FALSE, POSITION IS $position," +
+//                        " ARRAY LENGTH IS " + viewHolderArray.size +"," +
+//                        "ARRAY holder_position is:" + viewHolderArray[position].holder_position +
+//                ", HourValue:$hourValue, minValue: $minValue")
             }
         }
     }
@@ -256,7 +258,6 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
         var routeOption_holder:String = ""
         var hour_holder:String = ""
         var min_holder:String = ""
-        var holder_position:Int = -1
 
         fun bindStaticInfo(position:Int, hour:String?, min:String?, routeOption:String?){
             //save in placeholder
@@ -272,10 +273,6 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
             itemView.item_hour.text = hour
             itemView.item_min.text = min
             itemView.item_sec.text = sec
-        }
-
-        fun bindViewHolderNumber(position:Int){
-            holder_position = position
         }
     }
 }

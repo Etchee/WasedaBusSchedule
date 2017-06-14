@@ -109,7 +109,6 @@ class ToWasedaFragment: android.support.v4.app.Fragment(), DatasetUpdate {
             }
         }
         Log.v(TAG, "Generated concat current time value is: " + search_key.toString())
-        Log.v(TAG, DatabaseUtils.dumpCursorToString(cursor))
         return cursor
     }
 

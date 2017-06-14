@@ -328,7 +328,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                     20 -> {
                         values.put(data.COLUMN_HOUR, "16")
                         values.put(data.COLUMN_MIN, "20")
-                        values.put(data.COLUMN_FLAG, 0)
+                        values.put(data.COLUMN_FLAG, 6)
                         values.put(data.COLUMN_SEARCH, 1620)
                         uri = contentResolver.insert(
                                 data.CONTENT_URI,
@@ -339,7 +339,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                     21 -> {
                         values.put(data.COLUMN_HOUR, "16")
                         values.put(data.COLUMN_MIN, "35")
-                        values.put(data.COLUMN_FLAG, 3)
+                        values.put(data.COLUMN_FLAG, 0)
                         values.put(data.COLUMN_SEARCH, 1635)
                         uri = contentResolver.insert(
                                 data.CONTENT_URI,
@@ -348,9 +348,31 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                     }
 
                     22 -> {
+                        values.put(data.COLUMN_HOUR, "17")
+                        values.put(data.COLUMN_MIN, "00")
+                        values.put(data.COLUMN_FLAG, 0)
+                        values.put(data.COLUMN_SEARCH, 1700)
+                        uri = contentResolver.insert(
+                                data.CONTENT_URI,
+                                values
+                        ); values.clear(); count++
+                    }
+
+                    23 -> {
+                        values.put(data.COLUMN_HOUR, "17")
+                        values.put(data.COLUMN_MIN, "20")
+                        values.put(data.COLUMN_FLAG, 0)
+                        values.put(data.COLUMN_SEARCH, 1720)
+                        uri = contentResolver.insert(
+                                data.CONTENT_URI,
+                                values
+                        ); values.clear(); count++
+                    }
+
+                    24 -> {
                         values.put(data.COLUMN_HOUR, "18")
                         values.put(data.COLUMN_MIN, "10")
-                        values.put(data.COLUMN_FLAG, 3)
+                        values.put(data.COLUMN_FLAG, 8)
                         values.put(data.COLUMN_SEARCH, 1810)
                         uri = contentResolver.insert(
                                 data.CONTENT_URI,

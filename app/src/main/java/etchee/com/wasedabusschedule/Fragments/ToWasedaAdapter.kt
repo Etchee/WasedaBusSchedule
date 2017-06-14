@@ -2,6 +2,7 @@ package etchee.com.wasedabusschedule.Fragments
 
 import android.content.Context
 import android.database.Cursor
+import android.database.DatabaseUtils
 import android.os.Handler
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -35,7 +36,8 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
     *   TODO: 今一番上のカウントダウンが止まったときに全部のタイマーがとまる。それを直す
     * */
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
-//        Log.v(TAG, "WASEDA ADAPTER RECEIVING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
+        Log.v(TAG, "WASEDA ADAPTER RECEIVING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
+
 
         val view:View = LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false)
         val viewHolder = ToWasedaAdapter.ViewHolder(view)
@@ -65,7 +67,7 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
         Glide.with(context)
                 .load(R.drawable.img_okuma)
                 .into(viewHolder.image_background)
-
+        Log.v(TAG, "Position is $position")
         if (viewHolderArray.size <= position){
             viewHolderArray.add(viewHolder)
         }
@@ -103,9 +105,9 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
                         .load(R.drawable.img_okuma)
                         .into(viewHolder.image_background)
 
-//                cursor?.moveToPosition(viewHolder.holder_position)
-                val hourValue = viewHolderArray[position].hour_holder
-                val minValue = viewHolderArray[position].min_holder
+                cursor?.moveToPosition(position)
+                val hourValue = timeFormatter(cursor?.getString(hourIndex as Int) as String)
+                val minValue = timeFormatter(cursor?.getString(minIndex as Int) as String)
 
                 viewHolder.bindStaticInfo(
                         position,
@@ -113,6 +115,7 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
                         minValue,
                         viewHolderArray[position].routeOption_holder
                 )
+                //↓this code causes flicker!
 //                countDownStart(position, getCurrentDateText() + "$hourValue-$minValue-00")
 
                 viewHolderArray[position].bindCountDown(
@@ -149,7 +152,7 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
 
     override fun onViewRecycled(holder: ViewHolder?) {
         super.onViewRecycled(holder)
-        Log.v(TAG, "RECYCLING VIEWHOLDER #" + holder?.layoutPosition)
+//        Log.v(TAG, "RECYCLING VIEWHOLDER #" + holder?.layoutPosition)
         //Below code gives error upon onNotifyDatasetChanged() because array would be initialized®
 //        holder?.bindCountDown(
 //                viewHolderArray[holder.holder_position].hour_holder,

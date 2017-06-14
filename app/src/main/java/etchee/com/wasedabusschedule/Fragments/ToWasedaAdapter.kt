@@ -35,7 +35,7 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
 
 
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
-//        Log.v(TAG, "WASEDA ADAPTER RECEIVING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
+        Log.v(TAG, "WASEDA ADAPTER RECEIVING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
 
         val view:View = LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false)
         val viewHolder = ToWasedaAdapter.ViewHolder(view)
@@ -62,16 +62,16 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
 
         if (viewHolderArray.size == viewHolder.adapterPosition) viewHolderArray.add(viewHolder)
 
+        val hourIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_HOUR)
+        val minIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_MIN)
+        val routeOptionIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_FLAG)
+
         when(viewHolderArray[position].min_holder.isEmpty()){
 
         //new ViewHolder
             true->{
                 //GET THE INFO FROM CURSOR
                 cursor?.moveToPosition(position)
-                val hourIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_HOUR)
-                val minIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_MIN)
-                val routeOptionIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_FLAG)
-
                 val hourValue = timeFormatter(cursor?.getString(hourIndex as Int) as String)
                 val minValue = timeFormatter((cursor as Cursor).getString(minIndex as Int))
 
@@ -89,10 +89,13 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
                 Glide.with(context)
                         .load(R.drawable.img_okuma)
                         .into(viewHolder.image_background)
+
+                cursor?.moveToPosition(position)
                 viewHolder.bindStaticInfo(
-                        viewHolderArray[position].hour_holder,
-                        viewHolderArray[position].min_holder,
-                        viewHolderArray[position].routeOption_holder)
+                        timeFormatter(cursor?.getString(hourIndex as Int) as String),
+                        timeFormatter((cursor as Cursor).getString(minIndex as Int)),
+                        getRouteOption(cursor!!.getInt(routeOptionIndex as Int)))
+                
                 viewHolder.bindCountDown(
                         viewHolderArray[position].hour_holder,
                         viewHolderArray[position].min_holder,

@@ -59,7 +59,7 @@ class ToWasedaFragment: android.support.v4.app.Fragment(), DatasetUpdate {
      *  今の時刻を取得して、それ以降に出るバスの分の情報をCursorに乗っけて持ってくる！
      */
     fun createCursor(): Cursor? {
-        var cursor:Cursor?
+        val cursor:Cursor?
 
         //Get the current time as an instance
         val now = Date()
@@ -109,6 +109,7 @@ class ToWasedaFragment: android.support.v4.app.Fragment(), DatasetUpdate {
             }
         }
         Log.v(TAG, "Generated concat current time value is: " + search_key.toString())
+        Log.v(TAG, "PASSING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
         return cursor
     }
 

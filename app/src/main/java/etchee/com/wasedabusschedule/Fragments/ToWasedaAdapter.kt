@@ -252,6 +252,11 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
         notifyDataSetChanged()
     }
 
+//    data class (
+//            val image_background:ImageView,
+//            val routeOption_holder:
+//    )
+
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         //property access cannot be used because of Glide library limitation

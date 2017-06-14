@@ -173,9 +173,9 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
 
                     6 -> {
                         values.put(data.COLUMN_HOUR, "11")
-                        values.put(data.COLUMN_MIN, "15")
+                        values.put(data.COLUMN_MIN, "00")
                         values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1115)
+                        values.put(data.COLUMN_SEARCH, 1100)
                         uri = contentResolver.insert(
                                 data.CONTENT_URI,
                                 values
@@ -184,9 +184,9 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
 
                     7 -> {
                         values.put(data.COLUMN_HOUR, "11")
-                        values.put(data.COLUMN_MIN, "45")
+                        values.put(data.COLUMN_MIN, "30")
                         values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1145)
+                        values.put(data.COLUMN_SEARCH, 1130)
                         uri = contentResolver.insert(
                                 data.CONTENT_URI,
                                 values
@@ -206,7 +206,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
 
                     9 -> {
                         values.put(data.COLUMN_HOUR, "12")
-                        values.put(data.COLUMN_MIN, "15")
+                        values.put(data.COLUMN_MIN, "20")
                         values.put(data.COLUMN_FLAG, 2)
                         values.put(data.COLUMN_SEARCH, 1215)
                         uri = contentResolver.insert(
@@ -239,9 +239,9 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
 
                     12 -> {
                         values.put(data.COLUMN_HOUR, "13")
-                        values.put(data.COLUMN_MIN, "45")
+                        values.put(data.COLUMN_MIN, "00")
                         values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1345)
+                        values.put(data.COLUMN_SEARCH, 1300)
                         uri = contentResolver.insert(
                                 data.CONTENT_URI,
                                 values
@@ -249,10 +249,10 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                     }
 
                     13 -> {
-                        values.put(data.COLUMN_HOUR, "14")
-                        values.put(data.COLUMN_MIN, "05")
+                        values.put(data.COLUMN_HOUR, "13")
+                        values.put(data.COLUMN_MIN, "30")
                         values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1405)
+                        values.put(data.COLUMN_SEARCH, 1330)
                         uri = contentResolver.insert(
                                 data.CONTENT_URI,
                                 values
@@ -272,9 +272,9 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
 
                     15 -> {
                         values.put(data.COLUMN_HOUR, "14")
-                        values.put(data.COLUMN_MIN, "50")
+                        values.put(data.COLUMN_MIN, "35")
                         values.put(data.COLUMN_FLAG, 3)
-                        values.put(data.COLUMN_SEARCH, 1450)
+                        values.put(data.COLUMN_SEARCH, 1435)
                         uri = contentResolver.insert(
                                 data.CONTENT_URI,
                                 values
@@ -282,6 +282,17 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                     }
 
                     16 -> {
+                        values.put(data.COLUMN_HOUR, "14")
+                        values.put(data.COLUMN_MIN, "50")
+                        values.put(data.COLUMN_FLAG, 0)
+                        values.put(data.COLUMN_SEARCH, 1450)
+                        uri = contentResolver.insert(
+                                data.CONTENT_URI,
+                                values
+                        ); values.clear(); count++
+                    }
+
+                    17 -> {
                         values.put(data.COLUMN_HOUR, "15")
                         values.put(data.COLUMN_MIN, "05")
                         values.put(data.COLUMN_FLAG, 0)
@@ -292,7 +303,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                         ); values.clear(); count++
                     }
 
-                    17 -> {
+                    18 -> {
                         values.put(data.COLUMN_HOUR, "15")
                         values.put(data.COLUMN_MIN, "20")
                         values.put(data.COLUMN_FLAG, 0)
@@ -303,7 +314,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                         ); values.clear(); count++
                     }
 
-                    18 -> {
+                    19 -> {
                         values.put(data.COLUMN_HOUR, "15")
                         values.put(data.COLUMN_MIN, "35")
                         values.put(data.COLUMN_FLAG, 0)
@@ -314,10 +325,10 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                         ); values.clear(); count++
                     }
 
-                    19 -> {
+                    20 -> {
                         values.put(data.COLUMN_HOUR, "15")
                         values.put(data.COLUMN_MIN, "50")
-                        values.put(data.COLUMN_FLAG, 0)
+                        values.put(data.COLUMN_FLAG, 6)
                         values.put(data.COLUMN_SEARCH, 1550)
                         uri = contentResolver.insert(
                                 data.CONTENT_URI,
@@ -325,10 +336,10 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                         ); values.clear(); count++
                     }
 
-                    20 -> {
+                    21 -> {
                         values.put(data.COLUMN_HOUR, "16")
                         values.put(data.COLUMN_MIN, "20")
-                        values.put(data.COLUMN_FLAG, 6)
+                        values.put(data.COLUMN_FLAG, 0)
                         values.put(data.COLUMN_SEARCH, 1620)
                         uri = contentResolver.insert(
                                 data.CONTENT_URI,
@@ -336,7 +347,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                         ); values.clear(); count++
                     }
 
-                    21 -> {
+                    22 -> {
                         values.put(data.COLUMN_HOUR, "16")
                         values.put(data.COLUMN_MIN, "35")
                         values.put(data.COLUMN_FLAG, 0)
@@ -347,7 +358,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                         ); values.clear(); count++
                     }
 
-                    22 -> {
+                    23 -> {
                         values.put(data.COLUMN_HOUR, "17")
                         values.put(data.COLUMN_MIN, "00")
                         values.put(data.COLUMN_FLAG, 0)
@@ -358,10 +369,10 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                         ); values.clear(); count++
                     }
 
-                    23 -> {
+                    24 -> {
                         values.put(data.COLUMN_HOUR, "17")
                         values.put(data.COLUMN_MIN, "20")
-                        values.put(data.COLUMN_FLAG, 0)
+                        values.put(data.COLUMN_FLAG, 8)
                         values.put(data.COLUMN_SEARCH, 1720)
                         uri = contentResolver.insert(
                                 data.CONTENT_URI,
@@ -369,11 +380,22 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                         ); values.clear(); count++
                     }
 
-                    24 -> {
+                    25 -> {
                         values.put(data.COLUMN_HOUR, "18")
                         values.put(data.COLUMN_MIN, "10")
                         values.put(data.COLUMN_FLAG, 8)
                         values.put(data.COLUMN_SEARCH, 1810)
+                        uri = contentResolver.insert(
+                                data.CONTENT_URI,
+                                values
+                        ); values.clear(); count++
+                    }
+
+                    26 -> {
+                        values.put(data.COLUMN_HOUR, "18")
+                        values.put(data.COLUMN_MIN, "25")
+                        values.put(data.COLUMN_FLAG, 8)
+                        values.put(data.COLUMN_SEARCH, 1825)
                         uri = contentResolver.insert(
                                 data.CONTENT_URI,
                                 values

@@ -2,7 +2,7 @@ package etchee.com.wasedabusschedule.Fragments
 
 import android.content.Context
 import android.database.Cursor
-import android.database.DatabaseUtils
+import android.os.CountDownTimer
 import android.os.Handler
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -10,13 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.R
 import kotlinx.android.synthetic.main.layout_item_single.view.*
 import java.util.*
 import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -27,9 +27,6 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
 
 
     private var TAG: String = javaClass.simpleName
-    var handler: Handler? = null
-    var runnable: Runnable? = null
-    var viewHolderArray = arrayListOf<ToWasedaAdapter.ViewHolder>()
     var infoHolderArray = arrayListOf<InfoHolder>()
     var viewHolderCreatedCount = 0
 
@@ -71,8 +68,6 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
 
         cursor?.moveToPosition(position)
 
-
-
         //Already made viewholder
         if (infoHolderArray.size > position && infoHolderArray[position].hour_holder.isNotEmpty()) {
             //values
@@ -82,7 +77,8 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
 
             viewHolder.bindStaticInfo(position, hourValue, minValue, routeOption)
 
-            viewHolder.bindCountDown(hourValue, minValue, "00")
+//            viewHolder.bindCountDown(hourValue, minValue, "00")
+            viewHolder.startTimer()
 
         }else{  //Newly created viewholder
             //Indices
@@ -99,7 +95,11 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
             val infoHolder =  InfoHolder(
                     routeOption,
                     timeFormatter(hourValue),
-                    timeFormatter(minValue)
+                    timeFormatter(minValue),
+                    "NA",
+                    "NA",
+                    "NA",
+                    "NA"
             )
             infoHolderArray.add(infoHolder)
 
@@ -111,7 +111,7 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
                     routeOption
             )
 
-            countDownStart(viewHolder, position,  getCurrentDateText() + "$hourValue-$minValue-00")
+            viewHolder.startTimer()
         }
     }
 
@@ -135,6 +135,10 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
 
     override fun onViewRecycled(holder: ViewHolder?) {
         super.onViewRecycled(holder)
+        val hourValue = infoHolderArray[holder!!.adapterPosition].hour_holder
+        val minValue = infoHolderArray[holder.adapterPosition].min_holder
+
+//        countDownStart(holder!!, holder.adapterPosition,  getCurrentDateText() + "$hourValue-$minValue-00")
 //        Log.v(TAG, "RECYCLING VIEWHOLDER #" + holder?.layoutPosition)
         //Below code gives error upon onNotifyDatasetChanged() because array would be initialized®
 //        holder?.bindCountDown(
@@ -177,46 +181,6 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
         }
     }
 
-    //function to start countdown
-    fun countDownStart(viewHolder:ViewHolder, position:Int, dept_time:String) {
-        handler = Handler()
-        runnable = object : Runnable {
-            override fun run() {
-                (handler)?.postDelayed(this, 1000)
-                try {
-                    val dateFormat = SimpleDateFormat("yyyy-MM-dd-kk-mm-ss", Locale.JAPAN)
-                    // Here Set your Event Date
-                    val eventDate = dateFormat.parse(dept_time)
-                    val currentDate = Date()
-                    if (!currentDate.after(eventDate)) {
-                        var diff = eventDate.time - currentDate.time
-                        val days = diff / (24 * 60 * 60 * 1000)
-                        diff -= days * (24 * 60 * 60 * 1000)
-                        val hours = diff / (60 * 60 * 1000)
-                        diff -= hours * (60 * 60 * 1000)
-                        val minutes = diff / (60 * 1000)
-                        diff -= minutes * (60 * 1000)
-                        val seconds = diff / 1000
-
-                        val hourText = String.format("%02d", hours)
-                        val minText = String.format("%02d", minutes)
-                        val secText = String.format("%02d", seconds)
-
-                        viewHolder.bindCountDown(hourText, minText, secText)
-
-                    } else {
-                        handler?.removeCallbacks(runnable)
-                        handler?.removeMessages(0)
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }
-
-        handler?.postDelayed(runnable, 0)
-    }
-
     private fun timeFormatter(num:String):String{
         var str = ""
         if (num.toInt() < 10) {
@@ -231,14 +195,17 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
     fun swapCursor(cursor:Cursor?){
         this.cursor = cursor
 //        Log.v(TAG, "NEW CURSOR: " + DatabaseUtils.dumpCursorToString(cursor))
-        viewHolderArray.clear()
         notifyDataSetChanged()
     }
 
     data class InfoHolder (
             var routeOption_holder:String,
             var hour_holder:String,
-            var min_holder:String
+            var min_holder:String,
+            var sec_holder:String,
+            var hour_remaining:String,
+            var min_remaining:String,
+            var sec_remaining:String
     )
 
 
@@ -250,6 +217,10 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
         var routeOption_holder:String = ""
         var hour_holder:String = ""
         var min_holder:String = ""
+        var runnable:Runnable? = null
+        var handler: Handler? = null
+        var mTimer:CountDownTimer? = null
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.JAPAN)
 
         fun bindStaticInfo(position:Int, hour:String?, min:String?, routeOption:String?){
             //save in placeholder
@@ -265,6 +236,103 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
             itemView.item_hour.text = hour
             itemView.item_min.text = min
             itemView.item_sec.text = sec
+        }
+
+        fun startTimer() {
+            //TIMER ALREADY RUNNING
+            mTimer?.cancel()
+            val dep_time_obj: Date = dateFormat.parse(getCurrentDateText() + "$hour_holder-$min_holder-00")
+            mTimer = mTimer(dep_time_obj).start()
+        }
+
+        private fun mTimer(dep_obj:Date): CountDownTimer {
+            val hourFormat = SimpleDateFormat("HH", Locale.JAPAN)
+            val minFormat = SimpleDateFormat("mm", Locale.JAPAN)
+            val secFormat = SimpleDateFormat("ss", Locale.JAPAN)
+
+            val remaining = dep_obj.time - Date().time
+
+            val cdt = object : CountDownTimer(remaining, 1000) {  //throw in the bus schedule param here
+                override fun onTick(timerRemaining: Long) {
+                    val hours = (timerRemaining / (1000*60*60)) % 24
+                    val hourText = countFormatter(hours)
+                    val minutes =  (timerRemaining / (1000*60)) % 60
+                    val minText = countFormatter(minutes)
+                    val seconds = (timerRemaining / 1000) % 60
+                    val secText = countFormatter(seconds)
+
+//                    Log.v("MTIMER", "Second is: $secText")
+
+                    bindCountDown(hourText, minText, secText)
+                }
+
+                override fun onFinish() {
+                    bindCountDown("FI", "NI", "SH")
+                }
+            }
+
+            return cdt
+        }
+
+        private fun makeCounter(viewHolder:ViewHolder, position:Int, dept_time:String):Runnable {
+
+            runnable = object : Runnable {
+                override fun run() {
+                    handler?.postDelayed(this, 1000)
+                    try {
+                        val dateFormat = SimpleDateFormat("yyyy-MM-dd-kk-mm-ss", Locale.JAPAN)
+                        // Here Set your Event Date
+                        val eventDate = dateFormat.parse(dept_time)
+                        val currentDate = Date()
+                        if (!currentDate.after(eventDate)) {
+                            var diff = eventDate.time - currentDate.time
+                            val days = diff / (24 * 60 * 60 * 1000)
+                            diff -= days * (24 * 60 * 60 * 1000)
+                            val hours = diff / (60 * 60 * 1000)
+                            diff -= hours * (60 * 60 * 1000)
+                            val minutes = diff / (60 * 1000)
+                            diff -= minutes * (60 * 1000)
+                            val seconds = diff / 1000
+
+                            val hourText = String.format("%02d", hours)
+                            val minText = String.format("%02d", minutes)
+                            val secText = String.format("%02d", seconds)
+
+                            Log.v("Viewholder", "Tick: $secText")
+
+                            bindCountDown(hourText, minText, secText)
+
+                        } else {
+                            handler?.removeCallbacks(runnable)
+                            handler?.removeMessages(0)
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            //ここで定義したrunnableをhandler経由で実行している
+            return runnable as Runnable
+        }
+
+        private fun countFormatter(num:Long):String{
+            var str = ""
+            if (num < 10) {
+                str = "0" + num.toString()
+            }else{
+                str = num.toString()
+            }
+
+            return str
+        }
+
+        fun getCurrentDateText():String{
+            val calendar = Calendar.getInstance()
+            val year:String = calendar.get(Calendar.YEAR).toString()
+            val month:String = (calendar.get(Calendar.MONTH) +1).toString()
+            val date:String = calendar.get(Calendar.DATE).toString()
+
+            return "$year-$month-$date-"
         }
     }
 }

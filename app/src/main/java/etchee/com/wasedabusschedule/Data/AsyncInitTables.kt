@@ -8,9 +8,6 @@ import android.database.SQLException
 import android.net.Uri
 import android.os.AsyncTask
 import android.widget.Toast
-import etchee.com.wasedabusschedule.Fragments.ToWasedaAdapter
-import etchee.com.wasedabusschedule.Fragments.ToWasedaFragment
-import etchee.com.wasedabusschedule.Interface.DatasetUpdate
 
 
 /**
@@ -19,7 +16,11 @@ import etchee.com.wasedabusschedule.Interface.DatasetUpdate
  */
 class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
 
-    val contentResolver: ContentResolver = context.contentResolver
+    val contentResolver: ContentResolver = context.applicationContext.contentResolver
+
+    override fun onPreExecute() {
+        super.onPreExecute()
+    }
 
     override fun doInBackground(vararg params: Void?): Boolean {
         //if checking returns false
@@ -54,7 +55,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
      */
     private fun checkDB(): Boolean {
         var cursor: Cursor? = null
-        var errorFlag = true
+        var flag = true
         try {
             //query the Waseda Table
             cursor = contentResolver.query(
@@ -65,8 +66,10 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                     null
             )
             if (!cursor.moveToFirst()) {
-                errorFlag = false
+                flag = false
             }
+
+            cursor = null
 
             //query the NISHI table
             cursor = contentResolver.query(
@@ -78,7 +81,33 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
             )
 
             if (!cursor.moveToFirst()) {
-                errorFlag = false
+                flag = false
+            }
+
+            //query the sat Waseda table
+            cursor = contentResolver.query(
+                    DataContract.SATURDAY_DB_TO_WASEDA().CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null
+            )
+
+            if (!cursor.moveToFirst()) {
+                flag = false
+            }
+
+            //query the sat NISHI table
+            cursor = contentResolver.query(
+                    DataContract.SATURDAY_DB_TO_NISHI().CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null
+            )
+
+            if (!cursor.moveToFirst()) {
+                flag = false
             }
 
         } catch(e: Exception) {
@@ -88,10 +117,12 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
 
         }
 
-        return errorFlag
+        return flag
     }
 
-
+    /**
+     * delete, then add.
+     */
     private fun initWasedaTable(): Boolean {
         //for URI shortcut
         val data: DataContract.DB_TO_WASEDA = DataContract.DB_TO_WASEDA()
@@ -103,6 +134,9 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         var uri: Uri? = null    //For error checking
 
         try{
+
+            contentResolver.delete(data.CONTENT_URI, null, null)
+
             while(count < 23) {
                 when(count) {
                     0 -> {
@@ -424,6 +458,8 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         var uri:Uri? = null
 
         try{
+
+            contentResolver.delete(data.CONTENT_URI, null, null)
             while(count < 11) {
                 when(count) {
                     0 -> {
@@ -567,6 +603,8 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         var uri:Uri? = null
 
         try{
+
+            contentResolver.delete(data.CONTENT_URI, null, null)
             while(count < 24) {
                 when(count){
                     0->{
@@ -853,6 +891,8 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         var uri:Uri? = null
 
         try{
+
+            contentResolver.delete(data.CONTENT_URI, null, null)
             while(count < 10) {
                 when(count) {
                     0 -> {

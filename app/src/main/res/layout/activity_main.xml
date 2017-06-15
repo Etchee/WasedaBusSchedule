@@ -17,6 +17,8 @@
         android:id="@+id/list_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:theme="@style/TabStyle"
+        app:tabBackground="@color/PearlWhite"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/colorPrimaryDark"
         />

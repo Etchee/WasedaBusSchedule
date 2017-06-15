@@ -3,6 +3,7 @@ package etchee.com.wasedabusschedule.Fragments
 import android.content.Context
 import android.database.Cursor
 import android.database.DatabaseUtils
+import android.os.CountDownTimer
 import android.os.Handler
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -25,77 +26,92 @@ import kotlinx.android.synthetic.main.layout_item_single.view.*
 class ToNishiAdapter(val context: Context, var cursor: Cursor?) :
         android.support.v7.widget.RecyclerView.Adapter<ToNishiAdapter.ViewHolder>() {
 
-
-
     private var TAG: String = javaClass.simpleName
-    var handler: Handler? = null
-    var runnable: Runnable? = null
-    var viewHolderArray = arrayListOf<ToNishiAdapter.ViewHolder>()
+    var infoHolderArray = arrayListOf<InfoHolder>()
+    var viewHolderCreatedCount = 0
 
-
+    /*
+    *   TODO: 今一番上のカウントダウンが止まったときに全部のタイマーがとまる。それを直す
+    * */
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
 //        Log.v(TAG, "WASEDA ADAPTER RECEIVING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
+
 
         val view:View = LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false)
         val viewHolder = ToNishiAdapter.ViewHolder(view)
         view.setOnClickListener( {
-            Toast.makeText(context,
-                    "Position: " + viewHolder.adapterPosition,
-                    Toast.LENGTH_SHORT).show()
+            val position = viewHolder.adapterPosition
+            Log.v(TAG, "Item $position clicked.")
         }
         )
+//        Log.v(TAG,"Viewholder#$viewHolderCreatedCount")
+//        viewHolderCreatedCount++
+        //Don't add viewHolder to array yet: Viewholder must have position value
         return viewHolder
     }
+
+
     /**
      *  Position 0 → next bus leaving Waseda.
      *
      *  Get the current time, query the SQL bus schedule table and then display from there.
+     *
+     *  VIEWHOLDER IS RECYCLED FROM viewHolder#7 (position = 6) ITEM
+     *
      */
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         //Background image is the same for every view
         Glide.with(context)
                 .load(R.drawable.nishi_improved)
                 .into(viewHolder.image_background)
+        Log.v(TAG, "Position is $position")
 
-        if (viewHolderArray.size == viewHolder.adapterPosition) viewHolderArray.add(viewHolder)
+        cursor?.moveToPosition(position)
 
-        when(viewHolderArray[position].min_holder.isEmpty()){
+        //Already made viewholder
+        if (infoHolderArray.size > position && infoHolderArray[position].hour_holder.isNotEmpty()) {
+            //values
+            val routeOption = infoHolderArray[position].routeOption_holder
+            val hourValue = infoHolderArray[position].hour_holder
+            val minValue = infoHolderArray[position].min_holder
 
-        //new ViewHolder
-            true->{
-                //GET THE INFO FROM CURSOR
-                cursor?.moveToPosition(position)
-                val hourIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_HOUR)
-                val minIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_MIN)
-                val routeOptionIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_FLAG)
+            viewHolder.bindStaticInfo(position, hourValue, minValue, routeOption)
 
-                val hourValue = timeFormatter(cursor?.getString(hourIndex as Int) as String)
-                val minValue = timeFormatter(cursor!!.getString(minIndex as Int))
+//            viewHolder.bindCountDown(hourValue, minValue, "00")
+            viewHolder.startTimer()
 
-                viewHolderArray[position].bindStaticInfo(
-                        hourValue,
-                        minValue,
-                        getRouteOption(cursor!!.getInt(routeOptionIndex as Int))
-                )
-                //SimpleDateFormat specifies like 2017-06-12-13-15-00
-                countDownStart(position, getCurrentDateText() + "$hourValue-$minValue-00")
-            }
+        }else{  //Newly created viewholder
+            //Indices
+            val hourIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_HOUR)
+            val minIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_MIN)
+            val routeOptionIndex = cursor?.getColumnIndex(DataContract.DB_TO_NISHI().COLUMN_FLAG)
 
-        //Already made ViewHolder
-            false->{
-                Glide.with(context)
-                        .load(R.drawable.nishi_improved)
-                        .into(viewHolder.image_background)
-                viewHolder.bindStaticInfo(
-                        viewHolderArray[position].hour_holder,
-                        viewHolderArray[position].min_holder,
-                        viewHolderArray[position].routeOption_holder)
-                viewHolder.bindCountDown(
-                        viewHolderArray[position].hour_holder,
-                        viewHolderArray[position].min_holder,
-                        "00"
-                )
-            }
+            //values
+            val routeOption = getRouteOption(cursor?.getInt(routeOptionIndex!!)!!)
+            val hourValue = cursor?.getString(hourIndex!!)!!
+            val minValue = cursor?.getString(minIndex!!)!!
+
+            //save to data model
+            val infoHolder =  InfoHolder(
+                    routeOption,
+                    timeFormatter(hourValue),
+                    timeFormatter(minValue),
+                    "NA",
+                    "NA",
+                    "NA",
+                    "NA"
+            )
+            infoHolderArray.add(infoHolder)
+
+            //Display the info
+            viewHolder.bindStaticInfo(
+                    position,
+                    timeFormatter(hourValue),
+                    timeFormatter(minValue),
+                    routeOption
+            )
+
+            viewHolder.startTimer()
         }
     }
 
@@ -119,6 +135,17 @@ class ToNishiAdapter(val context: Context, var cursor: Cursor?) :
 
     override fun onViewRecycled(holder: ViewHolder?) {
         super.onViewRecycled(holder)
+        val hourValue = infoHolderArray[holder!!.adapterPosition].hour_holder
+        val minValue = infoHolderArray[holder.adapterPosition].min_holder
+
+//        countDownStart(holder!!, holder.adapterPosition,  getCurrentDateText() + "$hourValue-$minValue-00")
+//        Log.v(TAG, "RECYCLING VIEWHOLDER #" + holder?.layoutPosition)
+        //Below code gives error upon onNotifyDatasetChanged() because array would be initialized®
+//        holder?.bindCountDown(
+//                viewHolderArray[holder.holder_position].hour_holder,
+//                viewHolderArray[holder.holder_position].min_holder,
+//                "00"
+//        )
     }
 
     private fun getRouteOption(flag:Int):String {
@@ -154,47 +181,6 @@ class ToNishiAdapter(val context: Context, var cursor: Cursor?) :
         }
     }
 
-    //function to start countdown
-    fun countDownStart(position:Int, dept_time:String) {
-        Log.v(TAG, "COUNTDOWN INITIATED FOR: $dept_time")
-        handler = Handler()
-        runnable = object : Runnable {
-            override fun run() {
-                (handler)?.postDelayed(this, 1000)
-                try {
-                    val dateFormat = SimpleDateFormat("yyyy-MM-dd-kk-mm-ss", Locale.JAPAN)
-                    // Here Set your Event Date
-                    val eventDate = dateFormat.parse(dept_time)
-                    val currentDate = Date()
-                    if (!currentDate.after(eventDate)) {
-                        var diff = eventDate.time - currentDate.time
-                        val days = diff / (24 * 60 * 60 * 1000)
-                        diff -= days * (24 * 60 * 60 * 1000)
-                        val hours = diff / (60 * 60 * 1000)
-                        diff -= hours * (60 * 60 * 1000)
-                        val minutes = diff / (60 * 1000)
-                        diff -= minutes * (60 * 1000)
-                        val seconds = diff / 1000
-
-                        val hourText = String.format("%02d", hours)
-                        val minText = String.format("%02d", minutes)
-                        val secText = String.format("%02d", seconds)
-
-                        viewHolderArray[position].bindCountDown(hourText, minText, secText)
-
-                    } else {
-                        handler?.removeCallbacks(runnable)
-                        handler?.removeMessages(0)
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }
-
-        handler?.postDelayed(runnable, 0)
-    }
-
     private fun timeFormatter(num:String):String{
         var str = ""
         if (num.toInt() < 10) {
@@ -208,8 +194,19 @@ class ToNishiAdapter(val context: Context, var cursor: Cursor?) :
 
     fun swapCursor(cursor:Cursor?){
         this.cursor = cursor
+//        Log.v(TAG, "NEW CURSOR: " + DatabaseUtils.dumpCursorToString(cursor))
         notifyDataSetChanged()
     }
+
+    data class InfoHolder (
+            var routeOption_holder:String,
+            var hour_holder:String,
+            var min_holder:String,
+            var sec_holder:String,
+            var hour_remaining:String,
+            var min_remaining:String,
+            var sec_remaining:String
+    )
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -220,13 +217,17 @@ class ToNishiAdapter(val context: Context, var cursor: Cursor?) :
         var routeOption_holder:String = ""
         var hour_holder:String = ""
         var min_holder:String = ""
+        var runnable:Runnable? = null
+        var handler: Handler? = null
+        var mTimer: CountDownTimer? = null
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.JAPAN)
 
-        fun bindStaticInfo(hour:String?, min:String?, routeOption:String?){
+        fun bindStaticInfo(position:Int, hour:String?, min:String?, routeOption:String?){
             //save in placeholder
             routeOption_holder = routeOption as String
             hour_holder = hour as String
             min_holder = min as String
-
+//            holder_position = position
             itemView.hint_route_text.text = routeOption
             itemView.departure_time.text = hour + min
         }
@@ -235,6 +236,62 @@ class ToNishiAdapter(val context: Context, var cursor: Cursor?) :
             itemView.item_hour.text = hour
             itemView.item_min.text = min
             itemView.item_sec.text = sec
+        }
+
+        fun startTimer() {
+            //TIMER ALREADY RUNNING
+            mTimer?.cancel()
+            val dep_time_obj: Date = dateFormat.parse(getCurrentDateText() + "$hour_holder-$min_holder-00")
+            mTimer = mTimer(dep_time_obj).start()
+        }
+
+        private fun mTimer(dep_obj:Date): CountDownTimer {
+            val hourFormat = SimpleDateFormat("HH", Locale.JAPAN)
+            val minFormat = SimpleDateFormat("mm", Locale.JAPAN)
+            val secFormat = SimpleDateFormat("ss", Locale.JAPAN)
+
+            val remaining = dep_obj.time - Date().time
+
+            val cdt = object : CountDownTimer(remaining, 1000) {  //throw in the bus schedule param here
+                override fun onTick(timerRemaining: Long) {
+                    val hours = (timerRemaining / (1000*60*60)) % 24
+                    val hourText = countFormatter(hours)
+                    val minutes =  (timerRemaining / (1000*60)) % 60
+                    val minText = countFormatter(minutes)
+                    val seconds = (timerRemaining / 1000) % 60
+                    val secText = countFormatter(seconds)
+
+//                    Log.v("MTIMER", "Second is: $secText")
+
+                    bindCountDown(hourText, minText, secText)
+                }
+
+                override fun onFinish() {
+                    bindCountDown("FI", "NI", "SH")
+                }
+            }
+
+            return cdt
+        }
+
+        private fun countFormatter(num:Long):String{
+            var str = ""
+            if (num < 10) {
+                str = "0" + num.toString()
+            }else{
+                str = num.toString()
+            }
+
+            return str
+        }
+
+        fun getCurrentDateText():String{
+            val calendar = Calendar.getInstance()
+            val year:String = calendar.get(Calendar.YEAR).toString()
+            val month:String = (calendar.get(Calendar.MONTH) +1).toString()
+            val date:String = calendar.get(Calendar.DATE).toString()
+
+            return "$year-$month-$date-"
         }
     }
 }

@@ -51,7 +51,10 @@ class ToWasedaFragment: android.support.v4.app.Fragment(), DatasetUpdate {
     }
 
      fun refreshAdapter(){
-        mAdapter?.swapCursor(createCursor())
+         if (mAdapter?.itemCount == 0){
+             mAdapter?.swapCursor(createCursor())
+         }
+
         waseda_swipetoRefreshContainer?.isRefreshing = false
     }
 

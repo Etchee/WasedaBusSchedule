@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.database.SQLException
 import android.net.Uri
 import android.os.AsyncTask
+import android.util.Log
 import android.widget.Toast
 
 
@@ -17,107 +18,24 @@ import android.widget.Toast
 class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
 
     val contentResolver: ContentResolver = context.applicationContext.contentResolver
+    val TAG = javaClass.simpleName
 
     override fun onPreExecute() {
         super.onPreExecute()
+        Toast.makeText(context, "データ登録中・・・" , Toast.LENGTH_SHORT).show()
     }
 
     override fun doInBackground(vararg params: Void?): Boolean {
-        //if checking returns false
-        if (!checkDB()) {
-            //Initialize the database
-            initWasedaTable()
-            initNishiTable()
-            initSat_NishiTable()
-            initSat_WasedaTable()
-            //signal to UI that data is not there
-            return false
-        } else return true  // otherwise signal to UI that data is there
-    }
+        initWasedaTable()
+//        initNishiTable()
+//        initSat_NishiTable()
+//        initSat_WasedaTable()
 
+        return true
+    }
     override fun onPostExecute(result: Boolean?) {
         super.onPostExecute(result)
-        when(result){
-            false -> {
-                Toast.makeText(context, "時刻表最適化完了！", Toast.LENGTH_SHORT).show()
-                val dataUpdate:(()->Unit)? = null
-                dataUpdate?.invoke()
-            }
-            true -> {
-                Toast.makeText(context, "時刻表あります", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    /**
-     * No problem -> true
-     * No table -> false
-     */
-    private fun checkDB(): Boolean {
-        var cursor: Cursor? = null
-        var flag = true
-        try {
-            //query the Waseda Table
-            cursor = contentResolver.query(
-                    DataContract.DB_TO_WASEDA().CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    null
-            )
-            if (!cursor.moveToFirst()) {
-                flag = false
-            }
-
-            cursor = null
-
-            //query the NISHI table
-            cursor = contentResolver.query(
-                    DataContract.DB_TO_NISHI().CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    null
-            )
-
-            if (!cursor.moveToFirst()) {
-                flag = false
-            }
-
-            //query the sat Waseda table
-            cursor = contentResolver.query(
-                    DataContract.SATURDAY_DB_TO_WASEDA().CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    null
-            )
-
-            if (!cursor.moveToFirst()) {
-                flag = false
-            }
-
-            //query the sat NISHI table
-            cursor = contentResolver.query(
-                    DataContract.SATURDAY_DB_TO_NISHI().CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    null
-            )
-
-            if (!cursor.moveToFirst()) {
-                flag = false
-            }
-
-        } catch(e: Exception) {
-            e.printStackTrace()
-        } finally {
-            cursor?.close()
-
-        }
-
-        return flag
+        Log.v(TAG, "DATABASE HAS BEEN CREATED.")
     }
 
     /**
@@ -137,7 +55,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
 
             contentResolver.delete(data.CONTENT_URI, null, null)
 
-            while(count < 23) {
+            while(count < 27) {
                 when(count) {
                     0 -> {
                         values.put(data.COLUMN_HOUR, "09")

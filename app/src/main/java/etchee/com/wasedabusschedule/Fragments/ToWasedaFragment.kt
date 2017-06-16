@@ -81,10 +81,12 @@ class ToWasedaFragment: android.support.v4.app.Fragment(), DatasetUpdate {
 
         when(day){
             1->{    //No bus on Sunday
+                Log.v(TAG, "NO BUS ON SUNDAY")
                 cursor = null
             }
 
             7->{    //Saturday Table
+                Log.v(TAG, "SATURDAY DB DISPLAYING")
                 val selection = DataContract.SATURDAY_DB_TO_WASEDA().COLUMN_SEARCH + " > ?"
                 val selectionArgs = arrayOf(search_key.toString())
                 cursor = context.contentResolver.query(
@@ -97,6 +99,7 @@ class ToWasedaFragment: android.support.v4.app.Fragment(), DatasetUpdate {
             }
 
             else->{ //WeekDay Table
+                Log.v(TAG, "WEEKDAY DB DISPLAYING")
                 val selection = DataContract.DB_TO_WASEDA().COLUMN_SEARCH + " > ?"
                 val selectionArgs = arrayOf(search_key.toString())
                 cursor = context.contentResolver.query(
@@ -109,7 +112,7 @@ class ToWasedaFragment: android.support.v4.app.Fragment(), DatasetUpdate {
             }
         }
 //        Log.v(TAG, "Generated concat current time value is: " + search_key.toString())
-        Log.v(TAG, "PASSING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
+//        Log.v(TAG, "PASSING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
         return cursor
     }
 

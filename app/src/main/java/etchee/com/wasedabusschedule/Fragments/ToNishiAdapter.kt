@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.layout_item_single.view.*
 class ToNishiAdapter(val context: Context, var cursor: Cursor?) :
         android.support.v7.widget.RecyclerView.Adapter<ToNishiAdapter.ViewHolder>() {
 
+
     private var TAG: String = javaClass.simpleName
     var infoHolderArray = arrayListOf<InfoHolder>()
     var viewHolderCreatedCount = 0
@@ -34,7 +35,7 @@ class ToNishiAdapter(val context: Context, var cursor: Cursor?) :
     *   TODO: 今一番上のカウントダウンが止まったときに全部のタイマーがとまる。それを直す
     * */
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
-//        Log.v(TAG, "WASEDA ADAPTER RECEIVING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
+//        Log.v(TAG, "NISHI ADAPTER RECEIVING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
 
 
         val view:View = LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false)
@@ -219,7 +220,7 @@ class ToNishiAdapter(val context: Context, var cursor: Cursor?) :
         var min_holder:String = ""
         var runnable:Runnable? = null
         var handler: Handler? = null
-        var mTimer: CountDownTimer? = null
+        var mTimer:CountDownTimer? = null
         val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.JAPAN)
 
         fun bindStaticInfo(position:Int, hour:String?, min:String?, routeOption:String?){
@@ -272,6 +273,47 @@ class ToNishiAdapter(val context: Context, var cursor: Cursor?) :
             }
 
             return cdt
+        }
+
+        private fun makeCounter(viewHolder:ViewHolder, position:Int, dept_time:String):Runnable {
+
+            runnable = object : Runnable {
+                override fun run() {
+                    handler?.postDelayed(this, 1000)
+                    try {
+                        val dateFormat = SimpleDateFormat("yyyy-MM-dd-kk-mm-ss", Locale.JAPAN)
+                        // Here Set your Event Date
+                        val eventDate = dateFormat.parse(dept_time)
+                        val currentDate = Date()
+                        if (!currentDate.after(eventDate)) {
+                            var diff = eventDate.time - currentDate.time
+                            val days = diff / (24 * 60 * 60 * 1000)
+                            diff -= days * (24 * 60 * 60 * 1000)
+                            val hours = diff / (60 * 60 * 1000)
+                            diff -= hours * (60 * 60 * 1000)
+                            val minutes = diff / (60 * 1000)
+                            diff -= minutes * (60 * 1000)
+                            val seconds = diff / 1000
+
+                            val hourText = String.format("%02d", hours)
+                            val minText = String.format("%02d", minutes)
+                            val secText = String.format("%02d", seconds)
+
+                            Log.v("Viewholder", "Tick: $secText")
+
+                            bindCountDown(hourText, minText, secText)
+
+                        } else {
+                            handler?.removeCallbacks(runnable)
+                            handler?.removeMessages(0)
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            //ここで定義したrunnableをhandler経由で実行している
+            return runnable as Runnable
         }
 
         private fun countFormatter(num:Long):String{

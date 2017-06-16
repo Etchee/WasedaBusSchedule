@@ -413,7 +413,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         try {
 
             db.delete(data.TABLE_NAME, null, null)
-            while (count < 11) {
+            while (count < 10) {
                 when (count) {
                     0 -> {
                         values.put(data.COLUMN_HOUR, "09")
@@ -558,7 +558,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         try {
 
             db.delete(data.TABLE_NAME, null, null)
-            while (count < 24) {
+            while (count < 25) {
                 when (count) {
                     0 -> {
                         values.put(data.COLUMN_HOUR, "09")
@@ -885,7 +885,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
             try {
 
                 db.delete(data.TABLE_NAME, null, null)
-                while (count < 10) {
+                while (count < 11) {
                     when (count) {
                         0 -> {
                             values.put(data.COLUMN_HOUR, "09")

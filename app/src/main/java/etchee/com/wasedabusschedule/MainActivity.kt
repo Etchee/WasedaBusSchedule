@@ -8,6 +8,7 @@ import android.database.SQLException
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         //database check
         if (!checkDB()) {
+            Log.v(TAG, "DATABASE INIT STARTED")
             //Initialize the database in order
             AsyncInitTables(applicationContext).execute()
         }

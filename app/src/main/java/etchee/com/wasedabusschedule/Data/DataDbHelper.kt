@@ -9,8 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper
  * Database Helper class
  * Created by rikutoechigoya on 2017/05/22.
  */
-class DataDbHelper(context: Context, name: String, factory: SQLiteDatabase.CursorFactory?,
-                   version: Int): SQLiteOpenHelper(context, name, factory, version) {
+class DataDbHelper(context: Context, name_table: String, factory: SQLiteDatabase.CursorFactory?,
+                   db_version: Int): SQLiteOpenHelper(context, name_table, factory, db_version) {
 
     private val to_wasedaDb = DataContract.DB_TO_WASEDA()
     private val to_nishiDb = DataContract.DB_TO_NISHI()

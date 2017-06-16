@@ -29,6 +29,23 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         initSat_NishiTable()
         initSat_WasedaTable()
 
+        //Test function
+//        val db = DataDbHelper(context, DataContract.GlobalConstants().DATABASE_NAME, null, 1).writableDatabase
+//        db.beginTransaction()
+//        val values = ContentValues()
+//        try {
+//            values.put(DataContract.DB_TO_WASEDA().COLUMN_HOUR, "09")
+//            values.put(DataContract.DB_TO_WASEDA().COLUMN_MIN, "20")
+//            values.put(DataContract.DB_TO_WASEDA().COLUMN_FLAG, 0)
+//            values.put(DataContract.DB_TO_WASEDA().COLUMN_SEARCH, 920)
+//            db.insert(DataContract.DB_TO_WASEDA().TABLE_NAME, null, values)
+//
+//            db.setTransactionSuccessful()
+//        } catch(e: Exception) {
+//        } finally {
+//            db.endTransaction()
+//            db.close()
+//        }
         return true
     }
 
@@ -48,7 +65,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         var count: Int = 0   //Counter to use in loop
         var flag: Boolean = true     //If there is an error make this false
         var uri: Uri? = null    //For error checking
-        val db = DataDbHelper(context, data.TABLE_NAME, null, 1).writableDatabase
+        val db = DataDbHelper(context, DataContract.GlobalConstants().DATABASE_NAME, null, 1).writableDatabase
         db.beginTransaction()
         try {
             db.delete(data.TABLE_NAME, null, null)
@@ -381,7 +398,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                 }
             }
             db.setTransactionSuccessful()
-            
+
         } catch (e: SQLException) {
             e.printStackTrace()
         } finally {
@@ -403,7 +420,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         //Counter to use in loop
         var count: Int = 0
         var uri: Uri? = null
-        val db = DataDbHelper(context, data.TABLE_NAME, null, 1).writableDatabase
+        val db = DataDbHelper(context, DataContract.GlobalConstants().DATABASE_NAME, null, 1).writableDatabase
         db.beginTransaction()
         try {
 
@@ -561,7 +578,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         var count: Int = 0
         var flag: Boolean = true
         var uri: Uri? = null
-        val db = DataDbHelper(context, data.TABLE_NAME, null, 1).writableDatabase
+        val db = DataDbHelper(context, DataContract.GlobalConstants().DATABASE_NAME, null, 1).writableDatabase
         db.beginTransaction()
         try {
 
@@ -876,7 +893,7 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
             //Counter to use in loop
             var count: Int = 0
             var uri: Uri? = null
-            val db = DataDbHelper(context, data.TABLE_NAME, null, 1).writableDatabase
+            val db = DataDbHelper(context, DataContract.GlobalConstants().DATABASE_NAME, null, 1).writableDatabase
             db.beginTransaction()
             try {
 

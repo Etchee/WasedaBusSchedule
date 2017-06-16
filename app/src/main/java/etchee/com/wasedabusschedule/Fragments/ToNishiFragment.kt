@@ -51,7 +51,9 @@ class ToNishiFragment: Fragment() {
     }
 
     fun refreshAdapter(){
-        mAdapter.swapCursor(createCursor())
+        if (mAdapter.itemCount == 0){
+            mAdapter.swapCursor(createCursor())
+        }
         nishi_swipeToRefresh.isRefreshing = false
     }
 

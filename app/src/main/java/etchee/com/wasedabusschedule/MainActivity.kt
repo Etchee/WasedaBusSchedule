@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import etchee.com.wasedabusschedule.Data.AsyncInitTables
 import etchee.com.wasedabusschedule.Data.DataContract
+import etchee.com.wasedabusschedule.Data.InitTableSerial
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         if (!checkDB()) {
             Log.v(TAG, "DATABASE INIT STARTED")
             //Initialize the database in order
-            AsyncInitTables(applicationContext).execute()
+//            AsyncInitTables(applicationContext).execute()
         }
 
         //viewpager initialization
@@ -58,9 +59,13 @@ class MainActivity : AppCompatActivity() {
 
         when(item.itemId){
              R.id.menu_create_database ->{
-                //fire the asyncTask
-//                 AsyncInitTables(applicationContext).execute()
-                 checkDB()
+                 //database check
+                 if (!checkDB()) {
+                     Log.v(TAG, "DATABASE INIT STARTED")
+                     //Initialize the database in order
+//                     AsyncInitTables(applicationContext).execute()
+                     InitTableSerial(applicationContext).execute()
+                 }
             }
 
             R.id.menu_delete_database ->{
@@ -77,23 +82,32 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.menu_get_count ->{
-                var cursor:Cursor? = contentResolver.query(
-                        DataContract.DB_TO_WASEDA().CONTENT_URI,
-                        null, null, null, null
-                )
+                var cursor:Cursor? = null
+                var count = 0
+                try{
+                    cursor = contentResolver.query(DataContract.DB_TO_WASEDA().CONTENT_URI,
+                            null,null,null,null)
+                    count = cursor.count
+                    Toast.makeText(context, "Waseda table has $count rows.", Toast.LENGTH_SHORT).show()
+                    cursor = contentResolver.query(DataContract.DB_TO_NISHI().CONTENT_URI,
+                            null,null,null,null)
+                    count = cursor.count
+                    Toast.makeText(context, "Nishi table has $count rows.", Toast.LENGTH_SHORT).show()
+                    cursor = contentResolver.query(DataContract.SATURDAY_DB_TO_WASEDA().CONTENT_URI,
+                            null,null,null,null)
+                    count = cursor.count
+                    Toast.makeText(context, "Waseda(sat) table has $count rows.", Toast.LENGTH_SHORT).show()
+                    cursor = contentResolver.query(DataContract.SATURDAY_DB_TO_NISHI().CONTENT_URI,
+                            null,null,null,null)
+                    count = cursor.count
+                    Toast.makeText(context, "Nishi(sat) table has $count rows.", Toast.LENGTH_SHORT).show()
+                    cursor = null
 
-                Toast.makeText(this, "Waseda Table has: " + cursor?.count.toString() + " rows.",
-                        Toast.LENGTH_SHORT).show()
-
-                cursor = contentResolver.query(
-                        DataContract.DB_TO_NISHI().CONTENT_URI,
-                        null, null, null, null
-                )
-
-                Toast.makeText(this, "Nishi Table has: " + cursor?.count.toString() + " rows.",
-                        Toast.LENGTH_SHORT).show()
-
-                cursor?.close()
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }finally {
+                    cursor?.close()
+                }
             }
         }
 

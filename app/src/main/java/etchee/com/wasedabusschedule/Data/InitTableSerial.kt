@@ -3,73 +3,34 @@ package etchee.com.wasedabusschedule.Data
 import android.content.ContentValues
 import android.content.Context
 import android.database.SQLException
-import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.os.AsyncTask
 import android.util.Log
 import android.widget.Toast
 
-
 /**
- * Table init utility
- * Created by rikutoechigoya on 2017/05/29.
+ * data util class to create the DB serially
+ * Created by rikutoechigoya on 2017/06/17.
  */
-class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
+class InitTableSerial(val context: Context): AsyncTask<Void, Void, Void>() {
 
-//    val db: db = context.applicationContext.db
     val TAG = javaClass.simpleName
-    lateinit var db:SQLiteDatabase
 
-    override fun onPreExecute() {
-        super.onPreExecute()
-        Toast.makeText(context, "データ登録中・・・", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun doInBackground(vararg params: Void?): Boolean {
-
-        db = DataDbHelper(context, DataContract.GlobalConstants().DATABASE_NAME, null, 1).writableDatabase
-
-        initToWasedaTAble()
-        initNishiTable()
-        initSat_NishiTable()
-        initSat_ToWasedaTable()
-
-        //Test function
-//
-//        db.beginTransaction()
-//        val values = ContentValues()
-//        try {
-//            values.put(DataContract.DB_TO_WASEDA().COLUMN_HOUR, "09")
-//            values.put(DataContract.DB_TO_WASEDA().COLUMN_MIN, "20")
-//            values.put(DataContract.DB_TO_WASEDA().COLUMN_FLAG, 0)
-//            values.put(DataContract.DB_TO_WASEDA().COLUMN_SEARCH, 920)
-//            db.insert(DataContract.DB_TO_WASEDA().TABLE_NAME, null, values)
-//
-//            db.setTransactionSuccessful()
-//        } catch(e: Exception) {
-//        } finally {
-//            db.endTransaction()
-//            db.close()
-//        }
-        return true
-    }
-
-    override fun onPostExecute(result: Boolean?) {
+    override fun onPostExecute(result: Void?) {
         super.onPostExecute(result)
-        Log.v(TAG, "DATABASE HAS BEEN CREATED.")
+        Toast.makeText(context, "DB Finished", Toast.LENGTH_SHORT).show()
     }
 
-    /**
-     * delete, then add.
-     */
-    private fun initToWasedaTAble(): Boolean {
+    override fun doInBackground(vararg params: Void?): Void? {
+        val db = DataDbHelper(context,
+                DataContract.GlobalConstants().DATABASE_NAME,
+                null,
+                1).writableDatabase
+
         //for URI shortcut
-        val data: DataContract.DB_TO_WASEDA = DataContract.DB_TO_WASEDA()
-        //dump all the values in this
+        val data = DataContract.DB_TO_WASEDA()
         val values: ContentValues = ContentValues()
         var count: Int = 0   //Counter to use in loop
-        var flag: Boolean = true     //If there is an error make this false
-        var uri: Uri? = null    //For error checking
 
         db.beginTransaction()
         try {
@@ -390,316 +351,276 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                     }
                 }
             }
-            db.setTransactionSuccessful()
 
-        } catch (e: SQLException) {
-            e.printStackTrace()
-        } finally {
-            db.endTransaction()
-            if (uri == null) {
-                flag = false
-            }
-        }
-
-        return flag
-    }
-
-    private fun initSat_ToWasedaTable() {
-
-        //dump all the values in here
-        val values: ContentValues = ContentValues()
-        //Counter to use in loop
-        var count: Int = 0
-        var uri: Uri? = null
-        val data: DataContract.SATURDAY_DB_TO_WASEDA = DataContract.SATURDAY_DB_TO_WASEDA()
-        db.beginTransaction()
-        try {
-
+            count = 0
+            val data2 = DataContract.SATURDAY_DB_TO_WASEDA()
             db.delete(data.TABLE_NAME, null, null)
             while (count < 10) {
                 when (count) {
                     0 -> {
-                        values.put(data.COLUMN_HOUR, "09")
-                        values.put(data.COLUMN_MIN, "35")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 935)
+                        values.put(data2.COLUMN_HOUR, "09")
+                        values.put(data2.COLUMN_MIN, "35")
+                        values.put(data2.COLUMN_FLAG, 0)
+                        values.put(data2.COLUMN_SEARCH, 935)
                         db.insert(
-                                data.TABLE_NAME,
+                                data2.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     1 -> {
-                        values.put(data.COLUMN_HOUR, "10")
-                        values.put(data.COLUMN_MIN, "35")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1035)
+                        values.put(data2.COLUMN_HOUR, "10")
+                        values.put(data2.COLUMN_MIN, "35")
+                        values.put(data2.COLUMN_FLAG, 0)
+                        values.put(data2.COLUMN_SEARCH, 1035)
                         db.insert(
-                                data.TABLE_NAME,
+                                data2.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     2 -> {
-                        values.put(data.COLUMN_HOUR, "11")
-                        values.put(data.COLUMN_MIN, "05")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1105)
+                        values.put(data2.COLUMN_HOUR, "11")
+                        values.put(data2.COLUMN_MIN, "05")
+                        values.put(data2.COLUMN_FLAG, 0)
+                        values.put(data2.COLUMN_SEARCH, 1105)
                         db.insert(
-                                data.TABLE_NAME,
+                                data2.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     3 -> {
-                        values.put(data.COLUMN_HOUR, "11")
-                        values.put(data.COLUMN_MIN, "45")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1145)
+                        values.put(data2.COLUMN_HOUR, "11")
+                        values.put(data2.COLUMN_MIN, "45")
+                        values.put(data2.COLUMN_FLAG, 0)
+                        values.put(data2.COLUMN_SEARCH, 1145)
                         db.insert(
-                                data.TABLE_NAME,
+                                data2.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     4 -> {
-                        values.put(data.COLUMN_HOUR, "12")
-                        values.put(data.COLUMN_MIN, "15")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1215)
+                        values.put(data2.COLUMN_HOUR, "12")
+                        values.put(data2.COLUMN_MIN, "15")
+                        values.put(data2.COLUMN_FLAG, 0)
+                        values.put(data2.COLUMN_SEARCH, 1215)
                         db.insert(
-                                data.TABLE_NAME,
+                                data2.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     5 -> {
-                        values.put(data.COLUMN_HOUR, "12")
-                        values.put(data.COLUMN_MIN, "45")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1245)
+                        values.put(data2.COLUMN_HOUR, "12")
+                        values.put(data2.COLUMN_MIN, "45")
+                        values.put(data2.COLUMN_FLAG, 0)
+                        values.put(data2.COLUMN_SEARCH, 1245)
                         db.insert(
-                                data.TABLE_NAME,
+                                data2.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     6 -> {
-                        values.put(data.COLUMN_HOUR, "14")
-                        values.put(data.COLUMN_MIN, "00")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1400)
+                        values.put(data2.COLUMN_HOUR, "14")
+                        values.put(data2.COLUMN_MIN, "00")
+                        values.put(data2.COLUMN_FLAG, 0)
+                        values.put(data2.COLUMN_SEARCH, 1400)
                         db.insert(
-                                data.TABLE_NAME,
+                                data2.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     7 -> {
-                        values.put(data.COLUMN_HOUR, "14")
-                        values.put(data.COLUMN_MIN, "35")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1435)
+                        values.put(data2.COLUMN_HOUR, "14")
+                        values.put(data2.COLUMN_MIN, "35")
+                        values.put(data2.COLUMN_FLAG, 0)
+                        values.put(data2.COLUMN_SEARCH, 1435)
                         db.insert(
-                                data.TABLE_NAME,
+                                data2.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
                     8 -> {
-                        values.put(data.COLUMN_HOUR, "15")
-                        values.put(data.COLUMN_MIN, "20")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1520)
+                        values.put(data2.COLUMN_HOUR, "15")
+                        values.put(data2.COLUMN_MIN, "20")
+                        values.put(data2.COLUMN_FLAG, 0)
+                        values.put(data2.COLUMN_SEARCH, 1520)
                         db.insert(
-                                data.TABLE_NAME,
+                                data2.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     9 -> {
-                        values.put(data.COLUMN_HOUR, "16")
-                        values.put(data.COLUMN_MIN, "20")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1620)
+                        values.put(data2.COLUMN_HOUR, "16")
+                        values.put(data2.COLUMN_MIN, "20")
+                        values.put(data2.COLUMN_FLAG, 0)
+                        values.put(data2.COLUMN_SEARCH, 1620)
                         db.insert(
-                                data.TABLE_NAME,
+                                data2.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
                 }
             }
-            db.setTransactionSuccessful()
-
-        } catch (e: SQLException) {
-            e.printStackTrace()
-        } finally {
-            db.endTransaction()
-        }
-    }
-
-    private fun initNishiTable() {
-        //for URI shortcut
-        val data = DataContract.DB_TO_NISHI()
-        //dump all the values in this
-        val values: ContentValues = ContentValues()
-        var count: Int = 0   //Counter to use in loop
-        var flag: Boolean = true     //If there is an error make this false
-        var uri: Uri? = null    //For error checking
-
-        db.beginTransaction()
-        try {
-            db.delete(data.TABLE_NAME, null, null)
+            count = 0
+            val data3 = DataContract.DB_TO_NISHI()
+            db.delete(data3.TABLE_NAME, null, null)
 
             while (count < 25) {
                 when (count) {
                     0 -> {
-                        values.put(data.COLUMN_HOUR, "09")
-                        values.put(data.COLUMN_MIN, "20")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 920)
+                        values.put(data3.COLUMN_HOUR, "09")
+                        values.put(data3.COLUMN_MIN, "20")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 920)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     1 -> {
-                        values.put(data.COLUMN_HOUR, "09")
-                        values.put(data.COLUMN_MIN, "35")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 935)
+                        values.put(data3.COLUMN_HOUR, "09")
+                        values.put(data3.COLUMN_MIN, "35")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 935)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     2 -> {
-                        values.put(data.COLUMN_HOUR, "9")
-                        values.put(data.COLUMN_MIN, "50")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 950)
+                        values.put(data3.COLUMN_HOUR, "9")
+                        values.put(data3.COLUMN_MIN, "50")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 950)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     3 -> {
-                        values.put(data.COLUMN_HOUR, "10")
-                        values.put(data.COLUMN_MIN, "05")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1005)
+                        values.put(data3.COLUMN_HOUR, "10")
+                        values.put(data3.COLUMN_MIN, "05")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1005)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     4 -> {
-                        values.put(data.COLUMN_HOUR, "10")
-                        values.put(data.COLUMN_MIN, "35")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1035)
+                        values.put(data3.COLUMN_HOUR, "10")
+                        values.put(data3.COLUMN_MIN, "35")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1035)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     5 -> {
-                        values.put(data.COLUMN_HOUR, "10")
-                        values.put(data.COLUMN_MIN, "45")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1045)
+                        values.put(data3.COLUMN_HOUR, "10")
+                        values.put(data3.COLUMN_MIN, "45")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1045)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     6 -> {
-                        values.put(data.COLUMN_HOUR, "11")
-                        values.put(data.COLUMN_MIN, "15")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1115)
+                        values.put(data3.COLUMN_HOUR, "11")
+                        values.put(data3.COLUMN_MIN, "15")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1115)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     7 -> {
-                        values.put(data.COLUMN_HOUR, "11")
-                        values.put(data.COLUMN_MIN, "45")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1145)
+                        values.put(data3.COLUMN_HOUR, "11")
+                        values.put(data3.COLUMN_MIN, "45")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1145)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
                     8 -> {
-                        values.put(data.COLUMN_HOUR, "12")
-                        values.put(data.COLUMN_MIN, "05")
-                        values.put(data.COLUMN_FLAG, 1)
-                        values.put(data.COLUMN_SEARCH, 1205)
+                        values.put(data3.COLUMN_HOUR, "12")
+                        values.put(data3.COLUMN_MIN, "05")
+                        values.put(data3.COLUMN_FLAG, 1)
+                        values.put(data3.COLUMN_SEARCH, 1205)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     9 -> {
-                        values.put(data.COLUMN_HOUR, "12")
-                        values.put(data.COLUMN_MIN, "15")
-                        values.put(data.COLUMN_FLAG, 2)
-                        values.put(data.COLUMN_SEARCH, 1215)
+                        values.put(data3.COLUMN_HOUR, "12")
+                        values.put(data3.COLUMN_MIN, "15")
+                        values.put(data3.COLUMN_FLAG, 2)
+                        values.put(data3.COLUMN_SEARCH, 1215)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     10 -> {
-                        values.put(data.COLUMN_HOUR, "12")
-                        values.put(data.COLUMN_MIN, "45")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1245)
+                        values.put(data3.COLUMN_HOUR, "12")
+                        values.put(data3.COLUMN_MIN, "45")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1245)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     11 -> {
-                        values.put(data.COLUMN_HOUR, "13")
-                        values.put(data.COLUMN_MIN, "15")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1315)
+                        values.put(data3.COLUMN_HOUR, "13")
+                        values.put(data3.COLUMN_MIN, "15")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1315)
                         val id = db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
@@ -707,12 +628,12 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                     }
 
                     12 -> {
-                        values.put(data.COLUMN_HOUR, "13")
-                        values.put(data.COLUMN_MIN, "45")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1345)
+                        values.put(data3.COLUMN_HOUR, "13")
+                        values.put(data3.COLUMN_MIN, "45")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1345)
                         val id = db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
@@ -720,12 +641,12 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                     }
 
                     13 -> {
-                        values.put(data.COLUMN_HOUR, "14")
-                        values.put(data.COLUMN_MIN, "05")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1405)
+                        values.put(data3.COLUMN_HOUR, "14")
+                        values.put(data3.COLUMN_MIN, "05")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1405)
                         val id = db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
@@ -733,12 +654,12 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                     }
 
                     14 -> {
-                        values.put(data.COLUMN_HOUR, "14")
-                        values.put(data.COLUMN_MIN, "35")
-                        values.put(data.COLUMN_FLAG, 6)
-                        values.put(data.COLUMN_SEARCH, 1435)
+                        values.put(data3.COLUMN_HOUR, "14")
+                        values.put(data3.COLUMN_MIN, "35")
+                        values.put(data3.COLUMN_FLAG, 6)
+                        values.put(data3.COLUMN_SEARCH, 1435)
                         val id = db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
@@ -746,12 +667,12 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                     }
 
                     15 -> {
-                        values.put(data.COLUMN_HOUR, "14")
-                        values.put(data.COLUMN_MIN, "50")
-                        values.put(data.COLUMN_FLAG, 3)
-                        values.put(data.COLUMN_SEARCH, 1450)
+                        values.put(data3.COLUMN_HOUR, "14")
+                        values.put(data3.COLUMN_MIN, "50")
+                        values.put(data3.COLUMN_FLAG, 3)
+                        values.put(data3.COLUMN_SEARCH, 1450)
                         val id = db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
@@ -759,116 +680,251 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
                     }
 
                     16 -> {
-                        values.put(data.COLUMN_HOUR, "15")
-                        values.put(data.COLUMN_MIN, "05")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1505)
+                        values.put(data3.COLUMN_HOUR, "15")
+                        values.put(data3.COLUMN_MIN, "05")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1505)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     17 -> {
-                        values.put(data.COLUMN_HOUR, "15")
-                        values.put(data.COLUMN_MIN, "20")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1520)
+                        values.put(data3.COLUMN_HOUR, "15")
+                        values.put(data3.COLUMN_MIN, "20")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1520)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     18 -> {
-                        values.put(data.COLUMN_HOUR, "15")
-                        values.put(data.COLUMN_MIN, "35")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1535)
+                        values.put(data3.COLUMN_HOUR, "15")
+                        values.put(data3.COLUMN_MIN, "35")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1535)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     19 -> {
-                        values.put(data.COLUMN_HOUR, "15")
-                        values.put(data.COLUMN_MIN, "50")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1550)
+                        values.put(data3.COLUMN_HOUR, "15")
+                        values.put(data3.COLUMN_MIN, "50")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1550)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     20 -> {
-                        values.put(data.COLUMN_HOUR, "16")
-                        values.put(data.COLUMN_MIN, "20")
-                        values.put(data.COLUMN_FLAG, 6)
-                        values.put(data.COLUMN_SEARCH, 1620)
+                        values.put(data3.COLUMN_HOUR, "16")
+                        values.put(data3.COLUMN_MIN, "20")
+                        values.put(data3.COLUMN_FLAG, 6)
+                        values.put(data3.COLUMN_SEARCH, 1620)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     21 -> {
-                        values.put(data.COLUMN_HOUR, "16")
-                        values.put(data.COLUMN_MIN, "35")
-                        values.put(data.COLUMN_FLAG, 3)
-                        values.put(data.COLUMN_SEARCH, 1635)
+                        values.put(data3.COLUMN_HOUR, "16")
+                        values.put(data3.COLUMN_MIN, "35")
+                        values.put(data3.COLUMN_FLAG, 3)
+                        values.put(data3.COLUMN_SEARCH, 1635)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     22 -> {
-                        values.put(data.COLUMN_HOUR, "17")
-                        values.put(data.COLUMN_MIN, "00")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1700)
+                        values.put(data3.COLUMN_HOUR, "17")
+                        values.put(data3.COLUMN_MIN, "00")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1700)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     23 -> {
-                        values.put(data.COLUMN_HOUR, "17")
-                        values.put(data.COLUMN_MIN, "20")
-                        values.put(data.COLUMN_FLAG, 0)
-                        values.put(data.COLUMN_SEARCH, 1720)
+                        values.put(data3.COLUMN_HOUR, "17")
+                        values.put(data3.COLUMN_MIN, "20")
+                        values.put(data3.COLUMN_FLAG, 0)
+                        values.put(data3.COLUMN_SEARCH, 1720)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
 
                     24 -> {
-                        values.put(data.COLUMN_HOUR, "18")
-                        values.put(data.COLUMN_MIN, "10")
-                        values.put(data.COLUMN_FLAG, 3)
-                        values.put(data.COLUMN_SEARCH, 1810)
+                        values.put(data3.COLUMN_HOUR, "18")
+                        values.put(data3.COLUMN_MIN, "10")
+                        values.put(data3.COLUMN_FLAG, 3)
+                        values.put(data3.COLUMN_SEARCH, 1810)
                         db.insert(
-                                data.TABLE_NAME,
+                                data3.TABLE_NAME,
                                 null,
                                 values
                         ); values.clear(); count++
                     }
                 }
-
             }
+            count = 0
+            val data4 = DataContract.SATURDAY_DB_TO_NISHI()
+            db.delete(data.TABLE_NAME, null, null)
+            while (count < 11) {
+                when (count) {
+                    0 -> {
+                        values.put(data4.COLUMN_HOUR, "09")
+                        values.put(data4.COLUMN_MIN, "20")
+                        values.put(data4.COLUMN_FLAG, 0)
+                        values.put(data4.COLUMN_SEARCH, 920)
+                        db.insert(
+                                data4.TABLE_NAME,
+                                null,
+                                values
+                        ); values.clear(); count++
+                    }
 
+                    1 -> {
+                        values.put(data4.COLUMN_HOUR, "10")
+                        values.put(data4.COLUMN_MIN, "20")
+                        values.put(data4.COLUMN_FLAG, 0)
+                        values.put(data4.COLUMN_SEARCH, 1020)
+                        db.insert(
+                                data4.TABLE_NAME,
+                                null,
+                                values
+                        ); values.clear(); count++
+                    }
+
+                    2 -> {
+                        values.put(data4.COLUMN_HOUR, "10")
+                        values.put(data4.COLUMN_MIN, "50")
+                        values.put(data4.COLUMN_FLAG, 0)
+                        values.put(data4.COLUMN_SEARCH, 1050)
+                        db.insert(
+                                data4.TABLE_NAME,
+                                null,
+                                values
+                        ); values.clear(); count++
+                    }
+
+                    3 -> {
+                        values.put(data4.COLUMN_HOUR, "11")
+                        values.put(data4.COLUMN_MIN, "30")
+                        values.put(data4.COLUMN_FLAG, 0)
+                        values.put(data4.COLUMN_SEARCH, 1130)
+                        db.insert(
+                                data4.TABLE_NAME,
+                                null,
+                                values
+                        ); values.clear(); count++
+                    }
+
+                    4 -> {
+                        values.put(data4.COLUMN_HOUR, "12")
+                        values.put(data4.COLUMN_MIN, "00")
+                        values.put(data4.COLUMN_FLAG, 0)
+                        values.put(data4.COLUMN_SEARCH, 1200)
+                        db.insert(
+                                data4.TABLE_NAME,
+                                null,
+                                values
+                        ); values.clear(); count++
+                    }
+
+                    5 -> {
+                        values.put(data4.COLUMN_HOUR, "12")
+                        values.put(data4.COLUMN_MIN, "30")
+                        values.put(data4.COLUMN_FLAG, 0)
+                        values.put(data4.COLUMN_SEARCH, 1230)
+                        db.insert(
+                                data4.TABLE_NAME,
+                                null,
+                                values
+                        ); values.clear(); count++
+                    }
+
+                    6 -> {
+                        values.put(data4.COLUMN_HOUR, "13")
+                        values.put(data4.COLUMN_MIN, "45")
+                        values.put(data4.COLUMN_FLAG, 0)
+                        values.put(data4.COLUMN_SEARCH, 1345)
+                        db.insert(
+                                data4.TABLE_NAME,
+                                null,
+                                values
+                        ); values.clear(); count++
+                    }
+
+                    7 -> {
+                        values.put(data4.COLUMN_HOUR, "14")
+                        values.put(data4.COLUMN_MIN, "15")
+                        values.put(data4.COLUMN_FLAG, 0)
+                        values.put(data4.COLUMN_SEARCH, 1415)
+                        db.insert(
+                                data4.TABLE_NAME,
+                                null,
+                                values
+                        ); values.clear(); count++
+                    }
+                    8 -> {
+                        values.put(data4.COLUMN_HOUR, "14")
+                        values.put(data4.COLUMN_MIN, "50")
+                        values.put(data4.COLUMN_FLAG, 0)
+                        values.put(data4.COLUMN_SEARCH, 1450)
+                        db.insert(
+                                data4.TABLE_NAME,
+                                null,
+                                values
+                        ); values.clear(); count++
+                    }
+
+                    9 -> {
+                        values.put(data4.COLUMN_HOUR, "15")
+                        values.put(data4.COLUMN_MIN, "50")
+                        values.put(data4.COLUMN_FLAG, 0)
+                        values.put(data4.COLUMN_SEARCH, 1550)
+                        db.insert(
+                                data4.TABLE_NAME,
+                                null,
+                                values
+                        ); values.clear(); count++
+                    }
+
+                    10 -> {
+                        values.put(data4.COLUMN_HOUR, "16")
+                        values.put(data4.COLUMN_MIN, "35")
+                        values.put(data4.COLUMN_FLAG, 0)
+                        values.put(data4.COLUMN_SEARCH, 1635)
+                        db.insert(
+                                data4.TABLE_NAME,
+                                null,
+                                values
+                        ); values.clear(); count++
+                    }
+                }
+            }
             db.setTransactionSuccessful()
 
         } catch (e: SQLException) {
@@ -876,161 +932,6 @@ class AsyncInitTables(val context:Context): AsyncTask<Void, Int, Boolean>() {
         } finally {
             db.endTransaction()
         }
+        return null
     }
-
-        private fun initSat_NishiTable() {
-            val data = DataContract.SATURDAY_DB_TO_NISHI()
-            //dump all the values in here
-            val values: ContentValues = ContentValues()
-            //Counter to use in loop
-            var count: Int = 0
-            var uri: Uri? = null
-
-            db.beginTransaction()
-            try {
-
-                db.delete(data.TABLE_NAME, null, null)
-                while (count < 11) {
-                    when (count) {
-                        0 -> {
-                            values.put(data.COLUMN_HOUR, "09")
-                            values.put(data.COLUMN_MIN, "20")
-                            values.put(data.COLUMN_FLAG, 0)
-                            values.put(data.COLUMN_SEARCH, 920)
-                            db.insert(
-                                    data.TABLE_NAME,
-                                    null,
-                                    values
-                            ); values.clear(); count++
-                        }
-
-                        1 -> {
-                            values.put(data.COLUMN_HOUR, "10")
-                            values.put(data.COLUMN_MIN, "20")
-                            values.put(data.COLUMN_FLAG, 0)
-                            values.put(data.COLUMN_SEARCH, 1020)
-                            db.insert(
-                                    data.TABLE_NAME,
-                                    null,
-                                    values
-                            ); values.clear(); count++
-                        }
-
-                        2 -> {
-                            values.put(data.COLUMN_HOUR, "10")
-                            values.put(data.COLUMN_MIN, "50")
-                            values.put(data.COLUMN_FLAG, 0)
-                            values.put(data.COLUMN_SEARCH, 1050)
-                            db.insert(
-                                    data.TABLE_NAME,
-                                    null,
-                                    values
-                            ); values.clear(); count++
-                        }
-
-                        3 -> {
-                            values.put(data.COLUMN_HOUR, "11")
-                            values.put(data.COLUMN_MIN, "30")
-                            values.put(data.COLUMN_FLAG, 0)
-                            values.put(data.COLUMN_SEARCH, 1130)
-                            db.insert(
-                                    data.TABLE_NAME,
-                                    null,
-                                    values
-                            ); values.clear(); count++
-                        }
-
-                        4 -> {
-                            values.put(data.COLUMN_HOUR, "12")
-                            values.put(data.COLUMN_MIN, "00")
-                            values.put(data.COLUMN_FLAG, 0)
-                            values.put(data.COLUMN_SEARCH, 1200)
-                            db.insert(
-                                    data.TABLE_NAME,
-                                    null,
-                                    values
-                            ); values.clear(); count++
-                        }
-
-                        5 -> {
-                            values.put(data.COLUMN_HOUR, "12")
-                            values.put(data.COLUMN_MIN, "30")
-                            values.put(data.COLUMN_FLAG, 0)
-                            values.put(data.COLUMN_SEARCH, 1230)
-                            db.insert(
-                                    data.TABLE_NAME,
-                                    null,
-                                    values
-                            ); values.clear(); count++
-                        }
-
-                        6 -> {
-                            values.put(data.COLUMN_HOUR, "13")
-                            values.put(data.COLUMN_MIN, "45")
-                            values.put(data.COLUMN_FLAG, 0)
-                            values.put(data.COLUMN_SEARCH, 1345)
-                            db.insert(
-                                    data.TABLE_NAME,
-                                    null,
-                                    values
-                            ); values.clear(); count++
-                        }
-
-                        7 -> {
-                            values.put(data.COLUMN_HOUR, "14")
-                            values.put(data.COLUMN_MIN, "15")
-                            values.put(data.COLUMN_FLAG, 0)
-                            values.put(data.COLUMN_SEARCH, 1415)
-                            db.insert(
-                                    data.TABLE_NAME,
-                                    null,
-                                    values
-                            ); values.clear(); count++
-                        }
-                        8 -> {
-                            values.put(data.COLUMN_HOUR, "14")
-                            values.put(data.COLUMN_MIN, "50")
-                            values.put(data.COLUMN_FLAG, 0)
-                            values.put(data.COLUMN_SEARCH, 1450)
-                            db.insert(
-                                    data.TABLE_NAME,
-                                    null,
-                                    values
-                            ); values.clear(); count++
-                        }
-
-                        9 -> {
-                            values.put(data.COLUMN_HOUR, "15")
-                            values.put(data.COLUMN_MIN, "50")
-                            values.put(data.COLUMN_FLAG, 0)
-                            values.put(data.COLUMN_SEARCH, 1550)
-                            db.insert(
-                                    data.TABLE_NAME,
-                                    null,
-                                    values
-                            ); values.clear(); count++
-                        }
-
-                        10 -> {
-                            values.put(data.COLUMN_HOUR, "16")
-                            values.put(data.COLUMN_MIN, "35")
-                            values.put(data.COLUMN_FLAG, 0)
-                            values.put(data.COLUMN_SEARCH, 1635)
-                            db.insert(
-                                    data.TABLE_NAME,
-                                    null,
-                                    values
-                            ); values.clear(); count++
-                        }
-                    }
-                }
-
-                db.setTransactionSuccessful()
-
-            } catch (e: SQLException) {
-                e.printStackTrace()
-            } finally {
-                db.endTransaction()
-            }
-        }
-    }
+}

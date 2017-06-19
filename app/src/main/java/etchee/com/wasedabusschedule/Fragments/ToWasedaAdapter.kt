@@ -27,7 +27,6 @@ class ToWasedaAdapter(val context: Context) :
 
     private var TAG: String = javaClass.simpleName
     var infoHolderArray = arrayListOf<InfoHolder>()
-    var viewHolderCreatedCount = 0
     private val mArrayList = createArrayList()
 
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
@@ -43,34 +42,35 @@ class ToWasedaAdapter(val context: Context) :
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        //Background image is the same for every view
+        //BACKGROUND
         Glide.with(context)
                 .load(R.drawable.img_okuma)
                 .into(viewHolder.image_background)
 
-        //Already made viewholder
+        //Already made viewHolder
         if (infoHolderArray.size > position && infoHolderArray[position].hour_holder.isNotEmpty()) {
-            //values
+            //GET
             val routeOption = infoHolderArray[position].routeOption_holder
             val hourValue = infoHolderArray[position].hour_holder
             val minValue = infoHolderArray[position].min_holder
-
+            //BIND
             viewHolder.bindStaticInfo(position, hourValue, minValue, routeOption)
-
-//            viewHolder.bindCountDown(hourValue, minValue, "00")
+            //RESET TIMER
             viewHolder.startTimer()
 
-        }else{  //Newly created viewholder
+        }else{
+            //NEW viewHolder
 
+            //GET
             val hourValue = mArrayList[position].hour
             val minValue = mArrayList[position].min
             val routeOption = getRouteOption(mArrayList[position].flag)
 
-            //save to data model
+            //SAVE
             val infoHolder =  InfoHolder(
                     routeOption,
-                    timeFormatter(hourValue),
-                    timeFormatter(minValue),
+                    hourValue,
+                    minValue,
                     "NA",
                     "NA",
                     "NA",
@@ -78,14 +78,14 @@ class ToWasedaAdapter(val context: Context) :
             )
             infoHolderArray.add(infoHolder)
 
-            //Display the info
+            //BIND
             viewHolder.bindStaticInfo(
                     position,
-                    timeFormatter(hourValue),
-                    timeFormatter(minValue),
+                    hourValue,
+                    minValue,
                     routeOption
             )
-
+            //START TIMER
             viewHolder.startTimer()
         }
     }
@@ -148,7 +148,7 @@ class ToWasedaAdapter(val context: Context) :
 
 
 
-    private fun getDay(day:Int):String {
+    private fun getDayString(day:Int):String {
         when (day) {
             1 -> return "Sunday"
             2 -> return "Monday"
@@ -169,23 +169,6 @@ class ToWasedaAdapter(val context: Context) :
         val date:String = calendar.get(Calendar.DATE).toString()
 
         return "$year-$month-$date-"
-    }
-
-
-
-    override fun onViewRecycled(holder: ViewHolder?) {
-        super.onViewRecycled(holder)
-        val hourValue = infoHolderArray[holder!!.adapterPosition].hour_holder
-        val minValue = infoHolderArray[holder.adapterPosition].min_holder
-
-//        countDownStart(holder!!, holder.adapterPosition,  getCurrentDateText() + "$hourValue-$minValue-00")
-//        Log.v(TAG, "RECYCLING VIEWHOLDER #" + holder?.layoutPosition)
-        //Below code gives error upon onNotifyDatasetChanged() because array would be initialized®
-//        holder?.bindCountDown(
-//                viewHolderArray[holder.holder_position].hour_holder,
-//                viewHolderArray[holder.holder_position].min_holder,
-//                "00"
-//        )
     }
 
     /**
@@ -346,52 +329,11 @@ class ToWasedaAdapter(val context: Context) :
                 }
 
                 override fun onFinish() {
-                    bindCountDown("FI", "NI", "SH")
+                    bindCountDown("GONE", "", "")
                 }
             }
 
             return cdt
-        }
-
-        private fun makeCounter(viewHolder:ViewHolder, position:Int, dept_time:String):Runnable {
-
-            runnable = object : Runnable {
-                override fun run() {
-                    handler?.postDelayed(this, 1000)
-                    try {
-                        val dateFormat = SimpleDateFormat("yyyy-MM-dd-kk-mm-ss", Locale.JAPAN)
-                        // Here Set your Event Date
-                        val eventDate = dateFormat.parse(dept_time)
-                        val currentDate = Date()
-                        if (!currentDate.after(eventDate)) {
-                            var diff = eventDate.time - currentDate.time
-                            val days = diff / (24 * 60 * 60 * 1000)
-                            diff -= days * (24 * 60 * 60 * 1000)
-                            val hours = diff / (60 * 60 * 1000)
-                            diff -= hours * (60 * 60 * 1000)
-                            val minutes = diff / (60 * 1000)
-                            diff -= minutes * (60 * 1000)
-                            val seconds = diff / 1000
-
-                            val hourText = String.format("%02d", hours)
-                            val minText = String.format("%02d", minutes)
-                            val secText = String.format("%02d", seconds)
-
-                            Log.v("Viewholder", "Tick: $secText")
-
-                            bindCountDown(hourText, minText, secText)
-
-                        } else {
-                            handler?.removeCallbacks(runnable)
-                            handler?.removeMessages(0)
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-            //ここで定義したrunnableをhandler経由で実行している
-            return runnable as Runnable
         }
 
         private fun countFormatter(num:Long):String{

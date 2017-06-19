@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sample_destination">Sample Destination</string>
+    <string name="hint_text_destination">Destination:</string>
+    <string name="sample_text_route">Sample Route</string>
+    <string name="sample_route_option">via Sample</string>
+    <string name="hint_departure_text"></string>
+    <string name="waseda_flag_0">via Toyama Campus</string>
+    <string name="waseda_flag_1">To Twins via Nishi-Waseda Campus</string>
+    <string name="waseda_flag_2">To Nishi-Waseda Campus via Twins</string>
+    <string name="waseda_flag_3">Two bus operation</string>
+    <string name="waseda_flag_4">To Twins via Waseda Campus</string>
+    <string name="waseda_flag_5">To Waseda Campus via Twins</string>
+    <string name="waseda_flag_6">Two bus operation</string>
+    <string name="waseda_flag_7">Departure after the previous bus returns. Dept. time approx.</string>
+    <string name="waseda_flag_8">Two bus operation. Departure time approx.</string>
+    <string name="hint_text_monday">Schedule for Monday</string>
+    <string name="hint_text_tuesday">Schedule for Tuesday</string>
+    <string name="hint_text_wednesday">Schedule for Wednesday</string>
+    <string name="hint_text_thursday">Schedule for Thursday</string>
+    <string name="hint_text_friday">Schedule for Friday</string>
+    <string name="hint_text_saturday">Schedule for Saturday</string>
+    <string name="hint_text_sunday">No bus for Sunday. Chance for some exercise!</string>
+</resources>

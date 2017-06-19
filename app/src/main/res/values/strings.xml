@@ -1,17 +1,17 @@
 <resources>
-    <string name="app_name">Waseda Bus Schedule</string>
-    <string name="sample_time">23:00</string>
+    <string name="app_name" translatable="false">Waseda Bus Schedule</string>
+    <string name="sample_time" translatable="false">23:00</string>
     <string name="hint_text_destination">行き先: </string>
     <string name="sample_destination">サンプル行き先</string>
-    <string name="sample_hour">60</string>
-    <string name="sample_min">60</string>
-    <string name="_60">60</string>
-    <string name="semicolon">:</string>
-    <string name="leaving_in">Leaving in</string>
+    <string name="sample_hour" translatable="false">60</string>
+    <string name="sample_min" translatable="false">60</string>
+    <string name="_60" translatable="false">60</string>
+    <string name="semicolon" translatable="false">:</string>
+    <string name="leaving_in" translatable="false">Leaving in</string>
     <string name="sample_text_route">サンプル　ルート</string>
     <string name="sample_route_option">サンプル経由</string>
     <string name="hint_departure_text">発</string>
-    <string name="sample_departure_time">10:00</string>
+    <string name="sample_departure_time" translatable="false">10:00</string>
     <string name="waseda_flag_0">学生会館経由</string>
     <string name="waseda_flag_1">西早稲田キャンパス経由、Twins行き</string>
     <string name="waseda_flag_2">Twins経由、西早稲田キャンパス行き</string>

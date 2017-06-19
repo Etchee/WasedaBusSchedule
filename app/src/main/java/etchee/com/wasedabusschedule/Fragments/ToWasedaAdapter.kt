@@ -199,19 +199,38 @@ class ToWasedaAdapter(val context: Context) :
         val hour = time.hour
         val min = time.min
         val key = Integer.parseInt(hour + min)
-        val model:ArrayList<DataList.DataModel> = DataList().createWasedaData()
-        var count = -1
+        val day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
         val list = arrayListOf<DataList.DataModel>()
+        var count = -1
 
-        mArrayList?.clear()
-        for (i in model){
-            if (i.search > key){
-                list.add(i)
-                count++
+        when(day){
+        //Sunday
+            1-> return list //No bus on Sunday
+            7->{
+                val model: java.util.ArrayList<DataList.DataModel> = DataList().createSat_WasedaData()
+                mArrayList?.clear()
+                for (i in model){
+                    if (i.search > key){
+                        list.add(i)
+                        count++
+                    }
+                }
+
+                return list
+            }
+            else->{//weekday
+                val model: java.util.ArrayList<DataList.DataModel> = DataList().createWasedaData()
+                mArrayList?.clear()
+                for (i in model){
+                    if (i.search > key){
+                        list.add(i)
+                        count++
+                    }
+                }
+
+                return list
             }
         }
-
-        return list
     }
 
     private fun getRouteOption(flag:Int):String {

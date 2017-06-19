@@ -38,7 +38,7 @@ class ToNishiFragment: Fragment() {
         //view assignment
 
         //create cursor containing appropriate table depending on the day
-        mAdapter = ToNishiAdapter(context, createCursor())
+        mAdapter = ToNishiAdapter(context)
 
         //RecyclerView init
         recyclerView_toNishi.layoutManager = LinearLayoutManager(context.applicationContext)
@@ -46,15 +46,8 @@ class ToNishiFragment: Fragment() {
 
         //Pull to refresh setting
         nishi_swipeToRefresh.setOnRefreshListener {
-            refreshAdapter()
+            nishi_swipeToRefresh.isRefreshing = false
         }
-    }
-
-    fun refreshAdapter(){
-        if (mAdapter.itemCount == 0){
-            mAdapter.swapCursor(createCursor())
-        }
-        nishi_swipeToRefresh.isRefreshing = false
     }
 
     /**
@@ -117,7 +110,6 @@ class ToNishiFragment: Fragment() {
 
     override fun onResume() {
         super.onResume()
-        refreshAdapter()
     }
 
     private fun processMin(min:Int):String {

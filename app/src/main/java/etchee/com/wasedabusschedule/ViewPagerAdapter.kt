@@ -54,12 +54,12 @@ class ViewPagerAdapter(fm: FragmentManager, private val context: Context) : Frag
 
         //toWasedaFragment
             0 -> {
-                return "早稲田行き"
+                return context.resources.getString(R.string.tab_text_to_waseda)
             }
 
         //toNishiFragment
             1 -> {
-                return "西早稲田行き"
+                return context.resources.getString(R.string.tab_hint_text_to_nishi)
             }
 
         //impossible viewPager index

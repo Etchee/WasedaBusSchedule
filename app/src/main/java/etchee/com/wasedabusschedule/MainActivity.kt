@@ -1,6 +1,9 @@
 package etchee.com.wasedabusschedule
 
+import android.app.Activity
+import android.app.FragmentManager
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -10,6 +13,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import etchee.com.wasedabusschedule.Data.DataContract
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.reflect.KClass
 
 class MainActivity : AppCompatActivity() {
 
@@ -52,64 +56,10 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when(item.itemId){
-             R.id.menu_create_database ->{
-                 //database check
-                 if (!checkDB()) {
-                     Log.v(TAG, "DATABASE INIT STARTED")
-                     //Initialize the database in order
-//                     AsyncInitTables(applicationContext).execute()
-                 }
-            }
-
-            R.id.menu_delete_database ->{
-                val rows = contentResolver.delete(
-                        DataContract.DB_TO_WASEDA().CONTENT_URI,
-                        null,
-                        null
-                ) + contentResolver.delete(
-                        DataContract.DB_TO_NISHI().CONTENT_URI,
-                        null,
-                        null
-                ) + contentResolver.delete(
-                        DataContract.SATURDAY_DB_TO_NISHI().CONTENT_URI,
-                        null,
-                        null
-                ) + contentResolver.delete(
-                        DataContract.SATURDAY_DB_TO_WASEDA().CONTENT_URI,
-                        null,
-                        null
-                )
-                Toast.makeText(this, rows.toString() + " rows deleted", Toast.LENGTH_SHORT).show()
-            }
-
-            R.id.menu_get_count ->{
-                var cursor:Cursor? = null
-                var count = 0
-                try{
-                    cursor = contentResolver.query(DataContract.DB_TO_WASEDA().CONTENT_URI,
-                            null,null,null,null)
-                    count = cursor.count
-                    Toast.makeText(context, "Waseda table has $count rows.", Toast.LENGTH_SHORT).show()
-                    cursor = contentResolver.query(DataContract.DB_TO_NISHI().CONTENT_URI,
-                            null,null,null,null)
-                    count = cursor.count
-                    Toast.makeText(context, "Nishi table has $count rows.", Toast.LENGTH_SHORT).show()
-                    cursor = contentResolver.query(DataContract.SATURDAY_DB_TO_WASEDA().CONTENT_URI,
-                            null,null,null,null)
-                    count = cursor.count
-                    Toast.makeText(context, "Waseda(sat) table has $count rows.", Toast.LENGTH_SHORT).show()
-                    cursor = contentResolver.query(DataContract.SATURDAY_DB_TO_NISHI().CONTENT_URI,
-                            null,null,null,null)
-                    count = cursor.count
-                    Toast.makeText(context, "Nishi(sat) table has $count rows.", Toast.LENGTH_SHORT).show()
-                    cursor = null
-
-                }catch (e:Exception){
-                    e.printStackTrace()
-                }finally {
-                    cursor?.close()
-                }
-            }
+             R.id.option_item_about->{
+                 val intent = Intent(this, AboutActivity::class.java)
+                 startActivity(intent)
+             }
         }
 
         return super.onOptionsItemSelected(item)

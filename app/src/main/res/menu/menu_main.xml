@@ -2,15 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="Delete Database"
-        android:id="@+id/menu_delete_database"
-        app:showAsAction="never" />
-    <item android:title="Create Database"
-        android:id="@+id/menu_create_database"
-        app:showAsAction="never"
-        />
-    <item android:title="Get Database Count"
-        android:id="@+id/menu_get_count"
+    <item android:title="@string/about"
+        android:id="@+id/option_item_about"
         app:showAsAction="never" />
 
 

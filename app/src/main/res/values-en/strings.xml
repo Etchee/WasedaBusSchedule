@@ -21,4 +21,6 @@
     <string name="hint_text_friday">Schedule for Friday</string>
     <string name="hint_text_saturday">Schedule for Saturday</string>
     <string name="hint_text_sunday">No bus for Sunday. Chance for some exercise!</string>
+    <string name="tab_text_to_waseda">To Waseda</string>
+    <string name="tab_hint_text_to_nishi">To Nishi-Waseda</string>
 </resources>

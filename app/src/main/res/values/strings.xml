@@ -28,4 +28,11 @@
     <string name="hint_text_friday">金曜日のスケジュール</string>
     <string name="hint_text_saturday">土曜日のスケジュール</string>
     <string name="hint_text_sunday">日曜日はバスは出ていません。Sorry!</string>
+    <string name="tab_text_to_waseda">早稲田キャンパス行き</string>
+    <string name="tab_hint_text_to_nishi">西早稲田キャンパス行き</string>
+    <string name="about">About</string>
+    <string name="creator_etchee">Creator:Etchee</string>
+    <string name="about_message">Aboutをわざわざ読んで頂きありがとうございます！\n\n\n
+    このアプリは定期的にアップデートしてさらに使いやすくなるようにしていくので、ぜひぜひよろしくお願いします☺
+    </string>
 </resources>

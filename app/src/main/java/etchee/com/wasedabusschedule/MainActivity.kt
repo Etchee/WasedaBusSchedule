@@ -77,6 +77,14 @@ class MainActivity : AppCompatActivity() {
                         DataContract.DB_TO_NISHI().CONTENT_URI,
                         null,
                         null
+                ) + contentResolver.delete(
+                        DataContract.SATURDAY_DB_TO_NISHI().CONTENT_URI,
+                        null,
+                        null
+                ) + contentResolver.delete(
+                        DataContract.SATURDAY_DB_TO_WASEDA().CONTENT_URI,
+                        null,
+                        null
                 )
                 Toast.makeText(this, rows.toString() + " rows deleted", Toast.LENGTH_SHORT).show()
             }

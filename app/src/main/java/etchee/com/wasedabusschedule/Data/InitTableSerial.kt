@@ -352,9 +352,9 @@ class InitTableSerial(val context: Context): AsyncTask<Void, Void, Void>() {
                 }
             }
 
-            count = 0
             val data2 = DataContract.SATURDAY_DB_TO_WASEDA()
             db.delete(data.TABLE_NAME, null, null)
+            count = 0
             while (count < 10) {
                 when (count) {
                     0 -> {
@@ -477,6 +477,7 @@ class InitTableSerial(val context: Context): AsyncTask<Void, Void, Void>() {
                     }
                 }
             }
+
             count = 0
             val data3 = DataContract.DB_TO_NISHI()
             db.delete(data3.TABLE_NAME, null, null)
@@ -788,6 +789,7 @@ class InitTableSerial(val context: Context): AsyncTask<Void, Void, Void>() {
                     }
                 }
             }
+
             count = 0
             val data4 = DataContract.SATURDAY_DB_TO_NISHI()
             db.delete(data.TABLE_NAME, null, null)

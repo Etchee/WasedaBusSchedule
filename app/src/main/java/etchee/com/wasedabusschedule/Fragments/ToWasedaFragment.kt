@@ -3,12 +3,14 @@ package etchee.com.wasedabusschedule.Fragments
 import android.database.Cursor
 import android.database.DatabaseUtils
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
 import android.widget.Toast
 import etchee.com.wasedabusschedule.Data.DataContract
+import etchee.com.wasedabusschedule.Data.DataList
 import etchee.com.wasedabusschedule.Interface.DatasetUpdate
 import etchee.com.wasedabusschedule.R
 import etchee.com.wasedabusschedule.R.id.recyclerView_toWaseda
@@ -20,7 +22,7 @@ import java.util.*
  * Fragment to actually display the list of bus departures
  * Created by rikutoechigoya on 2017/05/24.
  */
-class ToWasedaFragment: android.support.v4.app.Fragment(), DatasetUpdate {
+class ToWasedaFragment: android.support.v4.app.Fragment() {
 
     val TAG: String = javaClass.simpleName
     var mAdapter:ToWasedaAdapter? = null
@@ -38,7 +40,7 @@ class ToWasedaFragment: android.support.v4.app.Fragment(), DatasetUpdate {
         //view assignment
 
         //create cursor containing appropriate table depending on the day
-        mAdapter = ToWasedaAdapter(context, createCursor())
+        mAdapter = ToWasedaAdapter(context)
 
         //RecyclerView init
         recyclerView_toWaseda.layoutManager = LinearLayoutManager(context.applicationContext)
@@ -46,76 +48,16 @@ class ToWasedaFragment: android.support.v4.app.Fragment(), DatasetUpdate {
 
         //Pull to refresh setting
         waseda_swipetoRefreshContainer.setOnRefreshListener {
-            refreshAdapter()
+            waseda_swipetoRefreshContainer?.isRefreshing = false
         }
     }
 
-     fun refreshAdapter(){
-         if (mAdapter?.itemCount == 0){
-             mAdapter?.swapCursor(createCursor())
-         }
+    private fun getKey(min: Int, hour:Int):Int{
+        //when min is less than 10, append 0
+        val minStr = processMin(min)
+        val str = hour.toString() + minStr  //so this becomes like 909 for 9:09AM
 
-        waseda_swipetoRefreshContainer?.isRefreshing = false
-    }
-
-    /**
-     *  今の時刻を取得して、それ以降に出るバスの分の情報をCursorに乗っけて持ってくる！
-     */
-    fun createCursor(): Cursor? {
-        val cursor:Cursor?
-
-        //Get the current time as an instance
-        val now = Date()
-        val calendar = Calendar.getInstance(Locale.JAPAN)
-        calendar.time = now
-
-        //extract the numbers
-        val day = calendar.get(Calendar.DAY_OF_WEEK)
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val min = calendar.get(Calendar.MINUTE)
-        val search_key = getKey(min, hour)  //get the integer value of the current time. i.g. 9:09AM → 909
-        //So just need to find rows with key bigger than 909
-        /*
-                The table:
-                |Hour column| |Minute Column|
-                Compare the current hour against the hour column,
-                then compare the minute column.
-         */
-
-        when(day){
-            1->{    //No bus on Sunday
-                Log.v(TAG, "NO BUS ON SUNDAY")
-                cursor = null
-            }
-
-            7->{    //Saturday Table
-                Log.v(TAG, "SATURDAY DB DISPLAYING")
-                val selection = DataContract.SATURDAY_DB_TO_WASEDA().COLUMN_SEARCH + " > ?"
-                val selectionArgs = arrayOf(search_key.toString())
-                cursor = context.contentResolver.query(
-                        DataContract.SATURDAY_DB_TO_WASEDA().CONTENT_URI,
-                        null,
-                        selection,
-                        selectionArgs,
-                        null
-                )
-            }
-
-            else->{ //WeekDay Table
-                Log.v(TAG, "WEEKDAY DB DISPLAYING")
-                val selection = DataContract.DB_TO_WASEDA().COLUMN_SEARCH + " > ?"
-                val selectionArgs = arrayOf(search_key.toString())
-                cursor = context.contentResolver.query(
-                        DataContract.DB_TO_WASEDA().CONTENT_URI,
-                        null,
-                        selection,
-                        selectionArgs,
-                        null
-                )
-            }
-        }
-//        Log.v(TAG, "PASSING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
-        return cursor
+        return Integer.parseInt(str)
     }
 
     override fun onResume() {
@@ -129,19 +71,6 @@ class ToWasedaFragment: android.support.v4.app.Fragment(), DatasetUpdate {
             str = "0" + min.toString()
             return str
         } else return min.toString()
-    }
-
-    override fun onTimeTableCreated() {
-        refreshAdapter()
-        Toast.makeText(context, "InterfaceReceived", Toast.LENGTH_SHORT)
-    }
-
-    private fun getKey(min: Int, hour:Int):Int{
-        //when min is less than 10, append 0
-        val minStr = processMin(min)
-        val str = hour.toString() + minStr  //so this becomes like 909 for 9:09AM
-
-        return Integer.parseInt(str)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

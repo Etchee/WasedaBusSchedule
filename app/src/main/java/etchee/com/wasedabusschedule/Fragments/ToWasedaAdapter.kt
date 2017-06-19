@@ -1,8 +1,6 @@
 package etchee.com.wasedabusschedule.Fragments
 
 import android.content.Context
-import android.database.Cursor
-import android.database.DatabaseUtils
 import android.os.CountDownTimer
 import android.os.Handler
 import android.support.v7.widget.RecyclerView
@@ -12,31 +10,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import etchee.com.wasedabusschedule.Data.DataContract
+import etchee.com.wasedabusschedule.Data.DataList
 import etchee.com.wasedabusschedule.R
 import kotlinx.android.synthetic.main.layout_item_single.view.*
 import java.util.*
 import java.text.SimpleDateFormat
-import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 /**
  * Adapter for the RecyclerView
  * Created by rikutoechigoya on 2017/05/23.
  */
-class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.Adapter<ToWasedaAdapter.ViewHolder>() {
-
+class ToWasedaAdapter(val context: Context) :
+        RecyclerView.Adapter<ToWasedaAdapter.ViewHolder>() {
 
     private var TAG: String = javaClass.simpleName
     var infoHolderArray = arrayListOf<InfoHolder>()
     var viewHolderCreatedCount = 0
+    private val mArrayList = createArrayList()
 
-    /*
-    *   TODO: 今一番上のカウントダウンが止まったときに全部のタイマーがとまる。それを直す
-    * */
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
-//        Log.v(TAG, "WASEDA ADAPTER RECEIVING THE CURSOR OF: " + DatabaseUtils.dumpCursorToString(cursor))
-
 
         val view:View = LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false)
         val viewHolder = ToWasedaAdapter.ViewHolder(view)
@@ -45,29 +39,14 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
             Log.v(TAG, "Item $position clicked.")
         }
         )
-//        Log.v(TAG,"Viewholder#$viewHolderCreatedCount")
-//        viewHolderCreatedCount++
-        //Don't add viewHolder to array yet: Viewholder must have position value
         return viewHolder
     }
 
-
-    /**
-     *  Position 0 → next bus leaving Waseda.
-     *
-     *  Get the current time, query the SQL bus schedule table and then display from there.
-     *
-     *  VIEWHOLDER IS RECYCLED FROM viewHolder#7 (position = 6) ITEM
-     *
-     */
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         //Background image is the same for every view
         Glide.with(context)
                 .load(R.drawable.img_okuma)
                 .into(viewHolder.image_background)
-        Log.v(TAG, "Position is $position")
-
-        cursor?.moveToPosition(position)
 
         //Already made viewholder
         if (infoHolderArray.size > position && infoHolderArray[position].hour_holder.isNotEmpty()) {
@@ -82,15 +61,10 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
             viewHolder.startTimer()
 
         }else{  //Newly created viewholder
-            //Indices
-            val hourIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_HOUR)
-            val minIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_MIN)
-            val routeOptionIndex = cursor?.getColumnIndex(DataContract.DB_TO_WASEDA().COLUMN_FLAG)
 
-            //values
-            val routeOption = getRouteOption(cursor?.getInt(routeOptionIndex!!)!!)
-            val hourValue = cursor?.getString(hourIndex!!)!!
-            val minValue = cursor?.getString(minIndex!!)!!
+            val hourValue = mArrayList[position].hour
+            val minValue = mArrayList[position].min
+            val routeOption = getRouteOption(mArrayList[position].flag)
 
             //save to data model
             val infoHolder =  InfoHolder(
@@ -117,11 +91,74 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
     }
 
     override fun getItemCount(): Int {
-        if (cursor == null) {
-            Log.e(TAG, "Cursor is null")
+        if (mArrayList.size == 0) {
+            Log.e(TAG, "ArrayList is null")
             return 0
         } else {
-            return cursor!!.count
+            return mArrayList.size
+        }
+    }
+
+    fun getIntTime():mIntTime{
+        val calendar = Calendar.getInstance()
+        val mIntTime = mIntTime(
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1,
+                calendar.get(Calendar.DAY_OF_WEEK),
+                calendar.get(Calendar.DATE),
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                calendar.get(Calendar.SECOND)
+        )
+
+        return mIntTime
+    }
+
+    fun getStringTime():mStringTime{
+        val calendar = Calendar.getInstance()
+        val mStringTime = mStringTime(
+                calendar.get(Calendar.YEAR).toString(),
+                (calendar.get(Calendar.MONTH) + 1).toString(),
+                calendar.get(Calendar.DAY_OF_WEEK).toString(),
+                calendar.get(Calendar.DATE),
+                calendar.get(Calendar.HOUR_OF_DAY).toString(),
+                calendar.get(Calendar.MINUTE).toString(),
+                calendar.get(Calendar.SECOND).toString()
+        )
+
+        return mStringTime
+    }
+
+
+    data class mIntTime(val year:Int,
+                        val month:Int,
+                        val day:Int,
+                        val date:Int,
+                        val hour:Int,
+                        val min:Int,
+                        val sec:Int)
+
+    data class mStringTime(val year:String,
+                           val month:String,
+                           val day:String,
+                           val date:Int,
+                           val hour:String,
+                           val min:String,
+                           val sec:String)
+
+
+
+    private fun getDay(day:Int):String {
+        when (day) {
+            1 -> return "Sunday"
+            2 -> return "Monday"
+            3 -> return "Tuesday"
+            4 -> return "Wednesday"
+            5 -> return "Thursday"
+            6 -> return "Friday"
+            7 -> return "Saturday"
+
+            else-> throw IllegalArgumentException(TAG + "Calendar did not recognize day.")
         }
     }
 
@@ -133,6 +170,8 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
 
         return "$year-$month-$date-"
     }
+
+
 
     override fun onViewRecycled(holder: ViewHolder?) {
         super.onViewRecycled(holder)
@@ -147,6 +186,32 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
 //                viewHolderArray[holder.holder_position].min_holder,
 //                "00"
 //        )
+    }
+
+    /**
+     *  gets time, then create mArrayList of appropriate size.
+     */
+    private fun createArrayList():ArrayList<DataList.DataModel>{
+        //Inside the mArrayList is like
+        //DataModel("15", "35", 0, 1535)
+        //get the current time in 1440 format, iterate until now > key
+        val time = getStringTime()
+        val hour = time.hour
+        val min = time.min
+        val key = Integer.parseInt(hour + min)
+        val model:ArrayList<DataList.DataModel> = DataList().createWasedaData()
+        var count = -1
+        val list = arrayListOf<DataList.DataModel>()
+
+        mArrayList?.clear()
+        for (i in model){
+            if (i.search > key){
+                list.add(i)
+                count++
+            }
+        }
+
+        return list
     }
 
     private fun getRouteOption(flag:Int):String {
@@ -191,12 +256,6 @@ class ToWasedaAdapter(val context: Context, var cursor: Cursor?) : RecyclerView.
         }
 
         return str
-    }
-
-    fun swapCursor(cursor:Cursor?){
-        this.cursor = cursor
-//        Log.v(TAG, "NEW CURSOR: " + DatabaseUtils.dumpCursorToString(cursor))
-        notifyDataSetChanged()
     }
 
     data class InfoHolder (

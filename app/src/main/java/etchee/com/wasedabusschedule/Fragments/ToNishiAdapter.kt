@@ -46,7 +46,7 @@ class ToNishiAdapter(val context: Context) :
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         //BACKGROUND
         Glide.with(context)
-                .load(R.drawable.img_okuma)
+                .load(R.drawable.nishi_improved)
                 .into(viewHolder.image_background)
 
         //Already made viewHolder

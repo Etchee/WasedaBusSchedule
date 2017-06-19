@@ -1,20 +1,14 @@
 package etchee.com.wasedabusschedule
 
-import android.app.ProgressDialog
-import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.database.SQLException
-import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import etchee.com.wasedabusschedule.Data.AsyncInitTables
 import etchee.com.wasedabusschedule.Data.DataContract
-import etchee.com.wasedabusschedule.Data.InitTableSerial
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -64,7 +58,6 @@ class MainActivity : AppCompatActivity() {
                      Log.v(TAG, "DATABASE INIT STARTED")
                      //Initialize the database in order
 //                     AsyncInitTables(applicationContext).execute()
-                     InitTableSerial(applicationContext).execute()
                  }
             }
 

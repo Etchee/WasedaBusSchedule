@@ -1,20 +1,10 @@
 package etchee.com.wasedabusschedule.Fragments
 
-import android.database.Cursor
-import android.database.DatabaseUtils
 import android.os.Bundle
-import android.provider.CalendarContract
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.*
 import android.widget.Toast
-import etchee.com.wasedabusschedule.Data.DataContract
-import etchee.com.wasedabusschedule.Data.DataList
-import etchee.com.wasedabusschedule.Interface.DatasetUpdate
 import etchee.com.wasedabusschedule.R
-import etchee.com.wasedabusschedule.R.id.recyclerView_toWaseda
-import etchee.com.wasedabusschedule.R.id.waseda_swipetoRefreshContainer
 import kotlinx.android.synthetic.main.layout_fragment_waseda.*
 import java.util.*
 
@@ -33,7 +23,8 @@ class ToWasedaFragment: android.support.v4.app.Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val hint = getDayHintString(Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
+        Toast.makeText(context, hint, Toast.LENGTH_SHORT).show()
         //RecyclerView
         recyclerView_toWaseda.layoutManager = LinearLayoutManager(context.applicationContext)
         mAdapter = ToWasedaAdapter(context)
@@ -45,7 +36,23 @@ class ToWasedaFragment: android.support.v4.app.Fragment() {
         }
     }
 
+
+    private fun getDayHintString(day:Int):String {
+        when (day) {
+            1 -> return context.resources.getString(R.string.hint_text_sunday)
+            2 -> return context.resources.getString(R.string.hint_text_monday)
+            3 -> return context.resources.getString(R.string.hint_text_tuesday)
+            4 -> return context.resources.getString(R.string.hint_text_wednesday)
+            5 -> return context.resources.getString(R.string.hint_text_thursday)
+            6 -> return context.resources.getString(R.string.hint_text_friday)
+            7 -> return context.resources.getString(R.string.hint_text_saturday)
+            else-> throw IllegalArgumentException(TAG + "Calendar did not recognize day.")
+        }
+    }
+
     override fun onResume() {
         super.onResume()
+        val hint = getDayHintString(Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
+        Toast.makeText(context, hint, Toast.LENGTH_SHORT).show()
     }
 }

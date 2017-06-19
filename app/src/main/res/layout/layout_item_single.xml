@@ -33,7 +33,7 @@
 
             <TextView
                 android:id="@+id/departure_time"
-                android:fontFamily="sans-serif-thin"
+                android:fontFamily="sans-serif"
                 android:text="@string/sample_departure_time"
                 android:textColor="@color/PearlWhite"
                 android:textSize="@dimen/hint_text_very_small"

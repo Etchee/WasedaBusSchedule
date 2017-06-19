@@ -21,4 +21,11 @@
     <string name="waseda_flag_6">中型とマイクロバス両方の運行</string>
     <string name="waseda_flag_7">前の便が到着次第運行。カウントダウンは目安</string>
     <string name="waseda_flag_8">バス２台の運行。前の便が到着次第運行。カウントダウンは目安</string>
+    <string name="hint_text_monday">月曜日のスケジュール</string>
+    <string name="hint_text_tuesday">火曜日のスケジュール</string>
+    <string name="hint_text_wednesday">水曜日のスケジュール</string>
+    <string name="hint_text_thursday">木曜日のスケジュール</string>
+    <string name="hint_text_friday">金曜日のスケジュール</string>
+    <string name="hint_text_saturday">土曜日のスケジュール</string>
+    <string name="hint_text_sunday">日曜日はバスは出ていません。Sorry!</string>
 </resources>

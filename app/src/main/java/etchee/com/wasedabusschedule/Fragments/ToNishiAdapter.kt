@@ -293,7 +293,7 @@ class ToNishiAdapter(val context: Context) :
             min_holder = min as String
 //            holder_position = position
             itemView.hint_route_text.text = routeOption
-            itemView.departure_time.text = hour + min
+            itemView.departure_time.text = hour + ":" +  min
         }
 
         fun bindCountDown(hour:String?, min:String?, sec:String?){

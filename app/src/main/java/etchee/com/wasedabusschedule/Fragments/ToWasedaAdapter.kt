@@ -148,19 +148,6 @@ class ToWasedaAdapter(val context: Context) :
 
 
 
-    private fun getDayString(day:Int):String {
-        when (day) {
-            1 -> return "Sunday"
-            2 -> return "Monday"
-            3 -> return "Tuesday"
-            4 -> return "Wednesday"
-            5 -> return "Thursday"
-            6 -> return "Friday"
-            7 -> return "Saturday"
-
-            else-> throw IllegalArgumentException(TAG + "Calendar did not recognize day.")
-        }
-    }
 
     fun getCurrentDateText():String{
         val calendar = Calendar.getInstance()
@@ -291,7 +278,7 @@ class ToWasedaAdapter(val context: Context) :
             min_holder = min as String
 //            holder_position = position
             itemView.hint_route_text.text = routeOption
-            itemView.departure_time.text = hour + min
+            itemView.departure_time.text = hour + ":" +  min
         }
 
         fun bindCountDown(hour:String?, min:String?, sec:String?){

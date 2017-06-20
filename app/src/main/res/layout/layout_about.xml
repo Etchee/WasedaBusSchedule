@@ -21,7 +21,7 @@
             <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/card_view"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/cardview_height"
+                android:layout_height="@dimen/cardView_height_big"
                 card_view:cardPreventCornerOverlap="true"
                 android:layout_marginRight="@dimen/cardview_margin_side"
                 android:layout_marginLeft="@dimen/cardview_margin_side"
@@ -34,7 +34,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="fill_parent"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -56,13 +56,13 @@
                     <LinearLayout
                         android:id="@+id/about_container_aboutMe"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal|center_vertical"
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
+                            android:layout_width="@dimen/about_icon_view"
+                            android:layout_height="@dimen/about_icon_view"
                             android:src="@drawable/my_face" />
 
                         <TextView
@@ -85,7 +85,7 @@
             <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/card_view_2"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/cardview_height"
+                android:layout_height="@dimen/cardview_height_normal"
                 card_view:cardPreventCornerOverlap="true"
                 android:layout_marginRight="@dimen/cardview_margin_side"
                 android:layout_marginLeft="@dimen/cardview_margin_side"
@@ -119,7 +119,7 @@
                     <LinearLayout
                         android:id="@+id/about_container_links_all"
                         android:orientation="vertical"
-                        android:gravity="fill_vertical"
+                        android:gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
@@ -197,12 +197,58 @@
 
                         </LinearLayout>
                     </LinearLayout>
-
-
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
 
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_view3"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/cardview_height_normal"
+                card_view:cardPreventCornerOverlap="true"
+                android:layout_marginRight="@dimen/cardview_margin_side"
+                android:layout_marginLeft="@dimen/cardview_margin_side"
+                android:layout_marginBottom="4dp"
+                android:elevation="@dimen/cardview_default_elevation"
+                card_view:contentPadding="@dimen/cardview_padding_around"
+                android:layout_gravity="center"
+                card_view:cardBackgroundColor="@color/PearlWhite"
+                card_view:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/about_message"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-thin"
+                        android:text="@string/message"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="40sp"/>
+                    <LinearLayout
+                        android:id="@+id/about_message_contents_container"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/about_message_contents"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:layout_width="300dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/messagecontents"
+                            android:textColor="@color/Black"
+                            />
+
+                    </LinearLayout>
+                    
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
         </LinearLayout>
 
 

@@ -40,4 +40,8 @@
     <string name="author_links">Author Links</string>
     <string name="github_link">github.com/Etchee</string>
     <string name="email">rikuapple@gmail.com</string>
+    <string name="message">Message</string>
+    <string name="messagecontents">英語のみもOk!気軽にメッセください！お話しませう！
+        趣味でEDM作ったり筋トレしたりもしています！
+    </string>
 </resources>

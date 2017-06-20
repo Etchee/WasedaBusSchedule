@@ -15,11 +15,6 @@ class AboutActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_about)
 
-        val imageView = findViewById(R.id.about_imageView) as ImageView
-        Glide.with(applicationContext)
-                .load(R.mipmap.ic_launcher_round)
-                .into(imageView)
-
         setSupportActionBar(about_toolBar)
     }
 }

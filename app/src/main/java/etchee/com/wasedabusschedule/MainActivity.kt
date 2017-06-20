@@ -1,7 +1,5 @@
 package etchee.com.wasedabusschedule
 
-import android.app.Activity
-import android.app.FragmentManager
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -10,10 +8,8 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import etchee.com.wasedabusschedule.Data.DataContract
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlin.reflect.KClass
 
 class MainActivity : AppCompatActivity() {
 

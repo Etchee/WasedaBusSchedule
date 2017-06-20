@@ -32,7 +32,12 @@
     <string name="tab_hint_text_to_nishi">西早稲田キャンパス行き</string>
     <string name="about">About</string>
     <string name="creator_etchee">Creator:Etchee</string>
-    <string name="about_message">Aboutをわざわざ読んで頂きありがとうございます！\n\n\n
-    このアプリは定期的にアップデートしてさらに使いやすくなるようにしていくので、ぜひぜひよろしくお願いします☺
+    <string name="about_message">早稲田大学基幹理工学部（秋入学）３年生。元WISH（中野の国際学生寮）のスタッフ。
+        \n\n 栃木県宇都宮市育ち、中学校３年〜高校生活は父親の仕事の転勤でアメリカのオハイオ州に住む。
     </string>
+    <string name="twitter_link">twitter.com/rikuto_bigarms</string>
+    <string name="about_author">About Author</string>
+    <string name="author_links">Author Links</string>
+    <string name="github_link">github.com/Etchee</string>
+    <string name="email">rikuapple@gmail.com</string>
 </resources>

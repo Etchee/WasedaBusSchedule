@@ -23,4 +23,8 @@
     <string name="hint_text_sunday">No bus for Sunday. Chance for some exercise!</string>
     <string name="tab_text_to_waseda">To Waseda</string>
     <string name="tab_hint_text_to_nishi">To Nishi-Waseda</string>
+    <string name="todaysLastWas">The last bus departed at:</string>
+    <string name="deshita">" "</string>
+    <string name="arimasen">no bus for Sunday.</string>
+    <string name="empty_last_bus_caution">Caution: the last bus of the day might depart late.</string>
 </resources>

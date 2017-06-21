@@ -23,25 +23,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         context = applicationContext
 
-        //database check
-        if (!checkDB()) {
-            Log.v(TAG, "DATABASE INIT STARTED")
-            //Initialize the database in order
-//            AsyncInitTables(applicationContext).execute()
-        }
-
-        //viewpager initialization
+        //VIEWPAGER ADAPTER
         val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, applicationContext)
         main_viewPager.adapter = viewPagerAdapter
-
-        //tab to show the current item
         list_tab.setupWithViewPager(main_viewPager)
-        setSupportActionBar(main_toolbar)
-//            AsyncInitTables(context).execute()
-    }
 
-    override fun onResume() {
-        super.onResume()
+        //TOOLBAR
+        setSupportActionBar(main_toolbar)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -59,35 +47,5 @@ class MainActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-
-    /**
-     * No problem -> true
-     * No table -> false
-     */
-    private fun checkDB(): Boolean {
-        var cursor: Cursor? = null
-        var flag = true
-        val contentResolver = context.contentResolver
-        try {
-            //query the Waseda Table
-            cursor = contentResolver.query(
-                    DataContract.DB_TO_WASEDA().CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    null
-            )
-            if (!cursor.moveToFirst()) {
-                flag = false
-            }
-        } catch(e: Exception) {
-            e.printStackTrace()
-        } finally {
-            cursor?.close()
-
-        }
-        return flag
     }
 }

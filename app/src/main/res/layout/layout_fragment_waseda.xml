@@ -2,16 +2,103 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical">
-    
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/waseda_swipetoRefreshContainer"
+
+    <FrameLayout
+        android:layout_gravity="center_vertical|center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView_toWaseda"
+        <ImageView
+            android:id="@+id/waseda_fragment_layout_background"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:src="@color/PearlWhite"
+            />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+        <LinearLayout
+            android:id="@+id/fragment_container_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/waseda_swipetoRefreshContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView_toWaseda"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </android.support.v4.widget.SwipeRefreshLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/empty_container"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/empty_icon_size"
+                android:layout_height="@dimen/empty_icon_size"
+                android:src="@drawable/ic_caution"
+                />
+
+            <TextView
+                android:id="@+id/empty_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ouch"
+                android:textColor="@color/Black"
+                android:fontFamily="sans-serif-thin"
+                android:textSize="@dimen/item_time_text_size" />
+
+            <LinearLayout
+                android:id="@+id/empty_message_container"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/Black"
+                    android:text="@string/todaysLastWas"
+                    />
+                <TextView
+                    android:id="@+id/empty_last_bus_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/Black"
+                    android:text="@string/empty_sample_last_bus_time_"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/Black"
+                    android:text="@string/deshita"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/empty_caution_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_last_bus_caution"
+                android:textSize="@dimen/hint_text_very_small"
+                android:textColor="@color/Black"
+                />
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+
 </LinearLayout>

@@ -42,7 +42,7 @@
     <string name="email" translatable="false">rikuapple@gmail.com</string>
     <string name="message" translatable="false">Message</string>
     <string name="messagecontents">英語のみもOk!コネクション増やしたいので気軽にメッセください！お話しませう！
-        趣味でEDM作ったり筋トレしたりもしています！
+        趣味でEDM作ったり筋トレしたりもしています！\n\n iOSデベロッパーの方:iOS版作って下さい（笑）リソース渡します。　Androidデベロッパーの方: プルリク待ってます！！リソースもほしければ渡します。
     </string>
     <string name="todaysLastWas">今日の最終は:</string>
     <string name="empty_sample_last_bus_time_" translatable="false">60:60</string>

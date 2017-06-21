@@ -204,7 +204,7 @@
             <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/card_view3"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/cardview_height_normal"
+                android:layout_height="@dimen/cardView_height_big"
                 card_view:cardPreventCornerOverlap="true"
                 android:layout_marginRight="@dimen/cardview_margin_side"
                 android:layout_marginLeft="@dimen/cardview_margin_side"

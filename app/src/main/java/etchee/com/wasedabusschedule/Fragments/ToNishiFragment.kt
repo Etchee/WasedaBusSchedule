@@ -21,7 +21,7 @@ import java.util.*
  * Created by rikutoechigoya on 2017/05/24.
  */
 class ToNishiFragment: Fragment() {
-
+    //Finished
     val TAG: String = javaClass.simpleName
     var mAdapter: MyAdapter? = null
     private var mArrayList = createArrayList()

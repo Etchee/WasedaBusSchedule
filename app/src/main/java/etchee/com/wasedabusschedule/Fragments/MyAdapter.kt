@@ -22,8 +22,8 @@ import kotlin.collections.ArrayList
  * Adapter for the RecyclerView
  * Created by rikutoechigoya on 2017/05/23.
  */
-class ToWasedaAdapter(val context: Context, var arrayList: ArrayList<DataList.DataModel>) :
-        RecyclerView.Adapter<ToWasedaAdapter.ViewHolder>() {
+class MyAdapter(val context: Context, var arrayList: ArrayList<DataList.DataModel>, val ADAPTER_MODE:Int) :
+        RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
     private var TAG: String = javaClass.simpleName
     var infoHolderArray = arrayListOf<InfoHolder>()
@@ -32,10 +32,11 @@ class ToWasedaAdapter(val context: Context, var arrayList: ArrayList<DataList.Da
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
 
         val view:View = LayoutInflater.from(context).inflate(R.layout.layout_item_single, viewGroup, false)
-        val viewHolder = ToWasedaAdapter.ViewHolder(view)
+        val viewHolder = MyAdapter.ViewHolder(view)
         view.setOnClickListener( {
             val position = viewHolder.adapterPosition
             Log.v(TAG, "Item $position clicked.")
+            removeItemAt(viewHolder.adapterPosition)
         }
         )
         return viewHolder
@@ -43,9 +44,16 @@ class ToWasedaAdapter(val context: Context, var arrayList: ArrayList<DataList.Da
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         //BACKGROUND
-        Glide.with(context)
-                .load(R.drawable.img_okuma)
-                .into(viewHolder.image_background)
+        if (ADAPTER_MODE == 0){
+            Glide.with(context)
+                    .load(R.drawable.img_okuma)
+                    .into(viewHolder.image_background)
+        }else{
+            Glide.with(context)
+                    .load(R.drawable.nishi_improved)
+                    .into(viewHolder.image_background)
+        }
+
 
         //Already made viewHolder
         if (infoHolderArray.size > position && infoHolderArray[position].hour_holder.isNotEmpty()) {
@@ -117,7 +125,11 @@ class ToWasedaAdapter(val context: Context, var arrayList: ArrayList<DataList.Da
     fun refreshDataSet(newArrayList:ArrayList<DataList.DataModel>){
         mArrayList.clear()
         mArrayList = newArrayList
-        notifyDataSetChanged()
+        if (mArrayList.count()!=newArrayList.count()){
+            notifyItemRangeInserted(0, newArrayList.count())
+        }else{
+            notifyDataSetChanged()
+        }
     }
 
     fun removeItemAt(position: Int){
@@ -273,6 +285,8 @@ class ToWasedaAdapter(val context: Context, var arrayList: ArrayList<DataList.Da
 
                 override fun onFinish() {
                     bindCountDown("GONE", "", "")
+                    itemView.semiColon.visibility = View.GONE
+                    itemView.semiColon2.visibility = View.GONE
                 }
             }
 

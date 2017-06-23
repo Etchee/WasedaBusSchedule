@@ -21,7 +21,7 @@ import java.util.*
 class ToNishiFragment: Fragment() {
 
     val TAG: String = javaClass.simpleName
-    var mAdapter:ToNishiAdapter? = null
+    var mAdapter:MyAdapter? = null
     private var mArrayList = createArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -39,11 +39,11 @@ class ToNishiFragment: Fragment() {
 
             recyclerView_toNishi.layoutManager =
                     LinearLayoutManager(context.applicationContext) as RecyclerView.LayoutManager?
-            mAdapter = ToNishiAdapter(context, mArrayList)
+            mAdapter = MyAdapter(context, mArrayList, 1) // 1 means nishi mode, nishi_improved background
             recyclerView_toNishi.adapter = mAdapter
 
             //RecyclerView
-            val itemTouchCallback =
+/*            val itemTouchCallback =
                     object : ItemTouchHelper.SimpleCallback(0,
                             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
@@ -53,14 +53,13 @@ class ToNishiFragment: Fragment() {
 
                         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                             mAdapter?.removeItemAt(viewHolder.adapterPosition)
-//                            mAdapter?.notifyItemRemoved(viewHolder.adapterPosition)
                         }
                     }
-            ItemTouchHelper(itemTouchCallback).attachToRecyclerView(recyclerView_toNishi)
+            ItemTouchHelper(itemTouchCallback).attachToRecyclerView(recyclerView_toNishi)*/
 
             //PULL TO REFRESH
             nishi_swipetoRefreshContainer.setOnRefreshListener {
-                (mAdapter as ToNishiAdapter).refreshDataSet(createArrayList())
+                (mAdapter as MyAdapter).refreshDataSet(createArrayList())
                 nishi_swipetoRefreshContainer?.isRefreshing = false
             }
 
@@ -175,9 +174,9 @@ class ToNishiFragment: Fragment() {
         }
     }
 
-    fun getStringTime(): ToNishiAdapter.mStringTime {
+    fun getStringTime(): MyAdapter.mStringTime {
         val calendar = Calendar.getInstance()
-        val mStringTime = ToNishiAdapter.mStringTime(
+        val mStringTime = MyAdapter.mStringTime(
                 calendar.get(Calendar.YEAR).toString(),
                 (calendar.get(Calendar.MONTH) + 1).toString(),
                 calendar.get(Calendar.DAY_OF_WEEK).toString(),

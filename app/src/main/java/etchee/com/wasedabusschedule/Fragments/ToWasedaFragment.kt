@@ -20,7 +20,7 @@ import kotlin.collections.ArrayList
 class ToWasedaFragment: android.support.v4.app.Fragment() {
 
     val TAG: String = javaClass.simpleName
-    var mAdapter:ToWasedaAdapter? = null
+    var mAdapter: MyAdapter? = null
     private var mArrayList = createArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -38,11 +38,11 @@ class ToWasedaFragment: android.support.v4.app.Fragment() {
 
             recyclerView_toWaseda.layoutManager =
                     LinearLayoutManager(context.applicationContext) as RecyclerView.LayoutManager?
-            mAdapter = ToWasedaAdapter(context, mArrayList)
+            mAdapter = MyAdapter(context, mArrayList, 0) //0 means waseda adapter = okuma background
             recyclerView_toWaseda.adapter = mAdapter
 
             //RecyclerView
-            val itemTouchCallback =
+   /*         val itemTouchCallback =
                     object : ItemTouchHelper.SimpleCallback(0,
                             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
@@ -55,11 +55,11 @@ class ToWasedaFragment: android.support.v4.app.Fragment() {
 //                            mAdapter?.notifyItemRemoved(viewHolder.adapterPosition)
                         }
                     }
-            ItemTouchHelper(itemTouchCallback).attachToRecyclerView(recyclerView_toWaseda)
+            ItemTouchHelper(itemTouchCallback).attachToRecyclerView(recyclerView_toWaseda)*/
 
             //PULL TO REFRESH
             waseda_swipetoRefreshContainer.setOnRefreshListener {
-                (mAdapter as ToWasedaAdapter).refreshDataSet(createArrayList())
+                (mAdapter as MyAdapter).refreshDataSet(createArrayList())
                 waseda_swipetoRefreshContainer?.isRefreshing = false
             }
 
@@ -174,9 +174,9 @@ class ToWasedaFragment: android.support.v4.app.Fragment() {
         }
     }
 
-    fun getStringTime(): ToWasedaAdapter.mStringTime {
+    fun getStringTime(): MyAdapter.mStringTime {
         val calendar = Calendar.getInstance()
-        val mStringTime = ToWasedaAdapter.mStringTime(
+        val mStringTime = MyAdapter.mStringTime(
                 calendar.get(Calendar.YEAR).toString(),
                 (calendar.get(Calendar.MONTH) + 1).toString(),
                 calendar.get(Calendar.DAY_OF_WEEK).toString(),

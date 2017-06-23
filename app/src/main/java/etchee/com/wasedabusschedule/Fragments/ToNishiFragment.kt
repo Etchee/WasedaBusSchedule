@@ -4,11 +4,14 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import etchee.com.wasedabusschedule.Data.DataList
 import etchee.com.wasedabusschedule.R
 import kotlinx.android.synthetic.main.layout_fragment_nishi.*
+import kotlinx.android.synthetic.main.layout_fragment_waseda.*
 import java.util.*
 
 /**
@@ -19,6 +22,7 @@ class ToNishiFragment: Fragment() {
 
     val TAG: String = javaClass.simpleName
     var mAdapter:ToNishiAdapter? = null
+    private var mArrayList = createArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.layout_fragment_nishi, container, false)
@@ -33,16 +37,39 @@ class ToNishiFragment: Fragment() {
             nishi_empty_container.visibility = View.GONE
             nishi_fragment_layout_background.visibility = View.GONE
 
-            //RecyclerView
-            recyclerView_toNishi.layoutManager = LinearLayoutManager(context.applicationContext) as RecyclerView.LayoutManager?
-            mAdapter = ToNishiAdapter(context)
+            recyclerView_toNishi.layoutManager =
+                    LinearLayoutManager(context.applicationContext) as RecyclerView.LayoutManager?
+            mAdapter = ToNishiAdapter(context, mArrayList)
             recyclerView_toNishi.adapter = mAdapter
+
+            //RecyclerView
+            val itemTouchCallback =
+                    object : ItemTouchHelper.SimpleCallback(0,
+                            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+
+                        override fun onMove(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?, p2: RecyclerView.ViewHolder?): Boolean {
+                            return true
+                        }
+
+                        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
+                            mAdapter?.removeItemAt(viewHolder.adapterPosition)
+//                            mAdapter?.notifyItemRemoved(viewHolder.adapterPosition)
+                        }
+                    }
+            ItemTouchHelper(itemTouchCallback).attachToRecyclerView(recyclerView_toNishi)
+
+            //PULL TO REFRESH
+            nishi_swipetoRefreshContainer.setOnRefreshListener {
+                (mAdapter as ToNishiAdapter).refreshDataSet(createArrayList())
+                nishi_swipetoRefreshContainer?.isRefreshing = false
+            }
+
         }
 
         else if (!busExists()){
-            nishi_empty_container.visibility = View.VISIBLE
+            empty_container.visibility = View.VISIBLE
             nishi_fragment_layout_background.visibility = View.VISIBLE
-            nishi_empty_last_bus_time.text = lastBusTime()
+            empty_last_bus_time.text = lastBusTime()
         }
     }
 
@@ -50,16 +77,16 @@ class ToNishiFragment: Fragment() {
         /**
          *  Last bus info:
          *
-         *  ToNishi
-         *  Weekdays -> 18:10
-         *  Saturday -> 16:35
+         *  ToWaseda
+         *  Weekdays -> 18:25
+         *  Saturday -> 16:20
          */
         val calendar = Calendar.getInstance()
         val day = calendar.get(Calendar.DAY_OF_WEEK)
         when (day) { // 1 is sunday
             1->return getString(R.string.arimasen)
-            7->return "16:35"
-            else-> return "18:10"
+            7->return "16:20"
+            else-> return "18:25"
         }
     }
 
@@ -67,6 +94,9 @@ class ToNishiFragment: Fragment() {
         /**
          *  Last bus info:
          *
+         *  ToWaseda
+         *  Weekdays -> 18:25
+         *  Saturday -> 16:20
          *
          *  ToNishi
          *  Weekdays -> 18:10
@@ -79,9 +109,9 @@ class ToNishiFragment: Fragment() {
         val day = calendar.get(Calendar.DAY_OF_WEEK)
         when (day) { // 1 is sunday
             1->finalBus_key = 0
-            7->finalBus_key = 1635
+            7->finalBus_key = 1620
 
-            else-> finalBus_key = 1810
+            else-> finalBus_key = 1825
         }
 
         return now_key < finalBus_key
@@ -98,5 +128,65 @@ class ToNishiFragment: Fragment() {
 
     override fun onResume() {
         super.onResume()
+    }
+
+    /**
+     *  gets time, then create mArrayList of appropriate size.
+     */
+    private fun createArrayList():ArrayList<DataList.DataModel>{
+        //Inside the mArrayList is like
+        //DataModel("15", "35", 0, 1535)
+        //get the current time in 1440 format, iterate until now > key
+        val time = getStringTime()
+        val hour = time.hour
+        val min = time.min
+        val key = Integer.parseInt(hour + min)
+        val day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+        val list = arrayListOf<DataList.DataModel>()
+        var count = -1
+
+        when(day){
+        //Sunday
+            1-> return list //No bus on Sunday
+            7->{
+                val model: java.util.ArrayList<DataList.DataModel> = DataList().createSat_NishiData()
+                mArrayList?.clear()
+                for (i in model){
+                    if (i.search > key){
+                        list.add(i)
+                        count++
+                    }
+                }
+
+                return list
+            }
+            else->{//weekday
+                val model: java.util.ArrayList<DataList.DataModel> = DataList().createNishiData()
+                mArrayList?.clear()
+                for (i in model){
+                    if (i.search > key){
+                        list.add(i)
+                        count++
+                    }
+                }
+
+                return list
+            }
+        }
+    }
+
+    fun getStringTime(): ToNishiAdapter.mStringTime {
+        val calendar = Calendar.getInstance()
+        val mStringTime = ToNishiAdapter.mStringTime(
+                calendar.get(Calendar.YEAR).toString(),
+                (calendar.get(Calendar.MONTH) + 1).toString(),
+                calendar.get(Calendar.DAY_OF_WEEK).toString(),
+                calendar.get(Calendar.DATE),
+                calendar.get(Calendar.HOUR_OF_DAY).toString(),
+                calendar.get(Calendar.MINUTE).toString(),
+                calendar.get(Calendar.SECOND).toString()
+        )
+
+        return mStringTime
     }
 }

@@ -19,17 +19,18 @@ import etchee.com.wasedabusschedule.R
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlinx.android.synthetic.main.layout_item_single.view.*
+import kotlin.collections.ArrayList
 
 /**
  * RecyclerView Adapter for the ToNishi fragment
  * Created by rikutoechigoya on 2017/05/24.
  */
-class ToNishiAdapter(val context: Context) :
+class ToNishiAdapter(val context: Context, arrayList: ArrayList<DataList.DataModel>) :
         android.support.v7.widget.RecyclerView.Adapter<ToNishiAdapter.ViewHolder>() {
 
     private var TAG: String = javaClass.simpleName
     var infoHolderArray = arrayListOf<InfoHolder>()
-    private val mArrayList = createArrayList()
+    private var mArrayList = arrayList
 
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): ViewHolder? {
 
@@ -116,6 +117,18 @@ class ToNishiAdapter(val context: Context) :
         return mIntTime
     }
 
+    fun refreshDataSet(newArrayList:ArrayList<DataList.DataModel>){
+        mArrayList.clear()
+        mArrayList = newArrayList
+        notifyDataSetChanged()
+    }
+
+    fun removeItemAt(position: Int){
+        mArrayList.removeAt(position)
+        infoHolderArray.removeAt(position)
+        this.notifyItemRemoved(position)
+    }
+
     fun getStringTime():mStringTime{
         val calendar = Calendar.getInstance()
         val mStringTime = mStringTime(
@@ -148,75 +161,6 @@ class ToNishiAdapter(val context: Context) :
                            val min:String,
                            val sec:String)
 
-
-
-    private fun getDayString(day:Int):String {
-        when (day) {
-            1 -> return "Sunday"
-            2 -> return "Monday"
-            3 -> return "Tuesday"
-            4 -> return "Wednesday"
-            5 -> return "Thursday"
-            6 -> return "Friday"
-            7 -> return "Saturday"
-
-            else-> throw IllegalArgumentException(TAG + "Calendar did not recognize day.")
-        }
-    }
-
-    fun getCurrentDateText():String{
-        val calendar = Calendar.getInstance()
-        val year:String = calendar.get(Calendar.YEAR).toString()
-        val month:String = (calendar.get(Calendar.MONTH) +1).toString()
-        val date:String = calendar.get(Calendar.DATE).toString()
-
-        return "$year-$month-$date-"
-    }
-
-    /**
-     *  gets time, then create mArrayList of appropriate size.
-     */
-    private fun createArrayList():ArrayList<DataList.DataModel>{
-        //Inside the mArrayList is like
-        //DataModel("15", "35", 0, 1535)
-        //get the current time in 1440 format, iterate until now > key
-        val time = getStringTime()
-        val hour = time.hour
-        val min = time.min
-        val key = Integer.parseInt(hour + min)
-        val day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
-        val list = arrayListOf<DataList.DataModel>()
-        var count = -1
-
-        when(day){
-        //Sunday
-            1-> return list //No bus on Sunday
-            7->{
-                val model: java.util.ArrayList<DataList.DataModel> = DataList().createSat_NishiData()
-                mArrayList?.clear()
-                for (i in model){
-                    if (i.search > key){
-                        list.add(i)
-                        count++
-                    }
-                }
-
-                return list
-            }
-            else->{//weekday
-                val model: java.util.ArrayList<DataList.DataModel> = DataList().createNishiData()
-                mArrayList?.clear()
-                for (i in model){
-                    if (i.search > key){
-                        list.add(i)
-                        count++
-                    }
-                }
-
-                return list
-            }
-        }
-    }
 
     private fun getRouteOption(flag:Int):String {
         when(flag) {

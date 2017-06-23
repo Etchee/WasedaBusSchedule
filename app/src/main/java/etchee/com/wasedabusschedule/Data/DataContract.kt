@@ -34,7 +34,9 @@ class DataContract private constructor() {
             val FLAG_5: String = "Twins経由",
             val FLAG_6: String = "学生会館経由と直行便の運行",
             val FLAG_7: String = "折り返し後すぐ運行。時間誤差あり",
-            val FLAG_8: String = "西早稲田キャンパス経由、 \\n　学生会館経由と直行便の運行 "
+            val FLAG_8: String = "西早稲田キャンパス経由、 \\n　学生会館経由と直行便の運行 ",
+            val MODE_WASEDA:Int = 0,
+            val MODE_NISHI:Int = 1
     )
 
     data class DB_TO_WASEDA(

@@ -5,9 +5,11 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.Data.DataList
 import etchee.com.wasedabusschedule.R
 import kotlinx.android.synthetic.main.layout_fragment_nishi.*
@@ -21,7 +23,7 @@ import java.util.*
 class ToNishiFragment: Fragment() {
 
     val TAG: String = javaClass.simpleName
-    var mAdapter:MyAdapter? = null
+    var mAdapter: MyAdapter? = null
     private var mArrayList = createArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -32,97 +34,104 @@ class ToNishiFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //SHOW LIST IF THERE ARE BUS LEFT
-        if (busExists()){
+        if (!isPastLastBus()){
 
             nishi_empty_container.visibility = View.GONE
             nishi_fragment_layout_background.visibility = View.GONE
 
-            recyclerView_toNishi.layoutManager =
-                    LinearLayoutManager(context.applicationContext) as RecyclerView.LayoutManager?
-            mAdapter = MyAdapter(context, mArrayList, 1) // 1 means nishi mode, nishi_improved background
+            recyclerView_toNishi.layoutManager = LinearLayoutManager(context.applicationContext)
+            mAdapter = MyAdapter(context, null , this ,mArrayList, DataContract.GlobalConstants().MODE_NISHI)
             recyclerView_toNishi.adapter = mAdapter
-
-            //RecyclerView
-/*            val itemTouchCallback =
-                    object : ItemTouchHelper.SimpleCallback(0,
-                            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-
-                        override fun onMove(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?, p2: RecyclerView.ViewHolder?): Boolean {
-                            return true
-                        }
-
-                        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                            mAdapter?.removeItemAt(viewHolder.adapterPosition)
-                        }
-                    }
-            ItemTouchHelper(itemTouchCallback).attachToRecyclerView(recyclerView_toNishi)*/
 
             //PULL TO REFRESH
             nishi_swipetoRefreshContainer.setOnRefreshListener {
-                (mAdapter as MyAdapter).refreshDataSet(createArrayList())
-                nishi_swipetoRefreshContainer?.isRefreshing = false
+                if (!isPastLastBus()){
+                    (mAdapter as MyAdapter).refreshDataSet(createArrayList())
+                    nishi_swipetoRefreshContainer?.isRefreshing = false
+                }else{
+                    setEmptyMode()
+                    nishi_swipetoRefreshContainer?.isRefreshing = false
+                }
+
             }
 
-        }
-
-        else if (!busExists()){
-            empty_container.visibility = View.VISIBLE
-            nishi_fragment_layout_background.visibility = View.VISIBLE
-            empty_last_bus_time.text = lastBusTime()
+        }else{
+            setEmptyMode()
+            nishi_swipetoRefreshContainer.setOnRefreshListener{
+                nishi_swipetoRefreshContainer?.isRefreshing = false
+            }
         }
     }
+
+    fun setEmptyMode(){
+        nishi_empty_container.visibility = View.VISIBLE
+        nishi_fragment_layout_background.visibility = View.VISIBLE
+        nishi_empty_last_bus_time.text = lastBusTime()
+    }
+
 
     fun lastBusTime():String{
         /**
          *  Last bus info:
-         *
-         *  ToWaseda
-         *  Weekdays -> 18:25
-         *  Saturday -> 16:20
-         */
-        val calendar = Calendar.getInstance()
-        val day = calendar.get(Calendar.DAY_OF_WEEK)
-        when (day) { // 1 is sunday
-            1->return getString(R.string.arimasen)
-            7->return "16:20"
-            else-> return "18:25"
-        }
-    }
-
-    fun busExists():Boolean{
-        /**
-         *  Last bus info:
-         *
-         *  ToWaseda
-         *  Weekdays -> 18:25
-         *  Saturday -> 16:20
          *
          *  ToNishi
          *  Weekdays -> 18:10
          *  Saturday -> 16:35
          */
         val calendar = Calendar.getInstance()
-        val nowString = calendar.get(Calendar.HOUR_OF_DAY).toString() + formatDate(calendar.get(Calendar.MINUTE))
-        val now_key = nowString.toInt()
-        var finalBus_key = 0
         val day = calendar.get(Calendar.DAY_OF_WEEK)
         when (day) { // 1 is sunday
-            1->finalBus_key = 0
-            7->finalBus_key = 1620
-
-            else-> finalBus_key = 1825
+            1->return getString(R.string.arimasen)
+            7->return "16:35"
+            else-> return "18:10"
         }
-
-        return now_key < finalBus_key
     }
 
-    fun formatDate(value:Int):String{
+    fun isPastLastBus():Boolean{
+        val time = getIntTime()
+        val hour = time.hour
+        val hour_key = 1810
+        val saturday_hour_key = 1635
+        val min = time.min
+        val day = time.day
 
-        if (value < 10){
-            return "0" + value.toString()
+        val key = (hour.toString() + min.toString()).toInt()
+        Log.v(TAG, "Key is: $key")
+        /**
+         *  Weekday: ToWaseda... 18:25
+         *  Saturday: To Waseda... 16:20
+         */
+
+        when (day) {
+            1 -> {
+                return true
+            }
+
+            7 -> {    //土曜
+                return key > saturday_hour_key
+
+            }
+
+            else -> { //Weekday
+                return key > hour_key
+            }
         }
 
-        else return value.toString()
+    }
+
+    fun getIntTime(): MyAdapter.mIntTime {
+        val calendar = Calendar.getInstance()
+        val mIntTime = MyAdapter.mIntTime(
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1,
+                calendar.get(Calendar.DAY_OF_WEEK),
+                calendar.get(Calendar.DATE),
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                calendar.get(Calendar.SECOND)
+        )
+
+        return mIntTime
     }
 
     override fun onResume() {

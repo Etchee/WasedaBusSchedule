@@ -3,6 +3,7 @@ package etchee.com.wasedabusschedule.Fragments
 import android.content.Context
 import android.os.CountDownTimer
 import android.os.Handler
+import android.provider.Settings
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,19 +11,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import etchee.com.wasedabusschedule.Data.DataContract
 import etchee.com.wasedabusschedule.Data.DataList
 import etchee.com.wasedabusschedule.R
 import kotlinx.android.synthetic.main.layout_item_single.view.*
 import java.util.*
 import java.text.SimpleDateFormat
 import kotlin.collections.ArrayList
+import etchee.com.wasedabusschedule.Data.DataContract.GlobalConstants
 
 
 /**
  * Adapter for the RecyclerView
  * Created by rikutoechigoya on 2017/05/23.
  */
-class MyAdapter(val context: Context, var arrayList: ArrayList<DataList.DataModel>, val ADAPTER_MODE:Int) :
+class MyAdapter(val context: Context, val toWasedaFragment: ToWasedaFragment?, val toNishiFragment: ToNishiFragment?,
+                var arrayList: ArrayList<DataList.DataModel>, val ADAPTER_MODE:Int) :
         RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
     private var TAG: String = javaClass.simpleName
@@ -44,7 +48,7 @@ class MyAdapter(val context: Context, var arrayList: ArrayList<DataList.DataMode
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         //BACKGROUND
-        if (ADAPTER_MODE == 0){
+        if (ADAPTER_MODE == GlobalConstants().MODE_WASEDA){
             Glide.with(context)
                     .load(R.drawable.img_okuma)
                     .into(viewHolder.image_background)
@@ -102,7 +106,19 @@ class MyAdapter(val context: Context, var arrayList: ArrayList<DataList.DataMode
         if (mArrayList.size == 0) {
             Log.e(TAG, "ArrayList is null")
             return 0
-        } else {
+        }
+
+        else if(isPastLastBus()){
+            if (ADAPTER_MODE == GlobalConstants().MODE_WASEDA){
+                toWasedaFragment?.setEmptyMode()
+                return 0
+            }else{
+                toNishiFragment?.setEmptyMode()
+                return 0
+            }
+        }
+
+        else {
             return mArrayList.size
         }
     }
@@ -120,6 +136,43 @@ class MyAdapter(val context: Context, var arrayList: ArrayList<DataList.DataMode
         )
 
         return mIntTime
+    }
+
+
+    fun isPastLastBus():Boolean{
+        val time = getIntTime()
+        val hour = time.hour
+        val waseda_week_hour_key = 1825
+        val waseda_saturday_hour_key = 1620
+        val nishi_week_hour_key = 1810
+        val nishi_sat_hour_key = 1635
+        val min = time.min
+        val day = time.day
+
+        val key = (hour.toString() + min.toString()).toInt()
+        Log.v(TAG, "Key is: $key")
+        /**
+         *  Weekday: ToWaseda... 18:25
+         *  Saturday: To Waseda... 16:20
+         */
+
+        when (day) {
+            1 -> {
+                return true
+            }
+
+            7 -> {    //土曜
+                if (ADAPTER_MODE == GlobalConstants().MODE_WASEDA) return key >= waseda_saturday_hour_key
+                else return key>= nishi_sat_hour_key
+
+            }
+
+            else -> { //Weekday
+                if (ADAPTER_MODE == GlobalConstants().MODE_WASEDA) return key >= waseda_week_hour_key
+                else return key>= nishi_week_hour_key
+            }
+        }
+
     }
 
     fun refreshDataSet(newArrayList:ArrayList<DataList.DataModel>){

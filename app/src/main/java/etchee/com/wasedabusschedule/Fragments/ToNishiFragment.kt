@@ -7,10 +7,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import etchee.com.wasedabusschedule.R
 import kotlinx.android.synthetic.main.layout_fragment_nishi.*
-import kotlinx.android.synthetic.main.layout_fragment_waseda.*
 import java.util.*
 
 /**
@@ -28,8 +26,6 @@ class ToNishiFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val hint = getDayHintString(Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
-        Toast.makeText(context, hint, Toast.LENGTH_SHORT).show()
 
         //SHOW LIST IF THERE ARE BUS LEFT
         if (busExists()){
@@ -121,7 +117,5 @@ class ToNishiFragment: Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val hint = getDayHintString(Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
-        Toast.makeText(context, hint, Toast.LENGTH_SHORT).show()
     }
 }

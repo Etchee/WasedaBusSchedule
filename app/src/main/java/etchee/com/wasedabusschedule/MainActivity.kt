@@ -2,14 +2,13 @@ package etchee.com.wasedabusschedule
 
 import android.content.Context
 import android.content.Intent
-import android.database.Cursor
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import etchee.com.wasedabusschedule.Data.DataContract
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +29,9 @@ class MainActivity : AppCompatActivity() {
 
         //TOOLBAR
         setSupportActionBar(main_toolbar)
+
+        val hint = getDayHintString(Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
+        Toast.makeText(this, hint, Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -47,5 +49,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    fun getDayHintString(day:Int):String {
+        when (day) {
+            1 -> return context.resources.getString(R.string.hint_text_sunday)
+            2 -> return context.resources.getString(R.string.hint_text_monday)
+            3 -> return context.resources.getString(R.string.hint_text_tuesday)
+            4 -> return context.resources.getString(R.string.hint_text_wednesday)
+            5 -> return context.resources.getString(R.string.hint_text_thursday)
+            6 -> return context.resources.getString(R.string.hint_text_friday)
+            7 -> return context.resources.getString(R.string.hint_text_saturday)
+            else-> throw IllegalArgumentException(TAG + "Calendar did not recognize day.")
+        }
     }
 }

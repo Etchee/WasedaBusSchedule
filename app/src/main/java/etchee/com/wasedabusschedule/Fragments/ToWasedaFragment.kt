@@ -33,14 +33,11 @@ class ToWasedaFragment: android.support.v4.app.Fragment() {
             waseda_fragment_layout_background.visibility = View.GONE
 
             //RecyclerView
-            recyclerView_toWaseda.layoutManager = LinearLayoutManager(context.applicationContext) as RecyclerView.LayoutManager?
+            recyclerView_toWaseda.layoutManager =
+                    LinearLayoutManager(context.applicationContext) as RecyclerView.LayoutManager?
             mAdapter = ToWasedaAdapter(context)
             recyclerView_toWaseda.adapter = mAdapter
 
-            //PULL TO REFRESH
-            waseda_swipetoRefreshContainer.setOnRefreshListener {
-                waseda_swipetoRefreshContainer?.isRefreshing = false
-            }
         }
 
         else if (!busExists()){

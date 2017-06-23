@@ -37,11 +37,6 @@ class ToNishiFragment: Fragment() {
             recyclerView_toNishi.layoutManager = LinearLayoutManager(context.applicationContext) as RecyclerView.LayoutManager?
             mAdapter = ToNishiAdapter(context)
             recyclerView_toNishi.adapter = mAdapter
-
-            //PULL TO REFRESH
-            nishi_swipetoRefreshContainer.setOnRefreshListener {
-                nishi_swipetoRefreshContainer?.isRefreshing = false
-            }
         }
 
         else if (!busExists()){
@@ -99,20 +94,6 @@ class ToNishiFragment: Fragment() {
         }
 
         else return value.toString()
-    }
-
-
-    private fun getDayHintString(day:Int):String {
-        when (day) {
-            1 -> return context.resources.getString(R.string.hint_text_sunday)
-            2 -> return context.resources.getString(R.string.hint_text_monday)
-            3 -> return context.resources.getString(R.string.hint_text_tuesday)
-            4 -> return context.resources.getString(R.string.hint_text_wednesday)
-            5 -> return context.resources.getString(R.string.hint_text_thursday)
-            6 -> return context.resources.getString(R.string.hint_text_friday)
-            7 -> return context.resources.getString(R.string.hint_text_saturday)
-            else-> throw IllegalArgumentException(TAG + "Calendar did not recognize day.")
-        }
     }
 
     override fun onResume() {

@@ -49,4 +49,5 @@
     <string name="deshita">でした。</string>
     <string name="arimasen">日曜日はバスは出ていません。</string>
     <string name="empty_last_bus_caution">※最終バスは、遅れてくる可能性があります。</string>
+    <string name="tab_hint_text_map">経路図</string>
 </resources>

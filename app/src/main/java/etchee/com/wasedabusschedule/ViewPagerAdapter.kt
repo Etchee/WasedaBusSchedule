@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.util.Log
+import com.google.android.gms.maps.MapFragment
+import etchee.com.wasedabusschedule.Fragments.MyMapFragment
 import etchee.com.wasedabusschedule.Fragments.ToNishiFragment
 import etchee.com.wasedabusschedule.Fragments.ToWasedaFragment
 
@@ -32,6 +34,10 @@ class ViewPagerAdapter(fm: FragmentManager, private val context: Context) : Frag
                 return ToNishiFragment()
             }
 
+            2 -> {
+                return MyMapFragment()
+            }
+
             //impossible viewPager index
             else -> {
                 Log.e(TAG, "ViewPagerAdapter did not recognize the item number")
@@ -46,7 +52,7 @@ class ViewPagerAdapter(fm: FragmentManager, private val context: Context) : Frag
      *  DO NOT do heavy process on here
      */
     override fun getCount(): Int {
-        return 2
+        return 3
     }
 
     override fun getPageTitle(position: Int): CharSequence {
@@ -60,6 +66,10 @@ class ViewPagerAdapter(fm: FragmentManager, private val context: Context) : Frag
         //toNishiFragment
             1 -> {
                 return context.resources.getString(R.string.tab_hint_text_to_nishi)
+            }
+
+            2 -> {
+                return context.resources.getString(R.string.tab_hint_text_map)
             }
 
         //impossible viewPager index

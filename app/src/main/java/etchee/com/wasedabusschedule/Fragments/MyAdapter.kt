@@ -150,7 +150,6 @@ class MyAdapter(val context: Context, val toWasedaFragment: ToWasedaFragment?, v
         val day = time.day
 
         val key = (hour.toString() + min.toString()).toInt()
-        Log.v(TAG, "Key is: $key")
         /**
          *  Weekday: ToWaseda... 18:25
          *  Saturday: To Waseda... 16:20

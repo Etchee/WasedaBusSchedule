@@ -50,4 +50,8 @@
     <string name="arimasen">日曜日はバスは出ていません。</string>
     <string name="empty_last_bus_caution">※最終バスは、遅れてくる可能性があります。</string>
     <string name="tab_hint_text_map">経路図</string>
+    <string name="key_map_api"
+        translatable="false">
+        AIzaSyAdA5DxnYWHncIDz2VSQyZc1-p9TcmWpwE
+    </string>
 </resources>

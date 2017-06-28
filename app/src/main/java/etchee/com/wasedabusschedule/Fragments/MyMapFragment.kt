@@ -9,22 +9,16 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.OnMapReadyCallback
 import etchee.com.wasedabusschedule.R
 import kotlinx.android.synthetic.main.layout_fragment_map.*
 
 /**
+ * Fragment to show the routes of the buses
  * Created by rikutoechigoya on 2017/06/28.
  */
 class MyMapFragment: Fragment() {
 
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.layout_fragment_map, container, false)
@@ -40,6 +34,7 @@ class MyMapFragment: Fragment() {
 
             }else{
                 maps?.isMyLocationEnabled = true
+
             }
         }
     }

@@ -30,8 +30,12 @@ class MainActivity : AppCompatActivity() {
         //TOOLBAR
         setSupportActionBar(main_toolbar)
 
-        val hint = getDayHintString(Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
-        Toast.makeText(this, hint, Toast.LENGTH_SHORT).show()
+        //toast day when starting up
+        if (savedInstanceState == null){
+            val hint = getDayHintString(Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
+            Toast.makeText(this, hint, Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -62,7 +62,12 @@ class MyMapFragment: Fragment() {
                     .position(latLng_nishi)
                     .title(resources.getString(R.string.marker_label_nishi))
 
-            maps.addMarker(wasedaOptions); maps.addMarker(nishiOptions)
+            val latLng_twins = LatLng(35.697629, 139.721627)
+            val twinsOption = MarkerOptions()
+                    .position(latLng_twins)
+                    .title(resources.getString(R.string.marker_label_twins))
+
+            maps.addMarker(wasedaOptions); maps.addMarker(nishiOptions); maps.addMarker(twinsOption)
 
             //check for location permission
             if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)

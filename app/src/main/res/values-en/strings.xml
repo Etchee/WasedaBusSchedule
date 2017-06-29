@@ -30,4 +30,7 @@
     <string name="messagecontents">I speak fluent English as I have lived in the States. I\'m looking to build some connections, feel free to toss me some messages! For fellow iOS developers: Please make the iOS version. LOL For Android developers: I\'m looking forward to your pull requests!</string>
     <string name="about_message">3rd year student in Fundamental Science and Engineering at Waseda. Formerly RA at WISH (The international dormitory.) \\n\\n Born and raised in Utsunomiya, Tochigi. Lived in Ohio State, USA for high school. Started developing Android application in 2017 spring break as a hobby.</string>
     <string name="tab_hint_text_map">Route Map</string>
+    <string name="marker_label_twins">Center for Advanced Biomedical Sciences(TWins)</string>
+    <string name="marker_label_nishi">Nishi-Waseda Campus</string>
+    <string name="marker_label_waseda">Waseda Campus</string>
 </resources>

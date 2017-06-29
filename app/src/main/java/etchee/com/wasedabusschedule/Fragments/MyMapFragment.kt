@@ -9,8 +9,12 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.MapsInitializer
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
 import etchee.com.wasedabusschedule.R
 import kotlinx.android.synthetic.main.layout_fragment_map.*
 import kotlinx.android.synthetic.main.layout_fragment_map.view.*
@@ -41,6 +45,10 @@ class MyMapFragment: Fragment() {
             if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 0)
+                val latlng = LatLng(35.708863, 139.719205)
+                val cameraPosition = CameraPosition.builder().target(latlng).zoom(14.2f).build()
+                val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
+                maps.moveCamera(cameraUpdate)
 
             }else{
                 maps?.isMyLocationEnabled = true

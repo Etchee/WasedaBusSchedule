@@ -33,4 +33,5 @@
     <string name="marker_label_twins">Center for Advanced Biomedical Sciences(TWins)</string>
     <string name="marker_label_nishi">Nishi-Waseda Campus</string>
     <string name="marker_label_waseda">Waseda Campus</string>
+    <string name="marker_label_toyama">Toyama Campus</string>
 </resources>

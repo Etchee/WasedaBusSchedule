@@ -67,7 +67,13 @@ class MyMapFragment: Fragment() {
                     .position(latLng_twins)
                     .title(resources.getString(R.string.marker_label_twins))
 
+            val latLng_toyama = LatLng(35.705191, 139.718106)
+            val toyamaOption = MarkerOptions()
+                    .position(latLng_toyama)
+                    .title(resources.getString(R.string.marker_label_toyama))
+
             maps.addMarker(wasedaOptions); maps.addMarker(nishiOptions); maps.addMarker(twinsOption)
+            maps.addMarker(toyamaOption)
 
             //check for location permission
             if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)

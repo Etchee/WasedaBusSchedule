@@ -15,6 +15,8 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import etchee.com.wasedabusschedule.R
 import kotlinx.android.synthetic.main.layout_fragment_map.*
 import kotlinx.android.synthetic.main.layout_fragment_map.view.*
@@ -42,13 +44,30 @@ class MyMapFragment: Fragment() {
         }
 
         mapInstance.getMapAsync { maps ->
+
+            //zoom in relevant place
+            val latLng = LatLng(35.708863, 139.719205)
+            val cameraPosition = CameraPosition.builder().target(latLng).zoom(14.2f).build()
+            val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
+            maps.moveCamera(cameraUpdate)
+
+            //add markers
+            val latLng_waseda = LatLng(35.708863, 139.719205)
+            val wasedaOptions = MarkerOptions()
+                    .position(latLng_waseda)
+                    .title(resources.getString(R.string.marker_label_waseda))
+
+            val latLng_nishi = LatLng(35.7060997,139.7067037)
+            val nishiOptions = MarkerOptions()
+                    .position(latLng_nishi)
+                    .title(resources.getString(R.string.marker_label_nishi))
+
+            maps.addMarker(wasedaOptions); maps.addMarker(nishiOptions)
+
+            //check for location permission
             if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 0)
-                val latlng = LatLng(35.708863, 139.719205)
-                val cameraPosition = CameraPosition.builder().target(latlng).zoom(14.2f).build()
-                val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
-                maps.moveCamera(cameraUpdate)
 
             }else{
                 maps?.isMyLocationEnabled = true
